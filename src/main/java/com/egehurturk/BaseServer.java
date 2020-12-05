@@ -2,11 +2,15 @@ package com.egehurturk;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+
+// consider adding the pool field for baseservice for threading
 
 /**
  * Base Server for providing TCP/IPv4 Socket connection. Uses TCP as
@@ -21,7 +25,7 @@ import java.util.HashMap;
  * </ul>
  *
  * <p> In general, each connection request made of a client is accepted by
- * {@code ServerSocket}. Inner class {@code ConnectionListener} handles the
+ * {@link ServerSocket}. Inner class {@link ConnectionManager} handles the
  * connection.
  *
  *
@@ -207,18 +211,178 @@ public abstract class BaseServer {
         return out;
     }
 
+    /**
+     * Accept any client that is connected to the BaseServer
+     * {@code ServerSocket} by calling the {@code ServerSocket.accept()}
+     * method.
+     * <code>
+     *     Socket client = server.accept();
+     * </code>
+     *
+     * <p>Passes this client object to the {@link ConnectionManager} class
+     * that handles the loop, input, and output of socket comminucation.
+     *
+     * @throws IOException          - IOException due to client acceptance
+     * @see ConnectionManager
+     * @see
+     */
+    public abstract void start() throws IOException; // MODIFIED THIS!!! RETURN VOID
 
-    protected static class ConnectionManager implements Listener {
+    /**
+     * Closes the socket channels for both {@code ServerSocket} object
+     * of server and {@code Socket} object for client. This method should
+     * be called if the server is going to be closed.
+     * <code>
+     *     HttpServer server = new HttpServer(...);
+     *     try {
+     *         server.close()
+     *     }
+     *     catch (IOException e) {
+     *         e.printStackTrace();
+     *     }
+     *
+     * </code>
+     *
+     * @throws IOException          - IOException due to closing of the client and server
+     */
+    public abstract void stop() throws IOException;
+
+    // restart, reload
+
+    /**
+     * Manager class for handling {@code Socket} object client.
+     * Any {@code Socket} object that is accepted by
+     * {@code ServerSocket} is passed into this class
+     * by constructor.
+     *
+     * <p> One convenient way to use this class is
+     * creating an infinite loop inside the method that
+     * constructs this class, and passes the {@code Socket} client
+     * in the constructor.
+     *
+     * <p>The subclass of the {@link BaseServer} class should have
+     * an inner class that handles the management of client,
+     * possibly named <i>ConnectionManager</i> and extends this
+     * base class
+     *
+     * <p>Implements the {@code Runnable} interface and a
+     * {@code run} method for making the server threaded. Every
+     * work that is done inside the {@code run} method executes
+     * in another Thread.
+     *
+     *
+     */
+    public static class ConnectionManager implements Runnable {
+        /**
+         * The client {@code Socket} object that is connected
+         * to the {@code ServerSocket}, via accept() method:
+         *
+         * <p>The client (Socket object) is passed into the
+         * constructor of this class. {@link #in} and {@link #out}
+         * is achieved via the {@code InputStream} and
+         * {@code OutputStream} of the client.
+         *
+         * <code>
+         *     try {
+         *         Socket client = server.accept()
+         *         ConnectionManager manager = new ConnectionManager(client);
+         *     }
+         *
+         * </code>
+         *
+         */
+        private Socket client;
+
+        /**
+         * Input for client socket. Everything
+         * that the client sends to the server is
+         * read by the {@code BufferedReader} object's
+         * readline methods.
+         */
+        private BufferedReader in;
+
+        /**
+         * Output for client socket. Send anything
+         * to client with calling the printline method of
+         * {@code PrintWriter}.
+         */
+        private PrintWriter out;
+
+        /**
+         * Default constructor for this class.
+         * @param socket         - the client socket that server accepts. All
+         *                         input and output tasks are done with the socket's I/O streams.
+         */
+        protected ConnectionManager(Socket socket) {
+            this.client = socket;
+            System.out.println("[SERVER] New connection established: " + this.client + "\n\n");
+        }
+
+        /**
+         * Services this thread's client by reading its {@link java.io.InputStream}
+         * and outputting the input with {@link PrintWriter}.
+         */
+        @Override
+        public void run() {
+            try {
+                in = new BufferedReader(
+                        new InputStreamReader(client.getInputStream())
+                );
+                out = new PrintWriter(client.getOutputStream(), true);
+
+                boolean run = true;
+                try {
+                    while (run) {
+                        String req = in.readLine();
+                        if (req.equals("/quit")) {
+                            run = false;
+                            break;
+                        }
+                        out.println(req);
+                    }
+                }
+
+                finally {
+                    in.close();
+                    out.close();
+                    this.client.close();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
+
+    /**
+     * Creates a new {@link ConnectionManager} class. Acts as
+     * a factory method for the object, allows subclasses to
+     * change behavior of the inner class {@link ConnectionManager}.
+     *
+     * <p>For extending the inner class, override this method
+     * to return the local inner class of that subclass.
+     *
+     * @param cli                               - {@link Socket} object client
+     * @return {@link ConnectionManager}        - new object for ConnectionManager
+     */
+    protected ConnectionManager createManager(Socket cli) {
+        return new ConnectionManager(cli);
+    }
+
+
 }
 
 /*
- * TODO: Create the Listener interface for managing clients
- * TODO: Create java docs for Listener interface
- * TODO: Create the ConnectionManager class
- * TODO: Create abstract methods / normal methods for BaseServer class
+ * TODO: BaseServer class shouldn't be abstract
+ * TODO: provide a psvm method that we can test out this server
+ * TODO: provide a client class that we can use to connect to the server
+ * TODO: Note: you can make the BaseServer class abstract if you want
+ * TODO: Do you want to start your server from psvm, or from start() method? Decide on that
+ * TODO: Consider adding a pool field for your baseserver class, for threading
+ * TODO: To be static or not to be static? Decide on your fields.
  */
+
 
 /* Useful links:
  *      - Java.net package docs: https://docs.oracle.com/javase/8/docs/api/java/net/package-summary.html
@@ -232,4 +396,14 @@ public abstract class BaseServer {
  *      - HttpServer class in  com.sun.net.httpserver
  *      - Classes in  com.sun.net.httpserver
  *      - ServerImpl class in sun.net.httpserver
+ */
+
+/*
+ * Description of classes in this project:
+ *      - BaseServer: don't play with this. This is your base server. [SERIOUS]
+ *      - App: Dummy. [DELETE]
+ *      - Client: For testing purposes for baseserver class. Don't delete until your code is ready [MEH]
+ *      - ClientApp: Class to start client. Again don't delete until your code is ready [MEH]
+ *      - TestOneServer: A testing TCP Server. Again same as above. [MEH]
+ *      - TestServer: [DELETE]
  */
