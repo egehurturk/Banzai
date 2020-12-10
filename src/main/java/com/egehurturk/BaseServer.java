@@ -1,14 +1,12 @@
 package com.egehurturk;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Properties;
 
 // consider adding the pool field for baseservice for threading
 
@@ -106,6 +104,36 @@ public abstract class BaseServer {
      */
     protected static HashMap<String, Object> META;
 
+
+    /**
+     * Config properties imported from {@code .properties}
+     * file. Stored as {@link Properties}
+     */
+    protected Properties config;
+
+    /**
+     * Properties file name
+     */
+    protected static String CONFIG_PROP_FILE = "server.properties";
+
+    /**
+     * Properties config places
+     */
+    protected static String PORT_PROP = "server.port";
+    protected static String HOST_PROP = "server.host";
+
+    /**
+     * File location of {@code .properties} file located
+     * in {@link InputStream} to perform IO operations (specifically
+     * reading the properties file) on the data.
+     *
+     * <p>All of the settings are required in the properties
+     * file, located in the resources directory in the standard
+     * Maven project DIR.
+     */
+    protected InputStream propertiesStream = ClassLoader.getSystemClassLoader()
+            .getResourceAsStream(CONFIG_PROP_FILE);
+
     /**
      * Chained constructor for intializing with only port.
      * Passes default values for other arguments in the base
@@ -131,10 +159,12 @@ public abstract class BaseServer {
      */
     public BaseServer () throws UnknownHostException {
         this(9090, InetAddress.getLocalHost(), 50);
+
     }
 
     /**
-     * Base constructor that has all fields as arguments.
+     * Base constructor that has all fields as arguments. Is used for manually
+     * configuring fields (Port, host, backlog).
      * Checks for valid port, backlog.
      *
      * @param serverPort                    - Server port that ServerSocket listens on
@@ -212,6 +242,18 @@ public abstract class BaseServer {
     }
 
     /**
+     * Getter for config prop file
+     * @return out - PrintWriter object for printing to client
+     */
+    public String getConfigPropFile() {
+        return CONFIG_PROP_FILE;
+    }
+
+    public void setConfigPropFile(String configPropFile) {
+        CONFIG_PROP_FILE = configPropFile;
+    }
+
+    /**
      * Accept any client that is connected to the BaseServer
      * {@code ServerSocket} by calling the {@code ServerSocket.accept()}
      * method.
@@ -248,6 +290,70 @@ public abstract class BaseServer {
     public abstract void stop() throws IOException;
 
     // restart, reload
+
+    /**
+     * Configures the server by the properties file.
+     * Note for future:
+     *  - You have a constructor to configure, and this method to configure. Decide
+     *    which one to use.
+     */
+    public void configureServer() {
+        this.config = serveConfigurations(System.getProperties(), propertiesStream);
+        try {
+            this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
+            this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void configureServer(String propertiesFilePath) {
+        this.config = serveConfigurations(System.getProperties(), ClassLoader.getSystemClassLoader()
+                                                                    .getResourceAsStream(CONFIG_PROP_FILE));
+        try {
+            this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
+            this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Populates the necessary fields (or properties) from the source
+     * {@link InputStream} properties file, and the {@link Properties} user config.
+     * If the properties file is missing, throws an {@link IOException} error.
+     *
+     * @param userConfig            - {@link Properties} file that has properties
+     * @param file                  - {@link InputStream} file resource
+     * @return serverConfig         - {@link Properties} new properties file
+     */
+    protected Properties serveConfigurations(Properties userConfig, InputStream file) {
+        Properties serverConfig = new Properties();
+        try {
+            if (file == null) {
+                throw new IOException("System Configuration Error: Are you sure that a properties" +
+                        " file is located under resources folder as stated in standard Maven " +
+                        " directory template?");
+            }
+
+            serverConfig.load(file);
+
+            userConfig.keySet().
+                    forEach(val -> {
+                        String key = (String) val;
+                        String value = userConfig.getProperty(key);
+                        if (value != null)
+                            serverConfig.put(key, value);
+                    });
+        }
+        catch (IOException err) {
+            System.err.println("System Configuration Error: Are you sure that a properties" +
+                               " file is located under resources folder as stated in standard Maven " +
+                               " directory template?");
+            err.printStackTrace();
+        }
+        return serverConfig;
+    }
 
     /**
      * Manager class for handling {@code Socket} object client.
@@ -374,11 +480,6 @@ public abstract class BaseServer {
 }
 
 /*
- * TODO: BaseServer class shouldn't be abstract
- * TODO: provide a psvm method that we can test out this server
- * TODO: provide a client class that we can use to connect to the server
- * TODO: Note: you can make the BaseServer class abstract if you want
- * TODO: Do you want to start your server from psvm, or from start() method? Decide on that
  * TODO: Consider adding a pool field for your baseserver class, for threading
  * TODO: To be static or not to be static? Decide on your fields.
  */
@@ -406,4 +507,12 @@ public abstract class BaseServer {
  *      - ClientApp: Class to start client. Again don't delete until your code is ready [MEH]
  *      - TestOneServer: A testing TCP Server. Again same as above. [MEH]
  *      - TestServer: [DELETE]
+ */
+
+
+/*
+Initserver method that initializes server with either (overload):
+    - Properties file
+    - or void
+Call this with constructors
  */
