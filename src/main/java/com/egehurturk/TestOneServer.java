@@ -3,25 +3,34 @@
 
 package com.egehurturk;
 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TestOneServer extends BaseServer {
 
+    protected static Logger logger = LogManager.getLogger(TestOneServer.class);
+
     public TestOneServer(int serverPort) throws UnknownHostException {
         super(serverPort);
     }
 
     public static void main(String[] args) throws IOException {
+
         ExecutorService pool = Executors.newFixedThreadPool(500);
-        System.out.println("[SERVER STARED] on port " + 9090);
+        logger.info("Server started on port " + 9090);
         ServerSocket sv = new ServerSocket(9090);
         while (true) {
-            ConnectionManager manager = new ConnectionManager(sv.accept());
-            System.out.println("[SERVER]");
+            Socket cli = sv.accept();
+            ConnectionManager manager = new ConnectionManager(cli);
+            logger.info("Connection established with " + cli + "");
             pool.execute(manager);
         }
     }

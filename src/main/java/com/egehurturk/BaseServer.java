@@ -1,5 +1,8 @@
 package com.egehurturk;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -104,6 +107,24 @@ public abstract class BaseServer {
      */
     protected static HashMap<String, Object> META;
 
+    /**
+     * {@link org.apache.logging.log4j.Logger} interface for logging messages
+     * Initialized to null defaultly, override the value in subclasses,
+     * this can cause {@link NullPointerException}
+     */
+    protected static Logger logger = null;
+
+    /**
+     * Required for configurating {@link #logger} field with the {@code log4j2.xml} file
+     */
+    protected static LoggerContext context = ( org.apache.logging.log4j.core.LoggerContext ) LogManager
+                                                                        .getContext(false);
+
+    // set default log4j2 config location to the ../resources/log4j2.xml
+    static  {
+        context.setConfigLocation( new File("src/main/resources/log4j2.xml").toURI()) ;
+    }
+
 
     /**
      * Config properties imported from {@code .properties}
@@ -132,7 +153,7 @@ public abstract class BaseServer {
      * Maven project DIR.
      */
     protected InputStream propertiesStream = ClassLoader.getSystemClassLoader()
-            .getResourceAsStream(CONFIG_PROP_FILE);
+            .getResourceAsStream( CONFIG_PROP_FILE );
 
     /**
      * Chained constructor for intializing with only port.
@@ -149,18 +170,10 @@ public abstract class BaseServer {
 
     /**
      * Empty constructor for BaseServer
-     * Chains the default values for base constructor:
-     * <ul>
-     *     <li>serverPort: 9090</li>
-     *     <li>serverHost: InetAddress localhost</li>
-     *     <li>backlog: 50</li>
-     * </ul>
-     * @throws UnknownHostException     - Required for {@code .getLocalHost()}
+     * Does nothing. Used for configuring from
+     * an external properties file
      */
-    public BaseServer () throws UnknownHostException {
-        this(9090, InetAddress.getLocalHost(), 50);
-
-    }
+    public BaseServer () {}
 
     /**
      * Base constructor that has all fields as arguments. Is used for manually
@@ -249,8 +262,20 @@ public abstract class BaseServer {
         return CONFIG_PROP_FILE;
     }
 
+    /**
+     * Setter for {@link #CONFIG_PROP_FILE}
+     * @param configPropFile        - name of file
+     */
     public void setConfigPropFile(String configPropFile) {
         CONFIG_PROP_FILE = configPropFile;
+    }
+
+    /**
+     * Setter for {@link #logger} field
+     * @param logger                - {@link org.apache.logging.log4j.Logger} instance
+     */
+    public static void setLogger(Logger logger) {
+        BaseServer.logger = logger;
     }
 
     /**
@@ -292,7 +317,8 @@ public abstract class BaseServer {
     // restart, reload
 
     /**
-     * Configures the server by the properties file.
+     * Configures the server by the default properties file
+     * which is <i>"server.properties"</i>
      * Note for future:
      *  - You have a constructor to configure, and this method to configure. Decide
      *    which one to use.
@@ -302,19 +328,31 @@ public abstract class BaseServer {
         try {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
+            logger.info("");
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            System.err.println("Server name " + HOST_PROP + "that you passed into the configurations file " +
+                    "(<name>.properties) is not valid. Make sure the host name exists or valid, or change" +
+                    "the property. ");
         }
     }
 
+    /**
+     * Configures the server via the property file name passed in as argument.
+     * This method is equal to setting the {@link #CONFIG_PROP_FILE} with the
+     * {@link #setConfigPropFile(String)} method.
+     *
+     * @param propertiesFilePath        - Property file name (path)
+     */
     public void configureServer(String propertiesFilePath) {
         this.config = serveConfigurations(System.getProperties(), ClassLoader.getSystemClassLoader()
-                                                                    .getResourceAsStream(CONFIG_PROP_FILE));
+                                                                    .getResourceAsStream(propertiesFilePath));
         try {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            System.err.println("Server name " + HOST_PROP + "that you passed into the configurations file " +
+                    "(<name>.properties) is not valid. Make sure the host name exists or valid, or change" +
+                    "the property. ");
         }
     }
 
@@ -326,6 +364,7 @@ public abstract class BaseServer {
      * @param userConfig            - {@link Properties} file that has properties
      * @param file                  - {@link InputStream} file resource
      * @return serverConfig         - {@link Properties} new properties file
+     *
      */
     protected Properties serveConfigurations(Properties userConfig, InputStream file) {
         Properties serverConfig = new Properties();
@@ -350,7 +389,6 @@ public abstract class BaseServer {
             System.err.println("System Configuration Error: Are you sure that a properties" +
                                " file is located under resources folder as stated in standard Maven " +
                                " directory template?");
-            err.printStackTrace();
         }
         return serverConfig;
     }
@@ -415,13 +453,17 @@ public abstract class BaseServer {
         private PrintWriter out;
 
         /**
+         * Logger class for logging things
+         */
+        protected static Logger logger = LogManager.getLogger(ConnectionManager.class);
+
+        /**
          * Default constructor for this class.
          * @param socket         - the client socket that server accepts. All
          *                         input and output tasks are done with the socket's I/O streams.
          */
         protected ConnectionManager(Socket socket) {
             this.client = socket;
-            System.out.println("[SERVER] New connection established: " + this.client + "\n\n");
         }
 
         /**
@@ -436,12 +478,11 @@ public abstract class BaseServer {
                 );
                 out = new PrintWriter(client.getOutputStream(), true);
 
-                boolean run = true;
                 try {
-                    while (run) {
+                    while (true) {
                         String req = in.readLine();
+                        logger.info("Client says " + req);
                         if (req.equals("/quit")) {
-                            run = false;
                             break;
                         }
                         out.println(req);
@@ -455,7 +496,8 @@ public abstract class BaseServer {
                 }
 
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Something wrong happened with the client socket " +
+                        ", status code = 1");
             }
         }
 
@@ -500,19 +542,25 @@ public abstract class BaseServer {
  */
 
 /*
- * Description of classes in this project:
- *      - BaseServer: don't play with this. This is your base server. [SERIOUS]
- *      - App: Dummy. [DELETE]
- *      - Client: For testing purposes for baseserver class. Don't delete until your code is ready [MEH]
- *      - ClientApp: Class to start client. Again don't delete until your code is ready [MEH]
- *      - TestOneServer: A testing TCP Server. Again same as above. [MEH]
- *      - TestServer: [DELETE]
- */
-
-
-/*
 Initserver method that initializes server with either (overload):
     - Properties file
     - or void
 Call this with constructors
+ */
+
+/*
+when do you want to log things?
+Log things at subclasses, particularly HTTPServer
+* Server Starts (info)
+* Server stops (info)
+* Client Conencts (info)
+* Client leaves (info)
+* Server restarts (info)
+* Log Errors (method name) (error)
+* On each request (GET, POST, PUT, DELETE) (info)
+*
+ */
+
+/*
+Note: I've used logging in ClientManager and TestOneServer thus far.
  */
