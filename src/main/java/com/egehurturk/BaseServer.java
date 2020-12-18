@@ -35,7 +35,7 @@ import java.util.Properties;
  * socket itself, and then passed into BufferedReader and PrintWriter.
  *
  *
- * @see com.sun.net.httpserver.HttpsServer
+ * @see HttpServer
  *
  * @author      Ege Hurturk
  * @version     1.0 - SNAPSHOT
@@ -314,7 +314,16 @@ public abstract class BaseServer {
      */
     public abstract void stop() throws IOException;
 
-    // restart, reload
+
+    /**
+     * Restarts the server. Not sure if it is needed
+     */
+    public void restart() {}
+
+    /**
+     * Restarts the server. Not sure if it is needed
+     */
+    public void reload() {}
 
     /**
      * Configures the server by the default properties file
@@ -330,6 +339,7 @@ public abstract class BaseServer {
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
             logger.info("");
         } catch (UnknownHostException e) {
+            // TODO: Logging
             System.err.println("Server name " + HOST_PROP + "that you passed into the configurations file " +
                     "(<name>.properties) is not valid. Make sure the host name exists or valid, or change" +
                     "the property. ");
@@ -350,6 +360,7 @@ public abstract class BaseServer {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
         } catch (UnknownHostException e) {
+            // TODO: Logging
             System.err.println("Server name " + HOST_PROP + "that you passed into the configurations file " +
                     "(<name>.properties) is not valid. Make sure the host name exists or valid, or change" +
                     "the property. ");
@@ -386,6 +397,7 @@ public abstract class BaseServer {
                     });
         }
         catch (IOException err) {
+            // TODO: Logging
             System.err.println("System Configuration Error: Are you sure that a properties" +
                                " file is located under resources folder as stated in standard Maven " +
                                " directory template?");
@@ -496,6 +508,7 @@ public abstract class BaseServer {
                 }
 
             } catch (IOException e) {
+                // TODO: Logging
                 System.err.println("Something wrong happened with the client socket " +
                         ", status code = 1");
             }
@@ -518,49 +531,6 @@ public abstract class BaseServer {
         return new ConnectionManager(cli);
     }
 
-
 }
 
-/*
- * TODO: Consider adding a pool field for your baseserver class, for threading
- * TODO: To be static or not to be static? Decide on your fields.
- */
-
-
-/* Useful links:
- *      - Java.net package docs: https://docs.oracle.com/javase/8/docs/api/java/net/package-summary.html
- *      - Java.io package docs: https://docs.oracle.com/javase/8/docs/api/java/io/package-summary.html
- *      - Wiki Checked & Unchecked exceptions: https://en.wikibooks.org/wiki/Java_Programming/Checked_Exceptions#
- *      - Metadata design: https://stackoverflow.com/questions/29592216/how-should-i-store-metadata-in-an-object
- *      - Java doc standards: https://blog.joda.org/2012/11/javadoc-coding-standards.html
- *      - How to override inner classes?
- *          https://stackoverflow.com/questions/7588091/how-to-override-extend-an-inner-class-from-a-subclass
- *
- *      - HttpServer class in  com.sun.net.httpserver
- *      - Classes in  com.sun.net.httpserver
- *      - ServerImpl class in sun.net.httpserver
- */
-
-/*
-Initserver method that initializes server with either (overload):
-    - Properties file
-    - or void
-Call this with constructors
- */
-
-/*
-when do you want to log things?
-Log things at subclasses, particularly HTTPServer
-* Server Starts (info)
-* Server stops (info)
-* Client Conencts (info)
-* Client leaves (info)
-* Server restarts (info)
-* Log Errors (method name) (error)
-* On each request (GET, POST, PUT, DELETE) (info)
-*
- */
-
-/*
-Note: I've used logging in ClientManager and TestOneServer thus far.
- */
+// end of class

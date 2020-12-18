@@ -1,0 +1,49 @@
+/* Useful links:
+ *      - Java.net package docs: https://docs.oracle.com/javase/8/docs/api/java/net/package-summary.html
+ *      - Java.io package docs: https://docs.oracle.com/javase/8/docs/api/java/io/package-summary.html
+ *      - Wiki Checked & Unchecked exceptions: https://en.wikibooks.org/wiki/Java_Programming/Checked_Exceptions#
+ *      - Metadata design: https://stackoverflow.com/questions/29592216/how-should-i-store-metadata-in-an-object
+ *      - Java doc standards: https://blog.joda.org/2012/11/javadoc-coding-standards.html
+ *      - How to override inner classes?
+ *          https://stackoverflow.com/questions/7588091/how-to-override-extend-an-inner-class-from-a-subclass
+ */
+
+/*
+when do you want to log things?
+Log things at subclasses, particularly HTTPServer
+* Server Starts (info)
+* Server stops (info)
+* Client Conencts (info)
+* Client leaves (info)
+* Server restarts (info)
+* Log Errors (method name) (error)
+* On each request (GET, POST, PUT, DELETE) (info)
+*
+*/
+
+/*
+Note: I've used logging in ClientManager and TestOneServer thus far.
+ */
+
+/*
+This server should be run from CLI, by using a bash file:
+    TCP Operations
+    - `$ banzai run --name Hey`                                 (runs default TCP server, port 8080, localhost)
+    - `$ banzai run -p 8080 -h localhost -b 50 --name Hey`      (runs TCP server with CLA config)
+    - `$ banzai stop --name Hey`                                (stops TCP server)
+    ------------------------------------------------------------
+    Run with Config
+    - `$ banzai config -filepath <...> --name Hey`              (configs TCP server)
+    - `$ banzai run --name Hey`                                 (runs the configured server)
+    ------------------------------------------------------------
+    Ops on running server
+    - `$ banzai connect -p 8080 -h localhost`                   (connects to specified port and host as TCP/IP)
+    - `$ banzai echo -p 8080 -h localhost -m "Hello" `          (tests the server)
+    - `$ banzai inspect -p 8080 -h localhost`                   (inspects the specified port and host) [META]
+    - `$ banzai list`                                           (lists the running servers)
+    ------------------------------------------------------------
+    Http Versions
+    - `$ banzai run http --name Hey`                            (runs default HTTP server, port 8080, localhost)
+    - `$ banzai run http -p 8080 -h localhost -b 50 --name Hey` (runs HTTP server with CLA config)
+    - `$ banzai stop http --name Hey`                           (stops HTTP server)
+ */
