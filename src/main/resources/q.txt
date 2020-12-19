@@ -47,3 +47,8 @@ This server should be run from CLI, by using a bash file:
     - `$ banzai run http -p 8080 -h localhost -b 50 --name Hey` (runs HTTP server with CLA config)
     - `$ banzai stop http --name Hey`                           (stops HTTP server)
  */
+
+ TODO: HttpServer class
+ TODO: Properties for new defined values
+ TODO: Think about how to store, parse, write HTTP Headers
+ TODO: Think about how to open and read HTML files

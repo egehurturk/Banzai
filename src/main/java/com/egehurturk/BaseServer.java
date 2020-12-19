@@ -337,6 +337,7 @@ public abstract class BaseServer {
         try {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
+            // TODO: LOGGING
             logger.info("");
         } catch (UnknownHostException e) {
             // TODO: Logging

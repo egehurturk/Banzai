@@ -6,11 +6,47 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-public class HttpServer extends BaseServer {
+/**
+ * HTTP Server for providing HTTP connection. Uses TCP as
+ * 4th layer defined in <b>OSI</b> for a server-client based server
+ * This class is a child of {@link BaseServer} class which provides
+ * abstraction over TCP/IPv4 communication. This class also overrides the
+ * inner class {@link com.egehurturk.BaseServer.ConnectionManager}. A lot of
+ * work (processing HTTP requests) is done inside the {@link com.egehurturk.BaseServer.ConnectionManager}
+ * class.
+ *
+ * <p> Provides methods for parsing, reading, sending HTTP headers.
+ * Configured via these fields:
+ * <ul>
+ *     <li>Server port</li>
+ *     <li>Server host</li>
+ *     <li>Backlog</li>
+ * </ul>
+ *
+ * <p> In general, each connection request made of a client is accepted by
+ * {@link ServerSocket}. Inner class {@link ConnectionManager} handles the
+ * connection.
+ *
+ * Uses {@code BufferedReader} and {@code PrintWriter} for communicating with
+ * sockets. {@code InputStream} and {@code OutputStream} are received by the
+ * socket itself, and then passed into BufferedReader and PrintWriter.
+ *
+ * @author      Ege Hurturk
+ * @version     1.0 - SNAPSHOT
+ */
 
+public class HttpServer extends BaseServer {
+    /* Extends {@link BaseServer} class for base TCP/IPv4 connection activity */
+
+    /**
+     * Chained constructor for initalizing with only port.
+     * @param serverPort                - server port that the HTTP server is running on
+     * @throws UnknownHostException     - required for {@link InetAddress} to hold the host name (IPv4)
+     */
     public HttpServer(int serverPort) throws UnknownHostException {
         super(serverPort);
     }
@@ -98,3 +134,6 @@ public class HttpServer extends BaseServer {
         return super.createManager(cli);
     }
 }
+
+// TODO: Think on your fields for only HTTP server class. Create constructors accordingly
+//
