@@ -78,6 +78,34 @@ public abstract class BaseServer {
      *
      */
     protected int backlog;
+
+    /**
+     * Server name that is used in {@link HttpServer} class
+     * in HTTP Protocol headers. Although usage is not limited for
+     * HTTP, any child class that inherits this class should have
+     * a name to run the server. Look for {@code q.txt} file for
+     * future usages of the servers
+     */
+    protected String name;
+
+    /**
+     * Web Root that HTML files live in. This is a directory
+     * that is the base URL. This directory will be considered and
+     * used as a directory and {@link ConnectionManager} will look
+     * for the path in this directory
+     *
+     * E.g.
+     *  root_dir
+     *      |- www
+     *          | - index.html
+     *      |- src
+     *          | main
+     *          ...
+     *  When a path is requested, e.g localhost:9090/index.html, {@link ConnectionManager}
+     *  will look in <i>www/index.html</i>.
+     */
+    protected String webRoot;
+
     /**
      * The main reader that reads the client's socket output.
      * Stream is buffered as to provide efficient reading of
@@ -142,6 +170,8 @@ public abstract class BaseServer {
      */
     protected static String PORT_PROP = "server.port";
     protected static String HOST_PROP = "server.host";
+    protected static String NAME_PROP = "server.name";
+    protected static String WEBROOT_PROP = "server.webroot";
 
     /**
      * File location of {@code .properties} file located
@@ -165,7 +195,7 @@ public abstract class BaseServer {
      * @throws  UnknownHostException    - Required for {@code .getLocalHost()}.
      */
     public BaseServer (int serverPort) throws UnknownHostException {
-        this(serverPort, InetAddress.getLocalHost(), 50);
+        this(serverPort, InetAddress.getLocalHost(), 50, "unnamed", "www");
     }
 
     /**
@@ -183,18 +213,29 @@ public abstract class BaseServer {
      * @param serverPort                    - Server port that ServerSocket listens on
      * @param serverHost                    - Server host that ServerSocket operates in ("localhost")
      * @param backlog                       - Number of pending requests in the queue
+     * @param name                          - Name of the server for running or stopping from CL
+     * @param webRoot                       - Web Root of the server for URL processing
      *
      * @throws IllegalArgumentException     - Throws for value of port that is out of range, described below
      *
      */
     public BaseServer (int serverPort, InetAddress serverHost,
-                       int backlog
+                       int backlog, String name, String webRoot
                        ) {
         if (serverPort < 0 || serverPort > 65535) {
             // Server port should be between 0 and 65535, that is the default
             // for ServerSocket class
             throw new IllegalArgumentException(
-                    "Port value out of range for server "
+                    "Port value out of range for server"
+            );
+        }
+
+        // TODO: Check if the webRoot string is present as a directory
+
+        if (name.length() > 20) {
+            throw new IllegalArgumentException(
+                    "Length of server name is greater than 20. Try to make the " +
+                            "name smaller"
             );
         }
 
@@ -212,6 +253,8 @@ public abstract class BaseServer {
         this.serverPort = serverPort;
         this.serverHost = serverHost;
         this.backlog = backlog;
+        this.name = name;
+        this.webRoot = webRoot;
     }
 
     /**
@@ -236,6 +279,22 @@ public abstract class BaseServer {
      */
     public int getBacklog() {
         return backlog;
+    }
+
+    /**
+     * Getter for name
+     * @return  name - name of the server
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Getter for webRoot
+     * @return  webroot - web root of the server
+     */
+    public String getWebRoot() {
+        return webRoot;
     }
 
     /**
@@ -277,6 +336,7 @@ public abstract class BaseServer {
     public static void setLogger(Logger logger) {
         BaseServer.logger = logger;
     }
+
 
     /**
      * Accept any client that is connected to the BaseServer
@@ -337,6 +397,9 @@ public abstract class BaseServer {
         try {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
+            this.name = this.config.getProperty(NAME_PROP); // already a string
+            // TODO: check if the directory is present or not. Create a private method for that
+            this.webRoot = this.config.getProperty(WEBROOT_PROP);
             // TODO: LOGGING
             logger.info("");
         } catch (UnknownHostException e) {
@@ -360,6 +423,9 @@ public abstract class BaseServer {
         try {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
+            this.name = this.config.getProperty(NAME_PROP); // already a string
+            // TODO: check if the directory is present or not. Create a private method for that
+            this.webRoot = this.config.getProperty(WEBROOT_PROP);
         } catch (UnknownHostException e) {
             // TODO: Logging
             System.err.println("Server name " + HOST_PROP + "that you passed into the configurations file " +
