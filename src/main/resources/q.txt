@@ -49,6 +49,5 @@ This server should be run from CLI, by using a bash file:
  */
 
  TODO: HttpServer class
- TODO: Properties for new defined values
  TODO: Think about how to store, parse, write HTTP Headers
  TODO: Think about how to open and read HTML files

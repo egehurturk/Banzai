@@ -8,6 +8,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -103,6 +105,11 @@ public abstract class BaseServer {
      *          ...
      *  When a path is requested, e.g localhost:9090/index.html, {@link ConnectionManager}
      *  will look in <i>www/index.html</i>.
+     *
+     *  Note that the webRoot should be an outer directory which does
+     *  not live in src file. The standard directory structure includes
+     *  that "www" specifies the root/www, ./src/main/www specifies a directory
+     *  inside the src/main directory.
      */
     protected String webRoot;
 
@@ -230,8 +237,13 @@ public abstract class BaseServer {
             );
         }
 
-        // TODO: Check if the webRoot string is present as a directory
-
+        if (!isDirectory(webRoot)) {
+            // TODO: Logging
+            throw new IllegalArgumentException(
+                "Web root directory not found. It should be placed in \"root/www\" where root" +
+                        "is the top parent directory."
+            );
+        }
         if (name.length() > 20) {
             throw new IllegalArgumentException(
                     "Length of server name is greater than 20. Try to make the " +
@@ -353,7 +365,7 @@ public abstract class BaseServer {
      * @see ConnectionManager
      * @see
      */
-    public abstract void start() throws IOException; // MODIFIED THIS!!! RETURN VOID
+    public abstract void start() throws IOException;
 
     /**
      * Closes the socket channels for both {@code ServerSocket} object
@@ -391,6 +403,8 @@ public abstract class BaseServer {
      * Note for future:
      *  - You have a constructor to configure, and this method to configure. Decide
      *    which one to use.
+     *
+     * @throws IllegalArgumentException     - where the web root directory is not correct
      */
     public void configureServer() {
         this.config = serveConfigurations(System.getProperties(), propertiesStream);
@@ -398,7 +412,15 @@ public abstract class BaseServer {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
             this.name = this.config.getProperty(NAME_PROP); // already a string
-            // TODO: check if the directory is present or not. Create a private method for that
+
+            if (!isDirectory(webRoot)) {
+                // TODO: Logging
+                throw new IllegalArgumentException(
+                        "Web root directory not found. It should be placed in \"root/www\" where root" +
+                                "is the top parent directory."
+                );
+            }
+
             this.webRoot = this.config.getProperty(WEBROOT_PROP);
             // TODO: LOGGING
             logger.info("");
@@ -424,7 +446,14 @@ public abstract class BaseServer {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
             this.name = this.config.getProperty(NAME_PROP); // already a string
-            // TODO: check if the directory is present or not. Create a private method for that
+
+            if (!isDirectory(webRoot)) {
+                // TODO: Logging
+                throw new IllegalArgumentException(
+                        "Web root directory not found. It should be placed in \"root/www\" where root" +
+                                "is the top parent directory."
+                );
+            }
             this.webRoot = this.config.getProperty(WEBROOT_PROP);
         } catch (UnknownHostException e) {
             // TODO: Logging
@@ -448,6 +477,7 @@ public abstract class BaseServer {
         Properties serverConfig = new Properties();
         try {
             if (file == null) {
+                // TODO: Logging
                 throw new IOException("System Configuration Error: Are you sure that a properties" +
                         " file is located under resources folder as stated in standard Maven " +
                         " directory template?");
@@ -470,6 +500,20 @@ public abstract class BaseServer {
                                " directory template?");
         }
         return serverConfig;
+    }
+
+    /**
+     * Check if a directory exists in the file structure. Essential
+     * for {@link HttpServer} for containing {@code HTML} files.
+     *
+     * @param dirPath               - Directory path where static and public
+     *                              files live in. Default value is <i>www</i>.
+     *                              See {@link #BaseServer(int, InetAddress, int, String, String)}
+     *
+     * @return  boolean             - returns true if a direcetory exists
+     */
+    protected boolean isDirectory(String dirPath) {
+        return Files.isDirectory(Paths.get(dirPath));
     }
 
     /**

@@ -55,8 +55,8 @@ public class HttpServer extends BaseServer {
         super();
     }
 
-    public HttpServer(int serverPort, InetAddress serverHost, int backlog) {
-        super(serverPort, serverHost, backlog);
+    public HttpServer(int serverPort, InetAddress serverHost, int backlog, String name, String webRoot) {
+        super(serverPort, serverHost, backlog, name, webRoot);
     }
 
     @Override
