@@ -80,6 +80,8 @@ public interface HttpValues {
      */
     public interface Headers {
         /**
+         * =========== GENERAL ============
+         *
          * Connection: controls whether or not the network connection stays open after the current
          *             transaction finishes. If the value sent is keep-alive, the connection is
          *             persistent and not closed, allowing for subsequent requests to the same server to be done.
@@ -89,7 +91,10 @@ public interface HttpValues {
          * </i>
          */
         String CONN = "Connection: ";
+
         /**
+         *  ============= REQUEST =============
+         *
          * Accept: advertises which content types, expressed as MIME types,
          *         the client is able to understand. Using content negotiation, the server then selects one of the proposals,
          *         uses it and informs the client of its choice with the Content-Type response header.
@@ -103,7 +108,10 @@ public interface HttpValues {
          * </i>
          */
         String ACCEPT = "Accept: ";
+
         /**
+         * =============== REQUEST===============
+         *
          * Encoding: The Accept-Encoding request HTTP header advertises which content encoding,
          *           usually a compression algorithm, the client is able to understand. Using content negotiation,
          *           the server selects one of the proposals, uses it and informs the client of its choice with the
@@ -114,7 +122,10 @@ public interface HttpValues {
          *  </i>
          */
         String ACCEPT_ENCODING = "Accept-Encoding: ";
+
         /**
+         * ============= REQUEST ==============
+         *
          * Language: advertises which languages the client is able to understand,
          *           and which locale variant is preferred. (By languages, we mean natural languages,
          *           such as English, and not programming languages.) Using content negotiation,
@@ -126,7 +137,10 @@ public interface HttpValues {
          * </i>
          */
         String ACCEPT_LANGUAGE = "Accept-Language: ";
+
         /**
+         * ============== GENERAL ============
+         *
          * Cache Control: holds directives (instructions) for caching in both requests and responses.
          * <i>
          *     Cache-Control: max-age=<seconds>
@@ -139,7 +153,9 @@ public interface HttpValues {
          * </i>
          */
         String CACHE_CONTROL = "Cache-Control: ";
+
         /**
+         * ============== RESPONSE ==============
          * Host: The Host request header specifies the host and port number of the server to which the
          *       request is being sent.
          *
@@ -148,7 +164,9 @@ public interface HttpValues {
          * </i>
          */
         String HOST = "Host: ";
+
         /**
+         * =================== RESPONSE =============
          * Cookie: contains stored HTTP cookies associated with the server (i.e. previously sent by the server with th-
          *         e Set-Cookie header or set in Javascript using Document.cookie).
          *
@@ -164,30 +182,36 @@ public interface HttpValues {
          */
         String COOKIE = "Cookie: ";
 
-        // Main line Of HTTP
 
         /**
+         * =============== REQUEST =============
          * Resource: The URL path associated with the request. This is where the HTML file lives in
          * <i>
          *    GET [/index.html] HTTP/1.1
          * </i>
          */
         String URL_RESOURCE = "resource";
+
         /**
+         * =============== REQUEST =============
          * Method: The method associated with the request.
          * <i>
          *      [GET] /index.html HTTP/1.1
          * </i>
          */
         String METHOD = "method";
+
         /**
+         * =========== REQUEST ==============
          * Protocol: The protocol associated with the request.
          * <i>
          *     GET /index.html [HTTP/1.1]
          * </i>
          */
         String PROTOCOL = "protocol";
+
         /**
+         * ============= RESPONSE ================
          * Server: describes the software used by the origin server that handled the request —
          *         that is, the server that generated the response.
          *
@@ -196,7 +220,9 @@ public interface HttpValues {
          * </i>
          */
         String SERVER = "Server: "; // config in properties file "server.name = ..."
+
         /**
+         * ================ REQUEST ================
          * User Agent:  is a characteristic string that lets servers and network peers identify the application,
          *              operating system, vendor, and/or version of the requesting user agent.
          * <i>
@@ -204,14 +230,20 @@ public interface HttpValues {
          * </i>
          */
         String USER_AGENT = "User-Agent: ";
+
         /**
+         * ============== RESPONSE ==========
+         *
          * Date: contains the date and time at which the message was originated.
          * <i>
          *     Date: Wed, 21 Oct 2015 07:28:00 GMT
          * </i>
          */
         String DATE = "Date: ";
+
         /**
+         * =============== GENERAL (POST IN REQUEST, NORMAL IN RESPONSE) ===============
+         *
          * Content Type: is used to indicate the media type of the resource.
          *               In responses, a Content-Type header tells the client what the content type of the returned
          *               content actually is.
@@ -222,14 +254,20 @@ public interface HttpValues {
          *  </i>
          */
         String CONTENT_TYPE = "Content-Type: ";
+
         /**
+         * =============== GENERAL (POST IN REQUEST, NORMAL IN RESPONSE) ===============
+         *
          * Content Length: indicates the size of the entity-body, in bytes, sent to the recipient.
          * <i>
          *     Content-Length: <length>
          * </i>
          */
         String CONTENT_LENGTH = "Content-Length: ";
+
         /**
+         * =============== GENERAL (POST IN REQUEST, NORMAL IN RESPONSE) ===============
+         *
          * Content Encoding:  is used to compress the media-type. When present, its value indicates which encodings
          *                    were applied to the entity-body. It lets the client know how to decode in order to
          *                    obtain the media-type referenced by the Content-Type header.
@@ -253,7 +291,10 @@ public interface HttpValues {
          *  </ul>
          */
         String CONTENT_ENCODING = "Content-Encoding: ";
+
         /**
+         * =============== GENERAL (POST IN REQUEST, NORMAL IN RESPONSE) ===============
+         *
          * Content Language: used to describe the language(s) intended for the audience,
          *                   so that it allows a user to differentiate according to the users' own preferred language.
          * <i>
@@ -265,3 +306,9 @@ public interface HttpValues {
         String CONTENT_LANGUAGE = "Content-Language: ";
     }
 }
+
+/*
+Notes:
+    - Headers that starts with Accept-... is sent by client, which expresses things they accept only
+    - Server propose's a content_type response based on these Accept's.
+ */
