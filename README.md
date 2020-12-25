@@ -22,15 +22,11 @@
 -->
 [![GitHub contributors](https://img.shields.io/github/contributors/egehurturk/HttpServer)](https://GitHub.com/egehurturk/HttpServer/graphs/contributors/)
 <br/>
-<br/>
 [![Forks](https://img.shields.io/github/forks/egehurturk/HttpServer?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/Naereen/StrapDown.js/network/)
-<br/>
 <br/>
 [![Stargazers](https://img.shields.io/github/stars/egehurturk/HttpServer?style=social&label=Star&maxAge=2592000)](https://GitHub.com/egehurturk/HttpServer/stargazers/)
 <br/>
-<br/>
 [![Issues](https://img.shields.io/github/issues/egehurturk/HttpServer)](https://GitHub.com/egehurturk/HttpServer/issues/)
-<br/>
 <br/>
 
 
