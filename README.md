@@ -30,11 +30,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/github_username/repo_name">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
 
-  <h3 align="center">Banzai Server (A HTTP Server)</h3>
+  <h2 align="center">Banzai Server (A HTTP Server)</h3>
 
   <p align="center">
     A non-blocking, event-driven Http server from scratch, using plain Java. No additional dependencies (look at [#built-with]) is needed. 
@@ -42,7 +39,6 @@
     <a href="https://github.com/egehurturk/HttpServer"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    ·
     <a href="https://github.com/egehurturk/HttpServer/issues">Report Bug</a>
     ·
     <a href="https://github.com/egehurturk/HttpServer/issues">Request Feature</a>
@@ -123,11 +119,11 @@ Configuration can happen in two ways. One is to pass in CLA (Command Line Argume
   
   All command line arguments:
   <ol>
-    <li>`-p`: port numer that the server is running on</li>
-    <li>`-h`: host</li>
-    <li>`-b: backlog (maximum number of Http threads in queue)</li>
-    <li>`--name`: name of the server</li>
-    <li>`-w`: web root of server</li>
+  <li> -p: port numer that the server is running on</li>
+    <li> -h: host</li>
+    <li> -b: backlog (maximum number of Http threads in queue)</li>
+    <li> --name: name of the server</li>
+    <li> -w: web root of server</li>
   </ol>
   
 2. Using a `properties` file:
@@ -154,20 +150,5 @@ Contributions are what make the open source community such an amazing place to b
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo.svg?style=for-the-badge
-[contributors-url]:
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo.svg?style=for-the-badge
-[forks-url]: https://github.com/egehurturk/HttpServer/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo.svg?style=for-the-badge
-[stars-url]: https://github.com/egehurturk/HttpServer/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo.svg?style=for-the-badge
-[issues-url]: https://github.com/egehurturk/HttpServer/issues
-
 
 
