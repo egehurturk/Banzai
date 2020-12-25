@@ -24,7 +24,6 @@
 [![Forks](https://img.shields.io/github/forks/Naereen/StrapDown.js.svg?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/Naereen/StrapDown.js/network/)
 [![Stargazers](https://img.shields.io/github/stars/Naereen/StrapDown.js.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/egehurturk/HttpServer/stargazers/)
 [![Issues](https://img.shields.io/github/issues/Naereen/StrapDown.js.svg)](https://GitHub.com/egehurturk/HttpServer/issues/)
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 
 
@@ -169,6 +168,6 @@ Contributions are what make the open source community such an amazing place to b
 [stars-url]: https://github.com/egehurturk/HttpServer/stargazers
 [issues-shield]: https://img.shields.io/github/issues/github_username/repo.svg?style=for-the-badge
 [issues-url]: https://github.com/egehurturk/HttpServer/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo.svg?style=for-the-badge
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/egehurturk
+
+
+
