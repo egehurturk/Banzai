@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.util.Properties;
@@ -103,7 +102,7 @@ public class HttpServer extends BaseServer {
     public void stop() throws IOException {
 
     }
-    
+
     @Override
     public void restart() {
         super.restart();
@@ -129,11 +128,67 @@ public class HttpServer extends BaseServer {
         return super.serveConfigurations(userConfig, file);
     }
 
-    @Override
-    protected ConnectionManager createManager(Socket cli) {
-        return super.createManager(cli);
-    }
+//    public static class ConnectionManager implements Runnable {
+//        /**
+//         * The client {@code Socket} object that is connected
+//         * to the {@code ServerSocket}, via accept() method:
+//         *
+//         * <p>The client (Socket object) is passed into the
+//         * constructor of this class. {@link #in} and {@link #out}
+//         * is achieved via the {@code InputStream} and
+//         * {@code OutputStream} of the client.
+//         *
+//         * <code>
+//         *     try {
+//         *         Socket client = server.accept()
+//         *         ConnectionManager manager = new ConnectionManager(client);
+//         *     }
+//         *
+//         * </code>
+//         *
+//         */
+//        private Socket client;
+//
+//        /**
+//         * Input for client socket. Everything
+//         * that the client sends to the server is
+//         * read by the {@code BufferedReader} object's
+//         * readline methods.
+//         */
+//        private BufferedReader in;
+//
+//        /**
+//         * Output for client socket. Send anything
+//         * to client with calling the printline method of
+//         * {@code PrintWriter}.
+//         */
+//        private PrintWriter out;
+//
+//        /**
+//         * Logger class for logging things
+//         */
+//        protected static Logger logger = LogManager.getLogger(BaseServer.ConnectionManager.class);
+//
+//        /**
+//         * Default constructor for this class.
+//         * @param socket         - the client socket that server accepts. All
+//         *                         input and output tasks are done with the socket's I/O streams.
+//         */
+//        protected ConnectionManager(Socket socket) {
+//            this.client = socket;
+//        }
+//
+//        @Override
+//        public void run() {
+//            System.out.println("Hello, World");
+//        }
+//    }
+
+   // @Override
+    //protected ConnectionManager createManager(Socket cli) {
+//        return new HttpServer.ConnectionManager(cli);
+    //}
 }
 
 // TODO: Think on your fields for only HTTP server class. Create constructors accordingly
-//
+// TODO: implement this class. Rewrite the methods
