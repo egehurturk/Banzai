@@ -20,10 +20,10 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![GitHub contributors](https://img.shields.io/github/contributors/Naereen/StrapDown.js.svg)](https://GitHub.com/egehurturk/HttpServer/graphs/contributors/)
-[![Forks](https://img.shields.io/github/forks/Naereen/StrapDown.js.svg?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/Naereen/StrapDown.js/network/)
-[![Stargazers](https://img.shields.io/github/stars/Naereen/StrapDown.js.svg?style=social&label=Star&maxAge=2592000)](https://GitHub.com/egehurturk/HttpServer/stargazers/)
-[![Issues](https://img.shields.io/github/issues/Naereen/StrapDown.js.svg)](https://GitHub.com/egehurturk/HttpServer/issues/)
+[![GitHub contributors](https://img.shields.io/github/contributors/egehurturk/HttpServer)](https://GitHub.com/egehurturk/HttpServer/graphs/contributors/)
+[![Forks](https://img.shields.io/github/forks/egehurturk/HttpServer?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/Naereen/StrapDown.js/network/)
+[![Stargazers](https://img.shields.io/github/stars/egehurturk/HttpServer?style=social&label=Star&maxAge=2592000)](https://GitHub.com/egehurturk/HttpServer/stargazers/)
+[![Issues](https://img.shields.io/github/issues/egehurturk/HttpServer)](https://GitHub.com/egehurturk/HttpServer/issues/)
 
 
 
