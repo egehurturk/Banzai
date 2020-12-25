@@ -34,7 +34,7 @@
   <h2 align="center">Banzai Server (A HTTP Server)</h3>
 
   <p align="center">
-    A non-blocking, event-driven Http server from scratch, using plain Java. No additional dependencies, look at [here](#built-with), is needed. 
+    A non-blocking, event-driven Http server from scratch, using plain Java. No additional dependencies, look at [here](#about-the-project), is needed. 
     <br />
     <a href="https://github.com/egehurturk/HttpServer"><strong>Explore the docs »</strong></a>
     <br />
