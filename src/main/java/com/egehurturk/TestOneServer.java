@@ -53,4 +53,14 @@ public class TestOneServer extends BaseServer {
         this.server.close();
 
     }
+
+    @Override
+    public void restart() {
+
+    }
+
+    @Override
+    public void reload() {
+
+    }
 }

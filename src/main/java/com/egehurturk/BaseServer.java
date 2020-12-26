@@ -390,12 +390,12 @@ public abstract class BaseServer {
     /**
      * Restarts the server. Not sure if it is needed
      */
-    public void restart() {}
+    public abstract void restart();
 
     /**
      * Restarts the server. Not sure if it is needed
      */
-    public void reload() {}
+    public abstract void reload();
 
     /**
      * Configures the server by the default properties file

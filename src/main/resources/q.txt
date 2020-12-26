@@ -51,3 +51,4 @@ This server should be run from CLI, by using a bash file:
  TODO: HttpServer class
  TODO: Think about how to store, parse, write HTTP Headers
  TODO: Think about how to open and read HTML files
+ TODO: Implement run method of httpserver
