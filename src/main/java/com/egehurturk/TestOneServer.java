@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -26,7 +27,7 @@ public class TestOneServer extends BaseServer {
 
         ExecutorService pool = Executors.newFixedThreadPool(500);
         logger.info("Server started on port " + 9090);
-        ServerSocket sv = new ServerSocket(9090);
+        ServerSocket sv = new ServerSocket(9090, 50, InetAddress.getByName("0.0.0.0"));
         while (true) {
             Socket cli = sv.accept();
             ConnectionManager manager = new ConnectionManager(cli);
