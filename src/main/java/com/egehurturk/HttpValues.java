@@ -9,7 +9,7 @@ public interface HttpValues {
      * HTTP Status codes for different situations
      * Here are the most common HTTP codes
      */
-    public interface StatusCode {
+    public interface StatusCodeMessage {
         /**
          * OK when everything is OK.
          */
@@ -47,6 +47,26 @@ public interface HttpValues {
         String NOT_IMPLEMENTED = " 501 Not Implemented";
     }
 
+    public interface Code {
+        int OK = 200;
+        int BAD_REQ = 400;
+        int FORBIDDEN = 403;
+        int NOT_FOUND = 404;
+        int METHOD_NOT_FOUND = 405;
+        int INTERNAL_ERROR = 500;
+        int NOT_IMPLEMENTED = 501;
+    }
+
+    public interface Messages {
+        String OK = "OK";
+        String BAD_REQ = "Bad Request";
+        String FORBIDDEN = "Forbidden";
+        String NOT_FOUND = "Not Found";
+        String METHOD_NOT_ALLOWED = "Method Not Allowed";
+        String INTERNAL_ERROR = "Internal Server Error";
+        String NOT_IMPLEMENTED = "Not Implemented";
+    }
+
     /**
      * HTTP Methods for communicating with the server
      */
@@ -71,7 +91,8 @@ public interface HttpValues {
          *  PUT request is used to send data to update a resource
          */
         String PUT = "PUT";
-        // head
+        String HEAD = "HEAD";
+        String OPTIONS = "OPTIONS";
     }
 
     /**
@@ -304,6 +325,8 @@ public interface HttpValues {
          * </i>
          */
         String CONTENT_LANGUAGE = "Content-Language: ";
+
+        String HTTP_V_1_1 = "HTTP/1.1";
     }
 }
 
