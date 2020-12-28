@@ -1,6 +1,7 @@
 package com.egehurturk;
 
 import com.egehurturk.lifecycle.HttpRequest;
+import com.egehurturk.lifecycle.HttpResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -341,9 +342,44 @@ public final class HttpServer extends BaseServer {
 
         /**
          * Http request for client.
+         *
+         * Example usage:
+         *
+         * <pre>
+         *
+         *     BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+         *     HttpRequest req = new HttpRequest(in);
+         *     // access req
+         *     System.out.println(req.method);
+         *
+         * </pre>
          */
-        protected HttpRequest req;
-        // TODO: response
+        protected HttpRequest req = null;
+
+        /**
+         * Http Response for client
+         *
+         * Example usage:
+         *
+         * <pre>
+         *
+         *     Map<String, String> headers = new Map<>();
+         *     headers.put("Content-Type", "text/html");
+         *     headers.put("Content-Length", "216");
+         *     String scheme = "HTTP/1.1";
+         *     int code = 404;
+         *     String message = "Not found"
+         *     String body  = "<H1>request path does not exist</H1>" // byte
+         *
+         *     try {
+         *         HttpResponse res = HttpResponse.create(headers, scheme, code, message, body); // set to the field
+         *     }
+         *     catch ({@link com.egehurturk.exceptions.HttpResponseException}) {...}
+         *
+         *
+         * </pre>
+         */
+        protected HttpResponse res = null;
 
         /**
          * Default constructor for this class.
@@ -365,13 +401,13 @@ public final class HttpServer extends BaseServer {
             this.req = new HttpRequest(new BufferedReader(
                     new InputStreamReader(this.client.getInputStream())
             ));
-            // TODO: Response
-
+            this.res = new HttpResponse();
         }
 
         // TODO: implement this
         @Override
         public void run() {
+
 
         }
 
