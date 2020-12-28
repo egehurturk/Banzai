@@ -605,6 +605,7 @@ public abstract class BaseServer {
                     while (true) {
                         String req = in.readLine();
                         logger.info("Client says " + req);
+                        // TODO: Handle null request
                         if (req.equals("/quit")) {
                             break;
                         }
