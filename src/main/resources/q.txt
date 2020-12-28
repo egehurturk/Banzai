@@ -6,6 +6,7 @@
  *      - Java doc standards: https://blog.joda.org/2012/11/javadoc-coding-standards.html
  *      - How to override inner classes?
  *          https://stackoverflow.com/questions/7588091/how-to-override-extend-an-inner-class-from-a-subclass
+ *      - https://stackoverflow.com/questions/13353592/while-reading-from-socket-how-to-detect-when-the-client-is-done-sending-the-requ
  */
 
 /*
