@@ -7,8 +7,11 @@ import com.egehurturk.exceptions.HttpRequestException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.StringTokenizer;
+
 
 /**
  * This server uses {@link HttpRequest} and {@link } to
@@ -119,6 +122,12 @@ public class HttpRequest {
         }
         String header = in.readLine();
 
+        if (!checkValidHttpRequest(header)) {
+            throw new HttpRequestException("Request does not match HTTP standards. Check the request again" +
+                    "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
+                    "HTTP scheme (\"HTTP/1.1\"), and path");
+        }
+
         // construct a tokenizer from the first line, with a delimiter of " "
         StringTokenizer tokenizer = new StringTokenizer(header);
         this.method = tokenizer.nextToken().toUpperCase(); // ensure it is all upper ("GET")
@@ -145,15 +154,54 @@ public class HttpRequest {
         }
         // in POST requests
         String bodyMsg;
-        StringBuffer _bodyTemplate = new StringBuffer();
+        StringBuilder _bodyTemplate = new StringBuilder();
         while ( (bodyMsg = in.readLine()) != null ) {
             _bodyTemplate.append(bodyMsg).append("\r\n"); // append carriage return
         }
         this.body = _bodyTemplate.toString().getBytes();
     }
 
+    public HashMap<String, String> toMap() {
+        HashMap<String, String> map = new HashMap<String, String>();
+
+        // first lines
+        map.put(HttpValues.Headers.METHOD, this.method);
+        map.put(HttpValues.Headers.URL_RESOURCE, this.path);
+        map.put(HttpValues.Headers.PROTOCOL, this.scheme);
+
+        for (String key : this.headers.keySet()) {
+            map.put(key, this.headers.getOrDefault(key, ""));
+        }
+        return map;
+    }
+
+    private boolean checkValidHttpRequest(String firstLine) {
+
+        StringTokenizer _token = new StringTokenizer(firstLine);
+        String method = _token.nextToken().toUpperCase();
+        String path = _token.nextToken().toLowerCase(); // not interested
+        String scheme = _token.nextToken();
+
+        // check scheme
+        if (!scheme.equals(HttpValues.Headers.HTTP_V_1_1)) {
+            // TODO: Logging, Throw an exception
+            return false;
+        }
+
+        // check method
+        String[] methods = {HttpValues.Method.GET, HttpValues.Method.HEAD, HttpValues.Method.OPTIONS,
+                            HttpValues.Method.POST, HttpValues.Method.PUT};
+        List<String> list = Arrays.asList(methods);
+        if (!list.contains(method)) {
+            // TODO: Logging, throw an exception
+            System.out.println(); // DELETE
+            return false;
+        }
+        return true;
+    }
+
+
+
 }
 
 /* https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages */
-/* TODO: Think about the methods for this class */
-/* TODO: Create a method to enclose every field in a map. Call this headers. Remove META Map and make every header a field*/
