@@ -1,5 +1,6 @@
 package com.egehurturk;
 
+import com.egehurturk.exceptions.FileSizeOverflowException;
 import com.egehurturk.lifecycle.HttpRequest;
 import com.egehurturk.lifecycle.HttpResponse;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,10 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.util.Properties;
 
 /**
@@ -382,6 +387,12 @@ public final class HttpServer extends BaseServer {
         protected HttpResponse res = null;
 
         /**
+         * Maximum length of a file which stores web page
+         * 20_000 bytes is 20kb
+         */
+        protected long MAX_FILE_LENGTH = 20000000000L;
+
+        /**
          * Default constructor for this class.
          * @param socket                        - the client socket that server accepts. All
          *                                          input and output tasks are done with the socket's I/O streams.
@@ -411,8 +422,133 @@ public final class HttpServer extends BaseServer {
 
         }
 
-        // TODO: implement this
-        private byte[] readFile(File file) throws IOException {return new byte[5];}
+        /**
+         * Reads file from given {@link File} object. This method uses "old"
+         * {@link java.io} style, where the source is coming from {@link InputStream}
+         * and {@link OutputStream}, more specifically {@link FileInputStream}.
+         * A buffer ({@code byte[] array} is used to buffer file contents from {@link InputStream}
+         * This method closes all streams
+         *
+         * @param file                              - {@link File} object that is the file to be read
+         * @return                                  - {@code byte[] array} buffer
+         * @throws IOException                      - IO operation error
+         * @throws FileSizeOverflowException        - If file length is very long
+         */
+        private byte[] readFile_IO(File file) throws IOException, FileSizeOverflowException {
+            if (file.length() > MAX_FILE_LENGTH) {
+                throw new com.egehurturk.exceptions.FileSizeOverflowException("File " +
+                        file.getName() + "is too big to handle. Server accepts " +
+                        MAX_FILE_LENGTH + " file size, the requested file is " +
+                        file.length() + " bytes.");
+            }
+
+            byte[] _buffer = new byte[(int) file.length()];
+            InputStream in = null;
+
+            try {
+                in = new FileInputStream(file);
+                if ( in.read(_buffer) == -1 ) {
+                   throw new IOException(
+                           "EOF reached while reading file. File is probably empty");
+                }
+            }
+            finally {
+                try {
+                    if (in != null)
+                        in.close();
+                }
+                catch (IOException err) {
+                    // TODO Logging
+                    err.printStackTrace();
+                }
+            }
+            return _buffer;
+        }
+
+
+        /**
+         * Reads file from given {@link File} object. This method uses "new"
+         * {@link java.nio} style, where the source is coming from {@link java.nio.channels.Channel}
+         * more specifically {@link FileChannel}.
+         * A buffer ({@link ByteBuffer} is used to buffer file contents from {@link FileChannel}
+         * This method closes all channels and returns {@link ByteBuffer} as {@code byte[]} array
+         *
+         * @param file                              - {@link File} object that is the file to be read
+         * @return                                  - {@code byte[] array} buffer (from {@link ByteBuffer})
+         * @throws IOException                      - IO operation error
+         */
+        private byte[] readFile_NIO(File file) throws IOException {
+            RandomAccessFile rFile = new RandomAccessFile(file.getName(), "rw");
+            FileChannel inChannel = rFile.getChannel();
+
+            ByteBuffer _buffer = ByteBuffer.allocate(1024);
+
+            // read from buffer to channel
+            int bytesRead = inChannel.read(_buffer);
+
+            while (bytesRead != -1) {
+                // flip buffer to read
+                _buffer.flip();
+
+                while (_buffer.hasRemaining()) {
+                    // read from buffer and store it in byte
+                    byte b = _buffer.get();
+                }
+                // clear for overflow
+                _buffer.clear();
+
+                // read the buffer again
+                bytesRead = inChannel.read(_buffer);
+            }
+            // close all channels
+            inChannel.close();
+            rFile.close();
+            return _buffer.array();
+        }
+
+        /**
+         * This method uses a direct approach and uses the "new"
+         * style, {@link java.nio}.
+         * @param file              - {@link File} to be read
+         * @return                  - {@code byte[]} array, buffer
+         * @throws IOException      - IO operation error
+         */
+        private byte[] readFile_NIO_DIRECT(File file) throws IOException {
+            byte[] buffer = Files.readAllBytes(file.toPath());
+            return buffer;
+        }
+
+        /**
+         * A "fast" approach to read from a {@link File} with {@link MappedByteBuffer}
+         * However, in my experiments, this resulted in the slowest performance, whereas
+         * {@link #readFile_IO(File)} was the fastest
+         *
+         * @param file               - {@link File} to be read
+         * @return                   - {@link MappedByteBuffer} object
+         * @throws IOException       - IO operation error
+         */
+        private MappedByteBuffer read_NIO_MAP(File file) throws IOException {
+            RandomAccessFile rFile = new RandomAccessFile(file.getName(), "rw");
+            FileChannel inChannel = rFile.getChannel();
+
+            // create a new mappedbyte buffer
+            MappedByteBuffer buffer = inChannel.map(
+                    FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
+
+            // load the buffer
+            buffer.load();
+            for (int i = 0; i < buffer.limit(); i++)
+            {
+                // get from buffer
+                byte a = buffer.get();
+            }
+            buffer.clear();
+
+            // close all the channels
+            inChannel.close();
+            rFile.close();
+            return buffer;
+        }
     }
 
 
