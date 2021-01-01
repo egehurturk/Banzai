@@ -98,6 +98,18 @@ public class HttpResponse {
     public HttpResponse() {}
 
 
+    /**
+     * Creates {@link this}
+     * @param map                       - Headers for <b>response</b>. Note that this map does not
+     *                                  contain <u>any headers</u> for request. This map is written
+     *                                  manually by the server
+     * @param scheme                    - Http scheme (HTTP/1.1)
+     * @param code                      - Status code
+     * @param message                   - Status message
+     * @param body                      - Content body
+     * @return                          - new {@link HttpResponse} object
+     * @throws HttpResponseException    - any errors associated with response lifecycle
+     */
     public static HttpResponse create(HashMap<String, String> map, String scheme, int code, String message, String body)
             throws HttpResponseException {
         HttpResponse resp = new HttpResponse();
@@ -157,8 +169,3 @@ public class HttpResponse {
 
 
 }
-
-// TODO: Check HttpRequest's toMap method
-// TODO: Implement resToMap method
-// TODO: Think about how to use this class.
-// TODO: HttpServer should initialize a connection manager in constructor
