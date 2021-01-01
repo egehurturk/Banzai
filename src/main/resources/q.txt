@@ -49,9 +49,29 @@ This server should be run from CLI, by using a bash file:
     - `$ banzai stop http --name Hey`                           (stops HTTP server)
  */
 
+ Pseudocode:
+ 1. Client Connects
+ 2. Client sends a request
+ 3. Server parses the request, stores it into HttpRequest
+ 4. Server analyzes the request, "do things" accordingly to the request data:
+ 	* Get method, scheme, path
+ 	* Prepare HTML file, status codes, messages
+ 	* Behave according to HTTP headers:
+ 		* Accept, Connection, Accept-encoding, ...
+ 	* Send things according to methods
+
+ 5. Server prepares a HttpResponse
+ 6. Server sends the HttpResponse
+ 7. Server closes the connection with the client when the stream is flushed
+
+
  TODO: HttpServer class
  TODO: Think about how to store, parse, write HTTP Headers
  TODO: Think about how to open and read HTML files
  TODO: Implement run method of httpserver
  TODO: close the stream of client whenever the request is received and the response is sent. Otherwise
         it will cost too much
+ TODO: Think on your fields for only HTTP server class. Create constructors accordingly
+ TODO: implement this class. Rewrite the methods
+ TODO: Implement resToMap method in HttpResponse
+ TODO: HttpServer should initialize a connection manager in constructor
