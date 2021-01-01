@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
+// http://web-sniffer.net/rfc/rfc2616.html#section-14.1
+
+
 
 /**
  * This server uses {@link HttpRequest} and {@link } to
@@ -66,6 +69,9 @@ public class HttpRequest {
      *
      * Example:
      *  "/music/guitarists/jimi_hendrix/"
+     *
+     *  From RFC:
+     *  http_URL = "http:" "//" host [ ":" port ] [ abs_path [ "?" query ]]
      */
     public String path;
 
@@ -184,7 +190,7 @@ public class HttpRequest {
 
         // check scheme
         if (!scheme.equals(HttpValues.Headers.HTTP_V_1_1)) {
-            // TODO: Logging, Throw an exception
+            // TODO: Logging, Throw an exception, Throw HttpVersionNotSupportedError
             return false;
         }
 
@@ -193,7 +199,7 @@ public class HttpRequest {
                             HttpValues.Method.POST, HttpValues.Method.PUT};
         List<String> list = Arrays.asList(methods);
         if (!list.contains(method)) {
-            // TODO: Logging, throw an exception
+            // TODO: Logging, throw an exception, raise 501 (not implemented)
             System.out.println(); // DELETE
             return false;
         }
