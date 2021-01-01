@@ -16,6 +16,7 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -263,7 +264,7 @@ public final class HttpServer extends BaseServer {
      * work that is done inside the {@code run} method executes
      * in another Thread.
      *
-     * <p>This class uses {@link com.egehurturk.lifecycle.HttpRequest} object and TODO:link response class
+     * <p>This class uses {@link com.egehurturk.lifecycle.HttpRequest} object and {@link HttpResponse}
      * to implement the lifecycle of http requests. Any error or exception
      * associated with these classes are located inside {@link com.egehurturk.exceptions}
      *
@@ -418,7 +419,29 @@ public final class HttpServer extends BaseServer {
         // TODO: implement this
         @Override
         public void run() {
+            OutputStream put = null;
 
+            try {
+                this.in = new BufferedReader(
+                        new InputStreamReader(client.getInputStream())
+                );
+                this.out = new PrintWriter(client.getOutputStream(), false);
+                this.req = new HttpRequest(in);
+                Map<String, String> mappedReq = this.req.toMap();
+
+                String method = this.req.method;
+                String path = this.req.path;
+                String scheme = this.req.scheme;
+
+
+
+
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -564,5 +587,4 @@ public final class HttpServer extends BaseServer {
     }
 }
 
-// TODO: Think on your fields for only HTTP server class. Create constructors accordingly
-// TODO: implement this class. Rewrite the methods
+// ../resources/q.txt
