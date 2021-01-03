@@ -4,6 +4,8 @@ import com.egehurturk.BaseServer;
 import com.egehurturk.HttpServer;
 import com.egehurturk.HttpValues;
 import com.egehurturk.exceptions.HttpRequestException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -94,6 +96,9 @@ public class HttpRequest {
      */
     public String method;
 
+    // logger instance
+    protected static Logger logger = LogManager.getLogger(HttpRequest.class);
+
     /**
      * Other headers that are not specified as a field
      * in this object.
@@ -106,11 +111,11 @@ public class HttpRequest {
         }
         catch (IOException err){
             err.printStackTrace();
-            // TODO: Logging
+            logger.error("[ERROR]: Could not parse client request");
         }
         catch (HttpRequestException err) {
             err.printStackTrace();
-            // TODO: Logging
+            logger.error("[ERROR] Could not parse client request");
         }
 
     }
@@ -122,13 +127,14 @@ public class HttpRequest {
         // 3. HTTP Version or Scheme
         // GET /index.html HTTP/1.1
         if (in.readLine() == null || in.readLine().isEmpty()) {
+            logger.error("Input stream of client is null, or empty, Check for client connection");
             throw new com.egehurturk.exceptions.HttpRequestException("Input stream is null or empty. Check for client" +
                     "connection that sends the request");
-            // TODO: Logging
         }
         String header = in.readLine();
 
         if (!checkValidHttpRequest(header)) {
+            logger.error("Request is not valid (check scheme)");
             throw new HttpRequestException("Request does not match HTTP standards. Check the request again" +
                     "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
                     "HTTP scheme (\"HTTP/1.1\"), and path");
@@ -190,7 +196,7 @@ public class HttpRequest {
 
         // check scheme
         if (!scheme.equals(HttpValues.Headers.HTTP_V_1_1)) {
-            // TODO: Logging, Throw an exception, Throw HttpVersionNotSupportedError
+            logger.info("HTTP Version not supported");
             return false;
         }
 
@@ -199,8 +205,7 @@ public class HttpRequest {
                             HttpValues.Method.POST, HttpValues.Method.PUT};
         List<String> list = Arrays.asList(methods);
         if (!list.contains(method)) {
-            // TODO: Logging, throw an exception, raise 501 (not implemented)
-            System.out.println(); // DELETE
+            logger.info("Http method not supported");
             return false;
         }
         return true;
