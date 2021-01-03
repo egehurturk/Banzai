@@ -59,10 +59,15 @@ This server should be run from CLI, by using a bash file:
  	* Behave according to HTTP headers:
  		* Accept, Connection, Accept-encoding, ...
  	* Send things according to methods
-
  5. Server prepares a HttpResponse
  6. Server sends the HttpResponse
- 7. Server closes the connection with the client when the stream is flushed
+ 7. if header contains {"Connection: Close"}
+    8. Server closes the connection with the client when the stream is flushed
+ 9. else if header contains {"Connection": "Keep Alive"}
+    10. Server checks connection/socket periodically (for incoming HTTP request) for the time span since it
+        sent the last HTTP response. If no HTTP request is received by the time of the configured keep-alive
+        time (seconds) the web server closes the connection. No further HTTP request will be possible after the
+        'close' done by server.
 
 
  TODO: HttpServer class
@@ -75,3 +80,4 @@ This server should be run from CLI, by using a bash file:
  TODO: implement this class. Rewrite the methods
  TODO: Implement resToMap method in HttpResponse
  TODO: HttpServer should initialize a connection manager in constructor
+ TODO: Raise 400 error on bad requests
