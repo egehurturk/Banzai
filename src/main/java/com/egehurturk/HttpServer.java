@@ -393,6 +393,7 @@ public final class HttpServer extends BaseServer {
          */
         protected long MAX_FILE_LENGTH = 20000000000L;
 
+
         /**
          * Default constructor for this class.
          * @param socket                        - the client socket that server accepts. All
@@ -404,10 +405,11 @@ public final class HttpServer extends BaseServer {
             this.configuration = config;
             this._strWebRoot = config.getProperty(WEBROOT_PROP);
             if (!isDirectory(this._strWebRoot)) {
+                logger.error("Web root is not a directory. Check if there exists a directory" +
+                        "at root/www");
                 throw new FileNotFoundException( "Web root directory not found. It should be" +
                         " placed in \"root/www\" where root" +
                         "is the top parent directory.");
-                // TODO: Logging
             }
             this.webRoot = new File(this._strWebRoot);
             this.req = new HttpRequest(new BufferedReader(
@@ -433,14 +435,14 @@ public final class HttpServer extends BaseServer {
                 String path = this.req.path;
                 String scheme = this.req.scheme;
 
-
-
-
-
-
-
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    client.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -481,7 +483,7 @@ public final class HttpServer extends BaseServer {
                         in.close();
                 }
                 catch (IOException err) {
-                    // TODO Logging
+                    logger.error("Can't read file and save into buffer");
                     err.printStackTrace();
                 }
             }
@@ -581,7 +583,7 @@ public final class HttpServer extends BaseServer {
             manager =  new HttpManager(cli, config);
         } catch (IOException e) {
             e.printStackTrace();
-            // TODO: Logging
+            logger.error("Something wrong happened with creation of manager");
         }
         return manager;
     }
