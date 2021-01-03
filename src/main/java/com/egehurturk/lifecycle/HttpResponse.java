@@ -3,6 +3,8 @@ package com.egehurturk.lifecycle;
 import com.egehurturk.HttpServer;
 import com.egehurturk.HttpValues;
 import com.egehurturk.exceptions.HttpResponseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -91,6 +93,8 @@ public class HttpResponse {
      */
     public HashMap<String, String> headers;
 
+    protected static Logger logger = LogManager.getLogger(HttpResponse.class);
+
     public HttpResponse(HashMap<String, String> map, String scheme, int code, String message, byte[] bod) {
     }
 
@@ -118,13 +122,13 @@ public class HttpResponse {
         Set<String> messages = prepareMessages(new HashSet<String>());
 
         if (!codes.contains(code)) {
-            // TODO: Proper message, logging
+            logger.info("Status code does not exists, or not implemented");
             throw new com.egehurturk.exceptions.HttpResponseException("Status code does not exists, or is not" +
                     "implemented by me. See future versions for more");
         }
 
         if (!messages.contains(message)) {
-            // TODO: Proper message, logging
+            logger.info("Message does not exists, or not implemented");
             throw new com.egehurturk.exceptions.HttpResponseException("Message does not exists, or is not" +
                     "implemented by me. See future versions for more");
         }
