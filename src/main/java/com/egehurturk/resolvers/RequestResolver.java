@@ -3,7 +3,11 @@ package com.egehurturk.resolvers;
 import com.egehurturk.HttpValues;
 import com.egehurturk.exceptions.HttpRequestException;
 import com.egehurturk.lifecycle.HttpRequest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -26,6 +30,7 @@ import java.util.Map;
 public class RequestResolver {
 
     Map<String, String> headers;
+    protected static Logger logger = LogManager.getLogger(RequestResolver.class);
     /**
      * Constructor with a {@link java.util.HashMap} get from
      * {@link HttpRequest#toMap()}.
@@ -41,11 +46,38 @@ public class RequestResolver {
         if (
                 (method == null || method.isEmpty()) || (path == null || path.isEmpty()) || (scheme == null || scheme.isEmpty())
         ) {
-            // TODO: Logging
+            logger.info("HTTP Status line does not exist or null");
             throw new HttpRequestException("Method, path, or protocol does not exist or null");
         }
         this.headers = headerMap;
     }
+
+    /**
+     * Constructor with a  {@link com.egehurturk.lifecycle.HttpRequest}
+     * @param req                               - Incoming request
+     * @throws HttpRequestException             - Exception for null request
+     */
+    public RequestResolver(HttpRequest req) throws HttpRequestException {
+        String method = req.method;
+        String path = req.path;
+        String scheme = req.scheme;
+
+        if ((method == null || method.isEmpty()) || (path == null || path.isEmpty()) || (scheme == null || scheme.isEmpty())) {
+            logger.info("HTTP Request is empty or null");
+            throw new HttpRequestException("Method, path, or protocol does not exist or null");
+        }
+        this.headers = req.toMap();
+    }
+
+    public String resolveURL() {
+        Path rootPath = FileSystems.getDefault().getPath("");
+        // todo implement
+        return "hi";
+    }
+
+
+
+
 
 
 
