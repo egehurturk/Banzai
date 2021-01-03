@@ -238,7 +238,6 @@ public abstract class BaseServer {
         }
 
         if (!isDirectory(webRoot)) {
-            // TODO: Logging
             throw new IllegalArgumentException(
                 "Web root directory not found. It should be placed in \"root/www\" where root" +
                         "is the top parent directory."
@@ -414,7 +413,6 @@ public abstract class BaseServer {
             this.name = this.config.getProperty(NAME_PROP); // already a string
 
             if (!isDirectory(webRoot)) {
-                // TODO: Logging
                 throw new IllegalArgumentException(
                         "Web root directory not found. It should be placed in \"root/www\" where root" +
                                 "is the top parent directory."
@@ -422,10 +420,8 @@ public abstract class BaseServer {
             }
 
             this.webRoot = this.config.getProperty(WEBROOT_PROP);
-            // TODO: LOGGING
             logger.info("");
         } catch (UnknownHostException e) {
-            // TODO: Logging
             System.err.println("Server name " + HOST_PROP + "that you passed into the configurations file " +
                     "(<name>.properties) is not valid. Make sure the host name exists or valid, or change" +
                     "the property. ");
@@ -448,7 +444,6 @@ public abstract class BaseServer {
             this.name = this.config.getProperty(NAME_PROP); // already a string
 
             if (!isDirectory(webRoot)) {
-                // TODO: Logging
                 throw new IllegalArgumentException(
                         "Web root directory not found. It should be placed in \"root/www\" where root" +
                                 "is the top parent directory."
@@ -456,7 +451,6 @@ public abstract class BaseServer {
             }
             this.webRoot = this.config.getProperty(WEBROOT_PROP);
         } catch (UnknownHostException e) {
-            // TODO: Logging
             System.err.println("Server name " + HOST_PROP + "that you passed into the configurations file " +
                     "(<name>.properties) is not valid. Make sure the host name exists or valid, or change" +
                     "the property. ");
@@ -477,7 +471,6 @@ public abstract class BaseServer {
         Properties serverConfig = new Properties();
         try {
             if (file == null) {
-                // TODO: Logging
                 throw new IOException("System Configuration Error: Are you sure that a properties" +
                         " file is located under resources folder as stated in standard Maven " +
                         " directory template?");
@@ -494,7 +487,6 @@ public abstract class BaseServer {
                     });
         }
         catch (IOException err) {
-            // TODO: Logging
             System.err.println("System Configuration Error: Are you sure that a properties" +
                                " file is located under resources folder as stated in standard Maven " +
                                " directory template?");
@@ -605,7 +597,7 @@ public abstract class BaseServer {
                     while (true) {
                         String req = in.readLine();
                         logger.info("Client says " + req);
-                        // TODO: Handle null request
+                        if (req.isEmpty()) {}
                         if (req.equals("/quit")) {
                             break;
                         }
@@ -620,7 +612,7 @@ public abstract class BaseServer {
                 }
 
             } catch (IOException e) {
-                // TODO: Logging
+                logger.info("Something wrong happened with client");
                 System.err.println("Something wrong happened with the client socket " +
                         ", status code = 1");
             }
