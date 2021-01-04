@@ -7,6 +7,9 @@
  *      - How to override inner classes?
  *          https://stackoverflow.com/questions/7588091/how-to-override-extend-an-inner-class-from-a-subclass
  *      - https://stackoverflow.com/questions/13353592/while-reading-from-socket-how-to-detect-when-the-client-is-done-sending-the-requ
+ *      - https://tools.ietf.org/html/rfc7230
+ *      - https://tools.ietf.org/html/rfc7231
+ *      - https://tools.ietf.org/html/rfc7232
  */
 
 /*
