@@ -8,7 +8,7 @@ import java.io.IOException;
 public class App 
 {
     public static void main( String[] args ) throws IOException {
-        TestOneServer server1 = new TestOneServer(9090);
+        TCPServer server1 = new TCPServer(9090);
        // server1.start();
 
     }
