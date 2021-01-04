@@ -201,6 +201,7 @@ public class HttpRequest {
         }
 
         // check method
+
         String[] methods = {HttpValues.Method.GET, HttpValues.Method.HEAD, HttpValues.Method.OPTIONS,
                             HttpValues.Method.POST, HttpValues.Method.PUT};
         List<String> list = Arrays.asList(methods);
