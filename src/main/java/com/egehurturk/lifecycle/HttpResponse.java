@@ -95,10 +95,8 @@ public class HttpResponse {
 
     protected static Logger logger = LogManager.getLogger(HttpResponse.class);
 
-    public HttpResponse(HashMap<String, String> map, String scheme, int code, String message, byte[] bod) {
-    }
-
-    // empty constructor
+    // empty constructors
+    public HttpResponse(HashMap<String, String> map, String scheme, int code, String message, byte[] bod) {}
     public HttpResponse() {}
 
 
