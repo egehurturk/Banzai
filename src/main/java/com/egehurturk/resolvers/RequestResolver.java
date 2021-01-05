@@ -6,8 +6,6 @@ import com.egehurturk.lifecycle.HttpRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -69,11 +67,7 @@ public class RequestResolver {
         this.headers = req.toMap();
     }
 
-    public String resolveURL() {
-        Path rootPath = FileSystems.getDefault().getPath("");
-        // todo implement
-        return "hi";
-    }
+
 
 
 
