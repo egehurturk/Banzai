@@ -15,7 +15,7 @@ public class HttpResponseBuilder {
     private HashMap<String, String> headers;
     protected static Logger logger = LogManager.getLogger(HttpResponseBuilder.class);
 
-    private HttpResponseBuilder() {}
+    public HttpResponseBuilder() {}
 
     public HttpResponseBuilder scheme(String scheme) {
         this.scheme = scheme;
