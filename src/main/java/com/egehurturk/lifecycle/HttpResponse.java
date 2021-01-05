@@ -1,7 +1,7 @@
 package com.egehurturk.lifecycle;
 
-import com.egehurturk.HttpServer;
-import com.egehurturk.HttpValues;
+import com.egehurturk.http.HttpServer;
+import com.egehurturk.http.HttpValues;
 import com.egehurturk.exceptions.HttpResponseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +26,7 @@ import java.util.Set;
  * Client, e.g. Chrome (browser) will make the request. {@link java.net.ServerSocket#accept()} method
  * accepts the request, as defined in {@link com.egehurturk.BaseServer}.
  *
- * Note that the values (fields) of this matches with the "Accept-<...>" values in {@link com.egehurturk.HttpValues}
+ * Note that the values (fields) of this matches with the "Accept-<...>" values in {@link HttpValues}
  *
  * ~ more description needed ~
  *
@@ -64,7 +64,7 @@ public class HttpResponse {
     /**
      * An integer representing the relevant HTTP status code
      *
-     * All status codes are defined in {@link com.egehurturk.HttpValues}.
+     * All status codes are defined in {@link HttpValues}.
      *
      */
     public int code;

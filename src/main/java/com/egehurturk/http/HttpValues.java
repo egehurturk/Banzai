@@ -1,4 +1,4 @@
-package com.egehurturk;
+package com.egehurturk.http;
 
 /**
  * An interface that stores HTTP Headers, values, status codes, etc.

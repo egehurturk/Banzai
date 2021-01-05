@@ -1,8 +1,10 @@
 package com.egehurturk.lifecycle;
 
 import com.egehurturk.BaseServer;
-import com.egehurturk.HttpServer;
-import com.egehurturk.HttpValues;
+import com.egehurturk.exceptions.HttpParsingException;
+import com.egehurturk.http.HttpServer;
+import com.egehurturk.http.HttpStatusCodes;
+import com.egehurturk.http.HttpValues;
 import com.egehurturk.exceptions.HttpRequestException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -113,14 +115,14 @@ public class HttpRequest {
             err.printStackTrace();
             logger.error("[ERROR]: Could not parse client request");
         }
-        catch (HttpRequestException err) {
+        catch (HttpRequestException | HttpParsingException err) {
             err.printStackTrace();
             logger.error("[ERROR] Could not parse client request");
         }
 
     }
 
-    private void parse(BufferedReader in) throws IOException, HttpRequestException {
+    private void parse(BufferedReader in) throws IOException, HttpRequestException, HttpParsingException {
         // Parse the request line. This line contains 3 vital things:
         // 1. Method
         // 2. URI
@@ -155,7 +157,7 @@ public class HttpRequest {
             headerLine = in.readLine().toLowerCase().trim();
             int idx = headerLine.indexOf(":"); // get the index of ":"
             if (idx == -1) {
-                throw new com.egehurturk.exceptions.HttpRequestException("Invalid header paramter: " + headerLine);
+                throw new com.egehurturk.exceptions.HttpParsingException(HttpStatusCodes._400_BAD_REQUEST);
             }
             else {
                 // put the header inside the headers map as

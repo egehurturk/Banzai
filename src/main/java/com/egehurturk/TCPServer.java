@@ -24,7 +24,7 @@ public class TCPServer extends BaseServer {
     }
 
     public static void main(String[] args) throws IOException {
-
+        //logger.error("ERROR FATAL ERROR");
         ExecutorService pool = Executors.newFixedThreadPool(500);
         logger.info("Server started on port " + 9090);
         ServerSocket sv = new ServerSocket(9090, 50, InetAddress.getByName("0.0.0.0"));

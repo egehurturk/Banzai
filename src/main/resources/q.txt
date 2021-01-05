@@ -10,6 +10,11 @@
  *      - https://tools.ietf.org/html/rfc7230
  *      - https://tools.ietf.org/html/rfc7231
  *      - https://tools.ietf.org/html/rfc7232
+ *      - http://www.brainkart.com/article/Handling-HTTP-Requests-and-Responses_10782/
+ *      - https://www.jonbell.net/wp-content/uploads/2016/12/Lecture-14-Handling-HTTP-Requests.pdf
+ *      - https://docs.oracle.com/cd/E19857-01/820-7655/abvah/index.html
+ *      - http://beej.us/guide/bgnet/pdf/bgnet_usl_c_1.pdf
+ *      - https://www.jmarshall.com/easy/http/
  */
 
 /*
@@ -56,31 +61,29 @@ This server should be run from CLI, by using a bash file:
  1. Client Connects
  2. Client sends a request
  3. Server parses the request, stores it into HttpRequest
- 4. Server analyzes the request, "do things" accordingly to the request data:
- 	* Get method, scheme, path
- 	* Prepare HTML file, status codes, messages
- 	* Behave according to HTTP headers:
- 		* Accept, Connection, Accept-encoding, ...
+ 4. Verify any authorization info in request
+ 5. Server analyzes the request, "do things" accordingly to the request data:
+ 	* Translate logical URI into file path
+ 	* Check the local system path for validity and priviliges
+ 	* Determine MIME type of requested source
+ 	* Select filters (headers) to process
  	* Send things according to methods
- 5. Server prepares a HttpResponse
- 6. Server sends the HttpResponse
- 7. if header contains {"Connection: Close"}
-    8. Server closes the connection with the client when the stream is flushed
- 9. else if header contains {"Connection": "Keep Alive"}
-    10. Server checks connection/socket periodically (for incoming HTTP request) for the time span since it
+ 6. Server generates a HttpResponse
+ 7. Server sends the HttpResponse
+    * Add entries to log files
+ 8. if header contains {"Connection: Close"}
+    9. Server closes the connection with the client when the stream is flushed
+ 10. else if header contains {"Connection": "Keep Alive"}
+    11. Server checks connection/socket periodically (for incoming HTTP request) for the time span since it
         sent the last HTTP response. If no HTTP request is received by the time of the configured keep-alive
         time (seconds) the web server closes the connection. No further HTTP request will be possible after the
         'close' done by server.
 
 
- TODO: HttpServer class
- TODO: Think about how to store, parse, write HTTP Headers
- TODO: Think about how to open and read HTML files
- TODO: Implement run method of httpserver
+
  TODO: close the stream of client whenever the request is received and the response is sent. Otherwise
         it will cost too much
- TODO: Think on your fields for only HTTP server class. Create constructors accordingly
- TODO: implement this class. Rewrite the methods
- TODO: Implement resToMap method in HttpResponse
  TODO: HttpServer should initialize a connection manager in constructor
  TODO: Raise 400 error on bad requests
+ TODO: Move header from maps to own field. Same in HttpResponseBuilder
+ TODO: test threading

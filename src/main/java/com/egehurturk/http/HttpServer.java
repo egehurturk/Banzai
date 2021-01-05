@@ -1,5 +1,6 @@
-package com.egehurturk;
+package com.egehurturk.http;
 
+import com.egehurturk.BaseServer;
 import com.egehurturk.exceptions.FileSizeOverflowException;
 import com.egehurturk.lifecycle.HttpRequest;
 import com.egehurturk.lifecycle.HttpResponse;

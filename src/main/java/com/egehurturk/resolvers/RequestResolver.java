@@ -1,7 +1,8 @@
 package com.egehurturk.resolvers;
 
-import com.egehurturk.HttpValues;
+import com.egehurturk.http.HttpValues;
 import com.egehurturk.exceptions.HttpRequestException;
+import com.egehurturk.http.HttpServer;
 import com.egehurturk.lifecycle.HttpRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +24,7 @@ import java.util.Map;
  *     that need to be "configured" or set when pushing the response to the client.
  * </p>
  *
- * @see com.egehurturk.HttpServer
+ * @see HttpServer
  * @see com.egehurturk.lifecycle.HttpRequest
  */
 
