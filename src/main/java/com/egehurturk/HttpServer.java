@@ -3,6 +3,7 @@ package com.egehurturk;
 import com.egehurturk.exceptions.FileSizeOverflowException;
 import com.egehurturk.lifecycle.HttpRequest;
 import com.egehurturk.lifecycle.HttpResponse;
+import com.egehurturk.lifecycle.HttpResponseBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -15,7 +16,14 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -387,6 +395,13 @@ public final class HttpServer extends BaseServer {
          */
         protected HttpResponse res = null;
 
+        public final String BAD_REQ = "400.html";
+        public final String INDEX = "index.html";
+        public final String _404_NOT_FOUND = "404.html";
+        public final String _NOT_IMPLEMENTED = "501.html";
+
+        public String FASTEST_IO = "readFile_IO";
+
         /**
          * Maximum length of a file which stores web page
          * 20_000 bytes is 20kb
@@ -435,7 +450,101 @@ public final class HttpServer extends BaseServer {
                 String path = this.req.path;
                 String scheme = this.req.scheme;
 
-            } catch (IOException e) {
+
+                // URLPath urlPath = new URLPath(path);
+
+                String status;
+                String resolvedFilePathUrl;
+                File outputFile = null;
+
+                boolean statusReturned = false;
+
+                if (!mappedReq.containsKey(HttpValues.Headers.HOST)) {
+                    status = HttpValues.StatusCodeMessage.BAD_REQ;
+                    outputFile = new File(this._strWebRoot, BAD_REQ);
+                    statusReturned = true;
+                }
+
+                // bad request if path contains directory format
+                if ((path.contains("./") || path.contains("../")) && isDirectory(path) && !statusReturned) {
+                    status = HttpValues.StatusCodeMessage.BAD_REQ;
+                    outputFile = new File(this._strWebRoot, BAD_REQ);
+                } else if (isDirectory(path) && !statusReturned){
+                    status = HttpValues.StatusCodeMessage.BAD_REQ;
+                    outputFile = new File(this._strWebRoot, BAD_REQ);
+                } else if (HttpValues.Method.GET.equals(method) && !statusReturned) {
+                    resolvedFilePathUrl = resolvePath(path);
+                    outputFile = new File(this._strWebRoot, resolvedFilePathUrl);
+
+                    if (!outputFile.exists()) {
+                        status = HttpValues.StatusCodeMessage.NOT_FOUND;
+                        outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
+                    } else {
+                        if (outputFile.isDirectory()) {
+                            outputFile = new File(outputFile, INDEX);
+                        }
+                        if (outputFile.exists()) {
+                            status = HttpValues.StatusCodeMessage.OK;
+                        } else {
+                            status = HttpValues.StatusCodeMessage.NOT_FOUND;
+                            outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
+                        }
+                    }
+                    // TODO: Handle absolute paths
+                } else {
+                    outputFile = new File(this._strWebRoot, _NOT_IMPLEMENTED);
+                    status = HttpValues.StatusCodeMessage.NOT_IMPLEMENTED;
+                }
+
+                byte[] bodyByte;
+
+                switch (FASTEST_IO) {
+                    case "readFile_IO":
+                        bodyByte = readFile_IO(outputFile);
+                        break;
+                    case "readFile_NIO":
+                        bodyByte = readFile_NIO(outputFile);
+                        break;
+                    case "readFile_NIO_DIRECT":
+                        bodyByte = readFile_NIO_DIRECT(outputFile);
+                        break;
+                    default:
+                        MappedByteBuffer _mappedBuffer = read_NIO_MAP(outputFile);
+                        bodyByte = new byte[_mappedBuffer.remaining()];
+                        _mappedBuffer.get(bodyByte);
+                        break;
+                }
+                ZonedDateTime now = ZonedDateTime.now();
+
+                String dateHeader = now.format(DateTimeFormatter.ofPattern(
+                        "EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).withZone(
+                                ZoneId.of("GMT")
+                        )
+                );
+                String contentLang = "en_US";
+                String mime_TYPE = Files.probeContentType(outputFile.toPath());
+                String content_Encoding;
+                // TODO: Get content encoding, clean up the stuff.
+
+                HttpResponseBuilder builder = new HttpResponseBuilder();
+                this.res = builder
+                            .scheme("HTTP/1.1")
+                            .code(Integer.parseInt(status.substring(1, 4)))
+                            .message(status.substring(5))
+                            .body(Arrays.toString(bodyByte))
+                            .setHeader(HttpValues.Headers.DATE, dateHeader)
+                            .setHeader(HttpValues.Headers.SERVER, this.configuration.getProperty(NAME_PROP))
+                            .setHeader(HttpValues.Headers.CONTENT_LANGUAGE, contentLang)
+                            .setHeader(HttpValues.Headers.CONTENT_LENGTH, ""+(bodyByte.length))
+                            .setHeader(HttpValues.Headers.CONTENT_TYPE, mime_TYPE)
+                            .setHeader(HttpValues.Headers.CONTENT_ENCODING, "a")
+                            .build();
+
+
+
+
+
+            } catch (IOException | FileSizeOverflowException e) {
                 e.printStackTrace();
             } finally {
                 try {
@@ -574,6 +683,32 @@ public final class HttpServer extends BaseServer {
             rFile.close();
             return buffer;
         }
+
+        private String resolvePath(String reqPath) {
+            Path resolved = FileSystems.getDefault().getPath("");
+            Path other = FileSystems.getDefault().getPath(reqPath);
+            for (Path path: other) {
+                if (!path.startsWith(".") && !path.startsWith("..")) {
+                    resolved = resolved.resolve(path);
+                }
+            }
+
+            if (resolved.startsWith("")) {
+                // if empty then use index.html
+                resolved = resolved.resolve(INDEX);
+            }
+            return resolved.toString();
+        }
+
+        private void writeResponseToStream(HttpResponse res) {
+
+        }
+
+        private boolean isAbsolute(String path) {
+            File f = new File(path);
+            return f.isAbsolute();
+        }
+
     }
 
 
