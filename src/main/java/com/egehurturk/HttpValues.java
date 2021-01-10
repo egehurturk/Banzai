@@ -176,7 +176,7 @@ public interface HttpValues {
         String CACHE_CONTROL = "Cache-Control: ";
 
         /**
-         * ============== RESPONSE ==============
+         * ============== REQUEST ==============
          * Host: The Host request header specifies the host and port number of the server to which the
          *       request is being sent.
          *
