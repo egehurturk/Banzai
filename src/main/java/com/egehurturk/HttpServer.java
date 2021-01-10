@@ -4,6 +4,9 @@ import com.egehurturk.exceptions.FileSizeOverflowException;
 import com.egehurturk.lifecycle.HttpRequest;
 import com.egehurturk.lifecycle.HttpResponse;
 import com.egehurturk.lifecycle.HttpResponseBuilder;
+import com.egehurturk.util.HeaderEnum;
+import com.egehurturk.util.MethodEnum;
+import com.egehurturk.util.StatusEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -433,7 +436,6 @@ public final class HttpServer extends BaseServer {
             this.res = new HttpResponse();
         }
 
-        // TODO: implement this
         @Override
         public void run() {
             OutputStream put = null;
@@ -459,41 +461,41 @@ public final class HttpServer extends BaseServer {
 
                 boolean statusReturned = false;
 
-                if (!mappedReq.containsKey(HttpValues.Headers.HOST)) {
-                    status = HttpValues.StatusCodeMessage.BAD_REQ;
+                if (!mappedReq.containsKey(HeaderEnum.HOST.NAME)) {
+                    status = StatusEnum._400_BAD_REQUEST.MESSAGE;
                     outputFile = new File(this._strWebRoot, BAD_REQ);
                     statusReturned = true;
                 }
 
                 // bad request if path contains directory format
                 if ((path.contains("./") || path.contains("../")) && isDirectory(path) && !statusReturned) {
-                    status = HttpValues.StatusCodeMessage.BAD_REQ;
+                    status = StatusEnum._400_BAD_REQUEST.MESSAGE;
                     outputFile = new File(this._strWebRoot, BAD_REQ);
                 } else if (isDirectory(path) && !statusReturned){
-                    status = HttpValues.StatusCodeMessage.BAD_REQ;
+                    status = StatusEnum._400_BAD_REQUEST.MESSAGE;
                     outputFile = new File(this._strWebRoot, BAD_REQ);
-                } else if (HttpValues.Method.GET.equals(method) && !statusReturned) {
+                } else if (MethodEnum.GET.str.equals(method) && !statusReturned) {
                     resolvedFilePathUrl = resolvePath(path);
                     outputFile = new File(this._strWebRoot, resolvedFilePathUrl);
 
                     if (!outputFile.exists()) {
-                        status = HttpValues.StatusCodeMessage.NOT_FOUND;
+                        status = StatusEnum._404_NOT_FOUND.MESSAGE;
                         outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
                     } else {
                         if (outputFile.isDirectory()) {
                             outputFile = new File(outputFile, INDEX);
                         }
                         if (outputFile.exists()) {
-                            status = HttpValues.StatusCodeMessage.OK;
+                            status = StatusEnum._200_OK.MESSAGE;
                         } else {
-                            status = HttpValues.StatusCodeMessage.NOT_FOUND;
+                            status = StatusEnum._404_NOT_FOUND.MESSAGE;
                             outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
                         }
                     }
                     // TODO: Handle absolute paths
                 } else {
                     outputFile = new File(this._strWebRoot, _NOT_IMPLEMENTED);
-                    status = HttpValues.StatusCodeMessage.NOT_IMPLEMENTED;
+                    status = StatusEnum._501_NOT_IMPLEMENTED.MESSAGE;
                 }
 
                 byte[] bodyByte;
@@ -523,7 +525,7 @@ public final class HttpServer extends BaseServer {
                 );
                 String contentLang = "en_US";
                 String mime_TYPE = Files.probeContentType(outputFile.toPath());
-                String content_Encoding;
+                //String content_Encoding;
                 // TODO: Get content encoding, clean up the stuff.
 
                 HttpResponseBuilder builder = new HttpResponseBuilder();
@@ -532,13 +534,14 @@ public final class HttpServer extends BaseServer {
                             .code(Integer.parseInt(status.substring(1, 4)))
                             .message(status.substring(5))
                             .body(Arrays.toString(bodyByte))
-                            .setHeader(HttpValues.Headers.DATE, dateHeader)
-                            .setHeader(HttpValues.Headers.SERVER, this.configuration.getProperty(NAME_PROP))
-                            .setHeader(HttpValues.Headers.CONTENT_LANGUAGE, contentLang)
-                            .setHeader(HttpValues.Headers.CONTENT_LENGTH, ""+(bodyByte.length))
-                            .setHeader(HttpValues.Headers.CONTENT_TYPE, mime_TYPE)
-                            .setHeader(HttpValues.Headers.CONTENT_ENCODING, "a")
+                            .setHeader(HeaderEnum.DATE.NAME, dateHeader)
+                            .setHeader(HeaderEnum.SERVER.NAME, this.configuration.getProperty(NAME_PROP))
+                            .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
+                            .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(bodyByte.length))
+                            .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mime_TYPE)
+                            .setHeader(HeaderEnum.CONTENT_ENCODING.NAME, "a")
                             .build();
+
 
 
 
