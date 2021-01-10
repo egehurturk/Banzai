@@ -2,16 +2,14 @@ package com.egehurturk.lifecycle;
 
 import com.egehurturk.BaseServer;
 import com.egehurturk.HttpServer;
-import com.egehurturk.HttpValues;
 import com.egehurturk.exceptions.HttpRequestException;
+import com.egehurturk.util.MethodEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.StringTokenizer;
 
 // http://web-sniffer.net/rfc/rfc2616.html#section-14.1
@@ -34,7 +32,7 @@ import java.util.StringTokenizer;
  * Client, e.g. Chrome (browser) will make the request. {@link java.net.ServerSocket#accept()} method
  * accepts the request, as defined in {@link BaseServer}.
  *
- * Note that the values (fields) of this matches with the "Accept-<...>" values in {@link HttpValues}
+ * Note that the values (fields) of this matches with the "Accept-<...>" values
  *
  * ~ more description needed ~
  *
@@ -99,6 +97,12 @@ public class HttpRequest {
     // logger instance
     protected static Logger logger = LogManager.getLogger(HttpRequest.class);
 
+    public String METHOD = "method";
+    public String PROTOCOL = "protocol";
+    public String URL_RESOURCE = "resource";
+    public String HTTP_V_1_1 = "HTTP/1.1";
+    public String HTTP_V_1_0 = "HTTP/1.0";
+
     /**
      * Other headers that are not specified as a field
      * in this object.
@@ -121,12 +125,8 @@ public class HttpRequest {
     }
 
     private void parse(BufferedReader in) throws IOException, HttpRequestException {
-        // Parse the request line. This line contains 3 vital things:
-        // 1. Method
-        // 2. URI
-        // 3. HTTP Version or Scheme
-        // GET /index.html HTTP/1.1
         if (in.readLine() == null || in.readLine().isEmpty()) {
+            // TODO: Status code?
             logger.error("Input stream of client is null, or empty, Check for client connection");
             throw new com.egehurturk.exceptions.HttpRequestException("Input stream is null or empty. Check for client" +
                     "connection that sends the request");
@@ -177,9 +177,9 @@ public class HttpRequest {
         HashMap<String, String> map = new HashMap<String, String>();
 
         // first lines
-        map.put(HttpValues.Headers.METHOD, this.method);
-        map.put(HttpValues.Headers.URL_RESOURCE, this.path);
-        map.put(HttpValues.Headers.PROTOCOL, this.scheme);
+        map.put(METHOD, this.method);
+        map.put(URL_RESOURCE, this.path);
+        map.put(PROTOCOL, this.scheme);
 
         for (String key : this.headers.keySet()) {
             map.put(key, this.headers.getOrDefault(key, ""));
@@ -190,23 +190,22 @@ public class HttpRequest {
     private boolean checkValidHttpRequest(String firstLine) {
 
         StringTokenizer _token = new StringTokenizer(firstLine);
-        String method = _token.nextToken().toUpperCase();
+        String method = _token.nextToken().toUpperCase(); // "GET"
         String path = _token.nextToken().toLowerCase(); // not interested
         String scheme = _token.nextToken();
 
-        // check scheme
-        if (!scheme.equals(HttpValues.Headers.HTTP_V_1_1)) {
+        // TODO: HTTP/1.0 Support
+        // TODO: Http version not supported for HTTP/2.0
+        if (!scheme.equals(HTTP_V_1_1) || !scheme.equals(HTTP_V_1_0)) {
             logger.info("HTTP Version not supported");
             return false;
         }
 
-        // check method
-        String[] methods = {HttpValues.Method.GET, HttpValues.Method.HEAD, HttpValues.Method.OPTIONS,
-                            HttpValues.Method.POST, HttpValues.Method.PUT};
-        List<String> list = Arrays.asList(methods);
-        if (!list.contains(method)) {
-            logger.info("Http method not supported");
-            return false;
+        for (MethodEnum methodE: MethodEnum.values()) {
+            if (!method.equals(methodE.str)) {
+                logger.info("Http method not supported");
+                return false;
+            }
         }
         return true;
     }
