@@ -1,8 +1,8 @@
 package com.egehurturk.lifecycle;
 
 import com.egehurturk.HttpServer;
-import com.egehurturk.HttpValues;
 import com.egehurturk.exceptions.HttpResponseException;
+import com.egehurturk.util.StatusEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +26,7 @@ import java.util.Set;
  * Client, e.g. Chrome (browser) will make the request. {@link java.net.ServerSocket#accept()} method
  * accepts the request, as defined in {@link com.egehurturk.BaseServer}.
  *
- * Note that the values (fields) of this matches with the "Accept-<...>" values in {@link com.egehurturk.HttpValues}
+ * Note that the values (fields) of this matches with the "Accept-<...>" values
  *
  * ~ more description needed ~
  *
@@ -63,9 +63,6 @@ public class HttpResponse {
 
     /**
      * An integer representing the relevant HTTP status code
-     *
-     * All status codes are defined in {@link com.egehurturk.HttpValues}.
-     *
      */
     public int code;
 
@@ -146,25 +143,27 @@ public class HttpResponse {
     // Utility functions
 
     private static Set<Integer> prepareCodes(Set<Integer> code) {
-        code.add(HttpValues.Code.BAD_REQ);
-        code.add(HttpValues.Code.FORBIDDEN);
-        code.add(HttpValues.Code.INTERNAL_ERROR);
-        code.add(HttpValues.Code.METHOD_NOT_FOUND);
-        code.add(HttpValues.Code.NOT_FOUND);
-        code.add(HttpValues.Code.NOT_IMPLEMENTED);
-        code.add(HttpValues.Code.OK);
+        code.add(StatusEnum._400_BAD_REQUEST.STATUS_CODE);
+        code.add(StatusEnum._403_FORBIDDEN.STATUS_CODE);
+        code.add(StatusEnum._500_INTERNAL_ERROR.STATUS_CODE);
+        // TODO: Is this method not allowed or not found
+        code.add(StatusEnum._405_METHOD_NOT_ALLOWED.STATUS_CODE);
+        code.add(StatusEnum._404_NOT_FOUND.STATUS_CODE);
+        code.add(StatusEnum._501_NOT_IMPLEMENTED.STATUS_CODE);
+        code.add(StatusEnum._200_OK.STATUS_CODE);
 
         return code;
     }
 
     private static Set<String> prepareMessages(Set<String> msg) {
-        msg.add(HttpValues.Messages.BAD_REQ);
-        msg.add(HttpValues.Messages.FORBIDDEN);
-        msg.add(HttpValues.Messages.INTERNAL_ERROR);
-        msg.add(HttpValues.Messages.METHOD_NOT_ALLOWED);
-        msg.add(HttpValues.Messages.NOT_FOUND);
-        msg.add(HttpValues.Messages.NOT_IMPLEMENTED);
-        msg.add(HttpValues.Messages.OK);
+        msg.add(StatusEnum._400_BAD_REQUEST.MESSAGE);
+        msg.add(StatusEnum._403_FORBIDDEN.MESSAGE);
+        msg.add(StatusEnum._500_INTERNAL_ERROR.MESSAGE);
+        // TODO: Is this method not allowed or not found
+        msg.add(StatusEnum._405_METHOD_NOT_ALLOWED.MESSAGE);
+        msg.add(StatusEnum._404_NOT_FOUND.MESSAGE);
+        msg.add(StatusEnum._501_NOT_IMPLEMENTED.MESSAGE);
+        msg.add(StatusEnum._200_OK.MESSAGE);
 
         return msg;
     }
