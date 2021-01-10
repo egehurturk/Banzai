@@ -412,7 +412,7 @@ public abstract class BaseServer {
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
             this.name = this.config.getProperty(NAME_PROP); // already a string
 
-            if (!isDirectory(webRoot)) {
+            if (!isDirectory(this.config.getProperty(WEBROOT_PROP))) {
                 throw new IllegalArgumentException(
                         "Web root directory not found. It should be placed in \"root/www\" where root" +
                                 "is the top parent directory."
@@ -420,7 +420,6 @@ public abstract class BaseServer {
             }
 
             this.webRoot = this.config.getProperty(WEBROOT_PROP);
-            logger.info("");
         } catch (UnknownHostException e) {
             System.err.println("Server name " + HOST_PROP + "that you passed into the configurations file " +
                     "(<name>.properties) is not valid. Make sure the host name exists or valid, or change" +
@@ -577,7 +576,7 @@ public abstract class BaseServer {
          * @param socket         - the client socket that server accepts. All
          *                         input and output tasks are done with the socket's I/O streams.
          */
-        protected ConnectionManager(Socket socket) {
+        public ConnectionManager(Socket socket) {
             this.client = socket;
         }
 
