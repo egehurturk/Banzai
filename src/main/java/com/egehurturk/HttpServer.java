@@ -96,6 +96,7 @@ public final class HttpServer extends BaseServer {
      * file, located in the resources directory in the standard
      * Maven project DIR.
      */
+    // TODO: Close the input stream
     protected InputStream propertiesStream = ClassLoader.getSystemClassLoader()
             .getResourceAsStream( CONFIG_PROP_FILE );
 
@@ -114,7 +115,13 @@ public final class HttpServer extends BaseServer {
      * Does nothing. Used for configuring from
      * an external properties file
      */
-    public HttpServer() {}
+    public HttpServer() throws UnknownHostException {
+        this(8080, InetAddress.getLocalHost(), 50, "unnamed", "www");
+    }
+
+    public HttpServer(String fileConfigPath) {
+        // TODO: Implement with configuration file path constructor
+        }
 
     /**
      * Base constructor that has all fields as arguments. Is used for manually
@@ -178,6 +185,38 @@ public final class HttpServer extends BaseServer {
         return super.getConfigPropFile();
     }
 
+    public static String getPortProp() {
+        return PORT_PROP;
+    }
+
+    public static String getHostProp() {
+        return HOST_PROP;
+    }
+
+    public static String getNameProp() {
+        return NAME_PROP;
+    }
+
+    public static String getWebrootProp() {
+        return WEBROOT_PROP;
+    }
+
+    public static void setPortProp(String portProp) {
+        PORT_PROP = portProp;
+    }
+
+    public static void setHostProp(String hostProp) {
+        HOST_PROP = hostProp;
+    }
+
+    public static void setNameProp(String nameProp) {
+        NAME_PROP = nameProp;
+    }
+
+    public static void setWebrootProp(String webrootProp) {
+        WEBROOT_PROP = webrootProp;
+    }
+
     /**
      * Setter for configuration property file. This is
      * used to configurate the server from an external
@@ -205,7 +244,6 @@ public final class HttpServer extends BaseServer {
 
     @Override
     public void stop() throws IOException {
-
     }
 
     @Override
@@ -411,6 +449,8 @@ public final class HttpServer extends BaseServer {
          */
         protected long MAX_FILE_LENGTH = 20000000000L;
 
+        public String status;
+
 
         /**
          * Default constructor for this class.
@@ -451,55 +491,36 @@ public final class HttpServer extends BaseServer {
                 String method = this.req.method;
                 String path = this.req.path;
                 String scheme = this.req.scheme;
-
-
-                // URLPath urlPath = new URLPath(path);
-
-                String status;
                 String resolvedFilePathUrl;
                 File outputFile = null;
 
                 boolean statusReturned = false;
 
+                // if "Host: " header is not present in the headers throw a 400 error
                 if (!mappedReq.containsKey(HeaderEnum.HOST.NAME)) {
-                    status = StatusEnum._400_BAD_REQUEST.MESSAGE;
+                    this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
                     outputFile = new File(this._strWebRoot, BAD_REQ);
                     statusReturned = true;
                 }
 
                 // bad request if path contains directory format
-                if ((path.contains("./") || path.contains("../")) && isDirectory(path) && !statusReturned) {
-                    status = StatusEnum._400_BAD_REQUEST.MESSAGE;
-                    outputFile = new File(this._strWebRoot, BAD_REQ);
-                } else if (isDirectory(path) && !statusReturned){
-                    status = StatusEnum._400_BAD_REQUEST.MESSAGE;
-                    outputFile = new File(this._strWebRoot, BAD_REQ);
-                } else if (MethodEnum.GET.str.equals(method) && !statusReturned) {
-                    resolvedFilePathUrl = resolvePath(path);
-                    outputFile = new File(this._strWebRoot, resolvedFilePathUrl);
-
-                    if (!outputFile.exists()) {
-                        status = StatusEnum._404_NOT_FOUND.MESSAGE;
-                        outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
-                    } else {
-                        if (outputFile.isDirectory()) {
-                            outputFile = new File(outputFile, INDEX);
-                        }
-                        if (outputFile.exists()) {
-                            status = StatusEnum._200_OK.MESSAGE;
-                        } else {
-                            status = StatusEnum._404_NOT_FOUND.MESSAGE;
-                            outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
-                        }
+                 if (!statusReturned) {
+                    if (path.contains("./") || path.contains("../")) {
+                        this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
+                        outputFile = new File(this._strWebRoot, BAD_REQ);
+                        statusReturned = true;
                     }
-                    // TODO: Handle absolute paths
-                } else {
-                    outputFile = new File(this._strWebRoot, _NOT_IMPLEMENTED);
-                    status = StatusEnum._501_NOT_IMPLEMENTED.MESSAGE;
+                    else if (isDirectory(path)){
+                        this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
+                        outputFile = new File(this._strWebRoot, BAD_REQ);
+                        statusReturned = true;
+                    }
+
+                    outputFile = prepareOutputWithMethod(method, path, outputFile);
                 }
 
                 byte[] bodyByte;
-
+                // handle_GET, handle_POST functions
                 switch (FASTEST_IO) {
                     case "readFile_IO":
                         bodyByte = readFile_IO(outputFile);
@@ -542,10 +563,14 @@ public final class HttpServer extends BaseServer {
                             .setHeader(HeaderEnum.CONTENT_ENCODING.NAME, "a")
                             .build();
 
-
-
-
-
+                this.out.println(scheme + status);
+                this.out.println("Server " + name);
+                this.out.println("Date: " + dateHeader);
+                this.out.println("Content-Type: " + mime_TYPE + ";charset=\"utf-8\"");
+                this.out.println("Content-Length: " + bodyByte.length);
+                this.out.println("Connection: Keep-Alive");
+                this.out.println();
+                out.flush();
 
             } catch (IOException | FileSizeOverflowException e) {
                 e.printStackTrace();
@@ -710,6 +735,37 @@ public final class HttpServer extends BaseServer {
         private boolean isAbsolute(String path) {
             File f = new File(path);
             return f.isAbsolute();
+        }
+
+        private File prepareOutputWithMethod(String method, String path, File outputFile) {
+            String resolvedFilePathUrl;
+            if (method.equals(MethodEnum.GET.str)) {
+                resolvedFilePathUrl = resolvePath(path);
+                outputFile = new File(this._strWebRoot, resolvedFilePathUrl);
+
+                if (!outputFile.exists()) {
+                      this.status = StatusEnum._404_NOT_FOUND.MESSAGE;
+                      outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
+                } else {
+                    if (outputFile.isDirectory()) {
+                        outputFile = new File(outputFile, INDEX);
+                    }
+                    if (outputFile.exists()) {
+                        this.status = StatusEnum._200_OK.MESSAGE;
+                    } else {
+                        this.status = StatusEnum._404_NOT_FOUND.MESSAGE;
+                        outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
+                    }
+                }
+                // TODO: Handle absolute paths
+            } else if (method.equals(MethodEnum.POST.str)) {
+                // TODO: Handle later
+            } else {
+                this.status = StatusEnum._501_NOT_IMPLEMENTED.MESSAGE;
+                outputFile = new File(this._strWebRoot, _NOT_IMPLEMENTED);
+            }
+            return outputFile;
+
         }
 
     }
