@@ -97,11 +97,11 @@ public class HttpRequest {
     // logger instance
     protected static Logger logger = LogManager.getLogger(HttpRequest.class);
 
-    public String METHOD = "method";
-    public String PROTOCOL = "protocol";
-    public String URL_RESOURCE = "resource";
-    public String HTTP_V_1_1 = "HTTP/1.1";
-    public String HTTP_V_1_0 = "HTTP/1.0";
+    public final String METHOD = "method";
+    public final String PROTOCOL = "protocol";
+    public final String URL_RESOURCE = "resource";
+    public final String HTTP_V_1_1 = "HTTP/1.1";
+    public final String HTTP_V_1_0 = "HTTP/1.0";
 
     /**
      * Other headers that are not specified as a field
@@ -126,22 +126,23 @@ public class HttpRequest {
 
     private void parse(BufferedReader in) throws IOException, HttpRequestException {
         if (in.readLine() == null || in.readLine().isEmpty()) {
-            // TODO: Status code?
             logger.error("Input stream of client is null, or empty, Check for client connection");
-            throw new com.egehurturk.exceptions.HttpRequestException("Input stream is null or empty. Check for client" +
-                    "connection that sends the request");
+            throw new com.egehurturk.exceptions.BadRequest400Exception("Input stream is null or empty. Check for client" +
+                    "connection that sends the request", 400, "Bad Request");
         }
         String header = in.readLine();
 
         if (!checkValidHttpRequest(header)) {
             logger.error("Request is not valid (check scheme)");
-            throw new HttpRequestException("Request does not match HTTP standards. Check the request again" +
+            throw new com.egehurturk.exceptions.BadRequest400Exception("Request does not match HTTP standards. Check the request again" +
                     "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
-                    "HTTP scheme (\"HTTP/1.1\"), and path");
+                    "HTTP scheme (\"HTTP/1.1\"), and path", 400, "Bad Request");
         }
 
         // construct a tokenizer from the first line, with a delimiter of " "
         StringTokenizer tokenizer = new StringTokenizer(header);
+
+        // TODO: Error: NoSuchElementException, check if tokenizer hasNextLine()
         this.method = tokenizer.nextToken().toUpperCase(); // ensure it is all upper ("GET")
         this.path = tokenizer.nextToken().toLowerCase(); // ensure it is all lower, i.e ("/index.html")
         this.scheme = tokenizer.nextToken(); // by default it is all upper. Case here does not matter
@@ -155,7 +156,8 @@ public class HttpRequest {
             headerLine = in.readLine().toLowerCase().trim();
             int idx = headerLine.indexOf(":"); // get the index of ":"
             if (idx == -1) {
-                throw new com.egehurturk.exceptions.HttpRequestException("Invalid header paramter: " + headerLine);
+                throw new com.egehurturk.exceptions.BadRequest400Exception("Invalid header paramter: " + headerLine,
+                        400, "Bad Request");
             }
             else {
                 // put the header inside the headers map as
@@ -166,11 +168,14 @@ public class HttpRequest {
         }
         // in POST requests
         String bodyMsg;
-        StringBuilder _bodyTemplate = new StringBuilder();
-        while ( (bodyMsg = in.readLine()) != null ) {
-            _bodyTemplate.append(bodyMsg).append("\r\n"); // append carriage return
+        if (method.equals("POST")) {
+            StringBuilder _bodyTemplate = new StringBuilder();
+            while ( (bodyMsg = in.readLine()) != null ) {
+                _bodyTemplate.append(bodyMsg).append("\r\n"); // append carriage return
+            }
+            this.body = _bodyTemplate.toString().getBytes();
         }
-        this.body = _bodyTemplate.toString().getBytes();
+
     }
 
     public HashMap<String, String> toMap() {
@@ -189,13 +194,12 @@ public class HttpRequest {
 
     private boolean checkValidHttpRequest(String firstLine) {
 
+        // TODO: Error: NoSuchElementException, check if tokenizer hasNextLine()
         StringTokenizer _token = new StringTokenizer(firstLine);
         String method = _token.nextToken().toUpperCase(); // "GET"
         String path = _token.nextToken().toLowerCase(); // not interested
         String scheme = _token.nextToken();
 
-        // TODO: HTTP/1.0 Support
-        // TODO: Http version not supported for HTTP/2.0
         if (!scheme.equals(HTTP_V_1_1) || !scheme.equals(HTTP_V_1_0)) {
             logger.info("HTTP Version not supported");
             return false;
@@ -209,9 +213,6 @@ public class HttpRequest {
         }
         return true;
     }
-
-
-
 }
 
 /* https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages */
