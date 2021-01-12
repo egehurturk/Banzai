@@ -1,5 +1,6 @@
-// A DUMMY TEST SERVER CLASS FOR TESTING PURPOSES
-// BASIC TCP [X]
+/*
+ * All rights reserved
+ */
 
 package com.egehurturk.example;
 
@@ -23,10 +24,12 @@ public class TCPServer extends BaseServer {
         super(serverPort);
     }
 
-
     public TCPServer() {}
 
-    // TODO: IMPORTANT! MAKE A CONSTRUCTOR WITH STRING FILE PATH FOR CONFIGURATION
+    public TCPServer(String configFilePath) {
+        configureServer(configFilePath);
+    }
+
 
     @Override
     public void start() throws IOException {
