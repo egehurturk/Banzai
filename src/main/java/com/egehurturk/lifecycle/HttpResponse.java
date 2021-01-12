@@ -2,6 +2,7 @@ package com.egehurturk.lifecycle;
 
 import com.egehurturk.HttpServer;
 import com.egehurturk.exceptions.HttpResponseException;
+import com.egehurturk.exceptions.NotImplemented501Exception;
 import com.egehurturk.util.StatusEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -110,7 +111,7 @@ public class HttpResponse {
      * @throws HttpResponseException    - any errors associated with response lifecycle
      */
     public static HttpResponse create(HashMap<String, String> map, String scheme, int code, String message, String body)
-            throws HttpResponseException {
+            throws HttpResponseException  {
         HttpResponse resp = new HttpResponse();
 
         Set<Integer> codes = prepareCodes(new HashSet<Integer>());
@@ -118,14 +119,14 @@ public class HttpResponse {
 
         if (!codes.contains(code)) {
             logger.info("Status code does not exists, or not implemented");
-            throw new com.egehurturk.exceptions.HttpResponseException("Status code does not exists, or is not" +
-                    "implemented by me. See future versions for more");
+            throw new NotImplemented501Exception("Status code does not exists, or is not" +
+                    "implemented by me. See future versions for more", 501, "Not Implemented");
         }
 
         if (!messages.contains(message)) {
             logger.info("Message does not exists, or not implemented");
-            throw new com.egehurturk.exceptions.HttpResponseException("Message does not exists, or is not" +
-                    "implemented by me. See future versions for more");
+            throw new com.egehurturk.exceptions.NotImplemented501Exception("Message does not exists, or is not" +
+                    "implemented by me. See future versions for more", 501, "Not Implemented");
         }
 
         resp.code = code;
@@ -146,7 +147,6 @@ public class HttpResponse {
         code.add(StatusEnum._400_BAD_REQUEST.STATUS_CODE);
         code.add(StatusEnum._403_FORBIDDEN.STATUS_CODE);
         code.add(StatusEnum._500_INTERNAL_ERROR.STATUS_CODE);
-        // TODO: Is this method not allowed or not found
         code.add(StatusEnum._405_METHOD_NOT_ALLOWED.STATUS_CODE);
         code.add(StatusEnum._404_NOT_FOUND.STATUS_CODE);
         code.add(StatusEnum._501_NOT_IMPLEMENTED.STATUS_CODE);
@@ -159,7 +159,6 @@ public class HttpResponse {
         msg.add(StatusEnum._400_BAD_REQUEST.MESSAGE);
         msg.add(StatusEnum._403_FORBIDDEN.MESSAGE);
         msg.add(StatusEnum._500_INTERNAL_ERROR.MESSAGE);
-        // TODO: Is this method not allowed or not found
         msg.add(StatusEnum._405_METHOD_NOT_ALLOWED.MESSAGE);
         msg.add(StatusEnum._404_NOT_FOUND.MESSAGE);
         msg.add(StatusEnum._501_NOT_IMPLEMENTED.MESSAGE);
