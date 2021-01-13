@@ -7,6 +7,7 @@ import com.egehurturk.lifecycle.HttpResponseBuilder;
 import com.egehurturk.util.HeaderEnum;
 import com.egehurturk.util.MethodEnum;
 import com.egehurturk.util.StatusEnum;
+import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -16,9 +17,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,7 +26,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -59,7 +57,7 @@ import java.util.Properties;
  * @version     1.0 - SNAPSHOT
  */
 
-public final class HttpServer extends BaseServer {
+public final class HttpServer extends BaseServer implements Closeable {
     /* Extends {@link BaseServer} class for base TCP/IPv4 connection activity */
 
     /**
@@ -244,6 +242,12 @@ public final class HttpServer extends BaseServer {
 
     @Override
     public void stop() throws IOException {
+
+    }
+
+    @Override
+    public void close() throws IOException {
+
     }
 
     @Override
@@ -290,6 +294,7 @@ public final class HttpServer extends BaseServer {
         return super.isDirectory(dirPath);
     }
 
+
     /**
      * Manager class for handling {@link Socket} object client. Using
      * the {@link BufferedReader}, this class access the HTTP Request (since HTTP)
@@ -318,7 +323,7 @@ public final class HttpServer extends BaseServer {
      * associated with these classes are located inside {@link com.egehurturk.exceptions}
      *
      */
-    public class HttpManager implements Runnable {
+    public class HttpManager implements Runnable, Closeable {
         /**
          * The client {@code Socket} object that is connected
          * to the {@code ServerSocket}, via accept() method:
@@ -443,12 +448,6 @@ public final class HttpServer extends BaseServer {
 
         public String FASTEST_IO = "readFile_IO";
 
-        /**
-         * Maximum length of a file which stores web page
-         * 20_000 bytes is 20kb
-         */
-        protected long MAX_FILE_LENGTH = 20000000000L;
-
         public String status;
 
 
@@ -486,230 +485,32 @@ public final class HttpServer extends BaseServer {
                 );
                 this.out = new PrintWriter(client.getOutputStream(), false);
                 this.req = new HttpRequest(in);
-                Map<String, String> mappedReq = this.req.toMap();
 
-                String method = this.req.method;
-                String path = this.req.path;
-                String scheme = this.req.scheme;
-                String resolvedFilePathUrl;
-                File outputFile = null;
+                String method = this.req.method, path = this.req.path, scheme = this.req.scheme;
 
-                boolean statusReturned = false;
-
-                // if "Host: " header is not present in the headers throw a 400 error
-                if (!mappedReq.containsKey(HeaderEnum.HOST.NAME)) {
-                    this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
-                    outputFile = new File(this._strWebRoot, BAD_REQ);
-                    statusReturned = true;
-                }
-
-                // bad request if path contains directory format
-                 if (!statusReturned) {
-                    if (path.contains("./") || path.contains("../")) {
-                        this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
-                        outputFile = new File(this._strWebRoot, BAD_REQ);
-                        statusReturned = true;
-                    }
-                    else if (isDirectory(path)){
-                        this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
-                        outputFile = new File(this._strWebRoot, BAD_REQ);
-                        statusReturned = true;
-                    }
-
-                    outputFile = prepareOutputWithMethod(method, path, outputFile);
-                }
-
-                byte[] bodyByte;
-                // handle_GET, handle_POST functions
-                switch (FASTEST_IO) {
-                    case "readFile_IO":
-                        bodyByte = readFile_IO(outputFile);
+                switch (MethodEnum.valueOf(method)) {
+                    case GET:
+                        this.res = handle_GET(this.req);
                         break;
-                    case "readFile_NIO":
-                        bodyByte = readFile_NIO(outputFile);
-                        break;
-                    case "readFile_NIO_DIRECT":
-                        bodyByte = readFile_NIO_DIRECT(outputFile);
+                    case POST:
+                        this.res = handle_POST(this.req);
                         break;
                     default:
-                        MappedByteBuffer _mappedBuffer = read_NIO_MAP(outputFile);
-                        bodyByte = new byte[_mappedBuffer.remaining()];
-                        _mappedBuffer.get(bodyByte);
-                        break;
+                        this.res = handle_NOT_IMPLEMENTED(this.req);
                 }
-                ZonedDateTime now = ZonedDateTime.now();
 
-                String dateHeader = now.format(DateTimeFormatter.ofPattern(
-                        "EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).withZone(
-                                ZoneId.of("GMT")
-                        )
-                );
-                String contentLang = "en_US";
-                String mime_TYPE = Files.probeContentType(outputFile.toPath());
-                //String content_Encoding;
-                // TODO: Get content encoding, clean up the stuff.
+                writeResponseToStream(this.res, this.out);
 
-                HttpResponseBuilder builder = new HttpResponseBuilder();
-                this.res = builder
-                            .scheme("HTTP/1.1")
-                            .code(Integer.parseInt(status.substring(1, 4)))
-                            .message(status.substring(5))
-                            .body(Arrays.toString(bodyByte))
-                            .setHeader(HeaderEnum.DATE.NAME, dateHeader)
-                            .setHeader(HeaderEnum.SERVER.NAME, this.configuration.getProperty(NAME_PROP))
-                            .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
-                            .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(bodyByte.length))
-                            .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mime_TYPE)
-                            .setHeader(HeaderEnum.CONTENT_ENCODING.NAME, "a")
-                            .build();
-
-                this.out.println(scheme + status);
-                this.out.println("Server " + name);
-                this.out.println("Date: " + dateHeader);
-                this.out.println("Content-Type: " + mime_TYPE + ";charset=\"utf-8\"");
-                this.out.println("Content-Length: " + bodyByte.length);
-                this.out.println("Connection: Keep-Alive");
-                this.out.println();
-                out.flush();
-
-            } catch (IOException | FileSizeOverflowException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 try {
-                    client.close();
+                   close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
-        }
-
-        /**
-         * Reads file from given {@link File} object. This method uses "old"
-         * {@link java.io} style, where the source is coming from {@link InputStream}
-         * and {@link OutputStream}, more specifically {@link FileInputStream}.
-         * A buffer ({@code byte[] array} is used to buffer file contents from {@link InputStream}
-         * This method closes all streams
-         *
-         * @param file                              - {@link File} object that is the file to be read
-         * @return                                  - {@code byte[] array} buffer
-         * @throws IOException                      - IO operation error
-         * @throws FileSizeOverflowException        - If file length is very long
-         */
-        private byte[] readFile_IO(File file) throws IOException, FileSizeOverflowException {
-            if (file.length() > MAX_FILE_LENGTH) {
-                throw new com.egehurturk.exceptions.FileSizeOverflowException("File " +
-                        file.getName() + "is too big to handle. Server accepts " +
-                        MAX_FILE_LENGTH + " file size, the requested file is " +
-                        file.length() + " bytes.");
-            }
-
-            byte[] _buffer = new byte[(int) file.length()];
-            InputStream in = null;
-
-            try {
-                in = new FileInputStream(file);
-                if ( in.read(_buffer) == -1 ) {
-                   throw new IOException(
-                           "EOF reached while reading file. File is probably empty");
-                }
-            }
-            finally {
-                try {
-                    if (in != null)
-                        in.close();
-                }
-                catch (IOException err) {
-                    logger.error("Can't read file and save into buffer");
-                    err.printStackTrace();
-                }
-            }
-            return _buffer;
-        }
-
-
-        /**
-         * Reads file from given {@link File} object. This method uses "new"
-         * {@link java.nio} style, where the source is coming from {@link java.nio.channels.Channel}
-         * more specifically {@link FileChannel}.
-         * A buffer ({@link ByteBuffer} is used to buffer file contents from {@link FileChannel}
-         * This method closes all channels and returns {@link ByteBuffer} as {@code byte[]} array
-         *
-         * @param file                              - {@link File} object that is the file to be read
-         * @return                                  - {@code byte[] array} buffer (from {@link ByteBuffer})
-         * @throws IOException                      - IO operation error
-         */
-        private byte[] readFile_NIO(File file) throws IOException {
-            RandomAccessFile rFile = new RandomAccessFile(file.getName(), "rw");
-            FileChannel inChannel = rFile.getChannel();
-
-            ByteBuffer _buffer = ByteBuffer.allocate(1024);
-
-            // read from buffer to channel
-            int bytesRead = inChannel.read(_buffer);
-
-            while (bytesRead != -1) {
-                // flip buffer to read
-                _buffer.flip();
-
-                while (_buffer.hasRemaining()) {
-                    // read from buffer and store it in byte
-                    byte b = _buffer.get();
-                }
-                // clear for overflow
-                _buffer.clear();
-
-                // read the buffer again
-                bytesRead = inChannel.read(_buffer);
-            }
-            // close all channels
-            inChannel.close();
-            rFile.close();
-            return _buffer.array();
-        }
-
-        /**
-         * This method uses a direct approach and uses the "new"
-         * style, {@link java.nio}.
-         * @param file              - {@link File} to be read
-         * @return                  - {@code byte[]} array, buffer
-         * @throws IOException      - IO operation error
-         */
-        private byte[] readFile_NIO_DIRECT(File file) throws IOException {
-            byte[] buffer = Files.readAllBytes(file.toPath());
-            return buffer;
-        }
-
-        /**
-         * A "fast" approach to read from a {@link File} with {@link MappedByteBuffer}
-         * However, in my experiments, this resulted in the slowest performance, whereas
-         * {@link #readFile_IO(File)} was the fastest
-         *
-         * @param file               - {@link File} to be read
-         * @return                   - {@link MappedByteBuffer} object
-         * @throws IOException       - IO operation error
-         */
-        private MappedByteBuffer read_NIO_MAP(File file) throws IOException {
-            RandomAccessFile rFile = new RandomAccessFile(file.getName(), "rw");
-            FileChannel inChannel = rFile.getChannel();
-
-            // create a new mappedbyte buffer
-            MappedByteBuffer buffer = inChannel.map(
-                    FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
-
-            // load the buffer
-            buffer.load();
-            for (int i = 0; i < buffer.limit(); i++)
-            {
-                // get from buffer
-                byte a = buffer.get();
-            }
-            buffer.clear();
-
-            // close all the channels
-            inChannel.close();
-            rFile.close();
-            return buffer;
         }
 
         private String resolvePath(String reqPath) {
@@ -728,8 +529,16 @@ public final class HttpServer extends BaseServer {
             return resolved.toString();
         }
 
-        private void writeResponseToStream(HttpResponse res) {
-
+        private void writeResponseToStream(HttpResponse res, PrintWriter out) {
+            // Todo: to be improved
+            out.println(res.scheme + " " + res.code + " " + res.message);
+            out.println(HeaderEnum.SERVER + name);
+            out.println(HeaderEnum.DATE + res.headers.get(HeaderEnum.DATE.NAME));
+            out.println(HeaderEnum.CONTENT_TYPE + res.headers.get(HeaderEnum.CONTENT_TYPE.NAME) + ";charset=\"utf-8\"");
+            out.println(HeaderEnum.CONTENT_LENGTH + res.headers.get(HeaderEnum.CONTENT_LENGTH));
+            out.println(HeaderEnum.CONNECTION + "close");
+            out.println();
+            out.flush();
         }
 
         private boolean isAbsolute(String path) {
@@ -737,10 +546,11 @@ public final class HttpServer extends BaseServer {
             return f.isAbsolute();
         }
 
-        private File prepareOutputWithMethod(String method, String path, File outputFile) {
+        private File prepareOutputWithMethod(HttpRequest req) {
+            File outputFile = null;
             String resolvedFilePathUrl;
-            if (method.equals(MethodEnum.GET.str)) {
-                resolvedFilePathUrl = resolvePath(path);
+            if (req.method.equals(MethodEnum.GET.str)) {
+                resolvedFilePathUrl = resolvePath(req.path);
                 outputFile = new File(this._strWebRoot, resolvedFilePathUrl);
 
                 if (!outputFile.exists()) {
@@ -748,6 +558,7 @@ public final class HttpServer extends BaseServer {
                       outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
                 } else {
                     if (outputFile.isDirectory()) {
+                        // /file -> index.html
                         outputFile = new File(outputFile, INDEX);
                     }
                     if (outputFile.exists()) {
@@ -758,7 +569,7 @@ public final class HttpServer extends BaseServer {
                     }
                 }
                 // TODO: Handle absolute paths
-            } else if (method.equals(MethodEnum.POST.str)) {
+            } else if (req.method.equals(MethodEnum.POST.str)) {
                 // TODO: Handle later
             } else {
                 this.status = StatusEnum._501_NOT_IMPLEMENTED.MESSAGE;
@@ -766,6 +577,131 @@ public final class HttpServer extends BaseServer {
             }
             return outputFile;
 
+        }
+
+        public HttpResponse handle_GET(HttpRequest req) {
+            String resolvedFilePathUrl;
+            File outputFile = null;
+            boolean statusReturned = false;
+
+            // if "Host: " header is not present in the headers throw a 400 error
+            if (!this.req.headers.containsKey(HeaderEnum.HOST.NAME)) {
+                this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
+                outputFile = new File(this._strWebRoot, BAD_REQ);
+                statusReturned = true;
+            }
+
+            // bad request if path contains directory format
+            if (!statusReturned) {
+                if (req.path.contains("./") || req.path.contains("../")) {
+                    this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
+                    outputFile = new File(this._strWebRoot, BAD_REQ);
+                    statusReturned = true;
+                }
+                else if (isDirectory(req.path)){
+                    this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
+                    outputFile = new File(this._strWebRoot, BAD_REQ);
+                    statusReturned = true;
+                }
+                outputFile = prepareOutputWithMethod(this.req);
+            }
+
+            byte[] bodyByte = null;
+            // handle_GET, handle_POST functions
+            switch (FASTEST_IO) {
+                case "readFile_IO":
+                    try {
+                        bodyByte = Utility.readFile_IO(outputFile);
+                    } catch (IOException | FileSizeOverflowException e) {
+                        this.logger.error("File size is too large");
+                        e.printStackTrace();
+                    }
+                    break;
+                case "readFile_NIO":
+                    try {
+                        bodyByte = Utility.readFile_NIO(outputFile);
+                    } catch (IOException e) {
+                        this.logger.error("Could not read the file");
+                        e.printStackTrace();
+                    }
+                    break;
+                case "readFile_NIO_DIRECT":
+                    try {
+                        bodyByte = Utility.readFile_NIO_DIRECT(outputFile);
+                    } catch (IOException e) {
+                        this.logger.error("Could not read the file");
+                        e.printStackTrace();
+                    }
+                    break;
+                default:
+                    MappedByteBuffer _mappedBuffer = null;
+                    try {
+                        _mappedBuffer = Utility.read_NIO_MAP(outputFile);
+                    } catch (IOException e) {
+                        this.logger.error("Could not read the file");
+                        e.printStackTrace();
+                    }
+                    if (_mappedBuffer != null) {
+                        bodyByte = new byte[_mappedBuffer.remaining()];
+                        _mappedBuffer.get(bodyByte);
+                    } else {
+                        this.logger.error("Cannot read file and store in memory");
+                    }
+                    break;
+            }
+
+            if (!statusReturned) {
+                if (bodyByte == null) {
+                    this.logger.error("Could not read file contents in memory");
+                    this.status = StatusEnum._500_INTERNAL_ERROR.MESSAGE;
+                    statusReturned = true;
+                }
+            }
+
+            // <<<<<<<<<<<<< HEADER SETTING <<<<<<<<<<<<<<<<<<<<<
+            ZonedDateTime now = ZonedDateTime.now();
+            String dateHeader = now.format(DateTimeFormatter.ofPattern(
+                    "EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).withZone(
+                    ZoneId.of("GMT")
+                    )
+            );
+            String contentLang = "en_US", mimeType = null;
+            try {
+                mimeType = Files.probeContentType(outputFile.toPath());
+            } catch (IOException e) {
+                this.logger.error("Cannot determine the MIME type of file");
+                e.printStackTrace();
+            }
+
+            HttpResponseBuilder builder = new HttpResponseBuilder();
+            HttpResponse response = builder
+                    .scheme("HTTP/1.1")
+                    .code(StatusEnum.valueOf(Utility.enumStatusToString(status)).STATUS_CODE)
+                    .message(StatusEnum.valueOf(Utility.enumStatusToString(status)).MESSAGE)
+                    .body(Arrays.toString(bodyByte))
+                    .setHeader(HeaderEnum.DATE.NAME, dateHeader)
+                    .setHeader(HeaderEnum.SERVER.NAME, this.configuration.getProperty(NAME_PROP))
+                    .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
+                    .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(bodyByte.length))
+                    .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
+                    .setHeader(HeaderEnum.CONTENT_ENCODING.NAME, "a")
+                    .build();
+            return response;
+        }
+
+        public HttpResponse handle_POST(HttpRequest req) {
+            return new HttpResponse();
+        }
+
+        public HttpResponse handle_NOT_IMPLEMENTED(HttpRequest req) {
+            return new HttpResponse();
+        }
+
+        @Override
+        public void close() throws IOException {
+            this.client.close();
+            this.in.close();
+            this.out.close();
         }
 
     }
