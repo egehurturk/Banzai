@@ -29,6 +29,10 @@
             <AppenderRef ref="fout" level="error" />
             <AppenderRef ref="stdout" level="info" />
         </Root>
+<!--        <Root level="error">-->
+<!--            <AppenderRef ref="fout"/>-->
+<!--            <AppenderRef ref="stdout" level="info" />-->
+<!--        </Root>-->
     </Loggers>
 </Configuration>
 
