@@ -1,0 +1,95 @@
+[DEBUG][DEBUG] starting server from driver [DriverClassForTest/main]
+[DEBUG][DEBUG] start() called [HttpServer/start]
+2021-01-14 13:54:59  INFO com.egehurturk.HttpServer - Server started on port 8090
+[DEBUG][DEBUG] inside while() [HttpServer/start]
+[DEBUG][DEBUG] recieved client [HttpServer/start]
+[DEBUG][DEBUG] parse [constructor]
+[DEBUG][DEBUG] bufferedreader in [parse] -->> java.io.BufferedReader@7b2bbc3
+[DEBUG][DEBUG] requestLine [parse] -->> GET / HTTP/1.1
+[DEBUG][DEBUG] requestLine.isEmpty() [parse] -->> false
+[DEBUG][DEBUG] requestLine == null [parse] -->> false
+[DEBUG][DEBUG] requestLine [checkValidHttpRequest] -->> [GET, /, HTTP/1.1]
+[DEBUG][DEBUG] method [checkValidHttpRequest] -->> GET
+[DEBUG][DEBUG] scheme [checkValidHttpRequest] -->> HTTP/1.1
+[DEBUG][DEBUG] method.equals(methodE.str) [checkValidHttpRequest] -->> true
+[DEBUG][DEBUG] checkValidHttpRequest [parse] -->> true
+[DEBUG][DEBUG] requestLine [checkValidHttpRequest] -->> [GET, /, HTTP/1.1]
+[DEBUG][DEBUG] method [checkValidHttpRequest] -->> GET
+[DEBUG][DEBUG] scheme [checkValidHttpRequest] -->> HTTP/1.1
+[DEBUG][DEBUG] method.equals(methodE.str) [checkValidHttpRequest] -->> true
+[DEBUG][DEBUG] requestLineArray [parse] -->> [GET, /, HTTP/1.1]
+[DEBUG][DEBUG] requestLineArray.length [parse] -->> 3
+[DEBUG][DEBUG] method [parse] -->> GET
+[DEBUG][DEBUG] path [parse] -->> /
+[DEBUG][DEBUG] scheme [parse] -->> HTTP/1.1
+[DEBUG][DEBUG] headerLine [parse] -->> connection: keep-alive
+[DEBUG][DEBUG] headerLine == null [parse] -->> false
+[DEBUG][DEBUG] headerLine.isempty() [parse] -->> false
+[DEBUG][DEBUG] inf [parse/while]
+[DEBUG][DEBUG] headerLineNew [parse] -->> user-agent: mozilla
+[DEBUG][DEBUG] inf [parse/while]
+[DEBUG][DEBUG] headerLineNew [parse] -->> accept: text/html
+[DEBUG][DEBUG] inf [parse/while]
+[DEBUG][DEBUG] headerLineNew [parse] -->>
+[DEBUG][DEBUG] HttpManager created [HttpServer/start]
+[DEBUG][DEBUG] pool executed manager [HttpServer/start]
+[DEBUG][DEBUG] run() called in [HttpServer/run]
+[DEBUG][DEBUG] client.getinputstream called in [HttpServer/run] -->> java.net.Socket$SocketInputStream@5f5d9b41
+[DEBUG][DEBUG] client.getoutputstream called in [HttpServer/run] -->> java.net.Socket$SocketOutputStream@10a774e1
+[DEBUG][DEBUG] HttpRequest initialization #before [HttpServer/run]
+[DEBUG][DEBUG] parse [constructor]
+[DEBUG][DEBUG] bufferedreader in [parse] -->> java.io.BufferedReader@21fda431
+2021-01-14 13:59:14  INFO com.egehurturk.HttpServer - Connection established with Socket[addr=/127.0.0.1,port=56107,localport=8090]
+[DEBUG][DEBUG] inside while() [HttpServer/start]
+[DEBUG][DEBUG] requestLine [parse] -->> GET / HTTP/1.1
+[DEBUG][DEBUG] requestLine.isEmpty() [parse] -->> false
+[DEBUG][DEBUG] requestLine == null [parse] -->> false
+[DEBUG][DEBUG] requestLine [checkValidHttpRequest] -->> [GET, /, HTTP/1.1]
+[DEBUG][DEBUG] method [checkValidHttpRequest] -->> GET
+[DEBUG][DEBUG] scheme [checkValidHttpRequest] -->> HTTP/1.1
+[DEBUG][DEBUG] method.equals(methodE.str) [checkValidHttpRequest] -->> true
+[DEBUG][DEBUG] checkValidHttpRequest [parse] -->> true
+[DEBUG][DEBUG] requestLine [checkValidHttpRequest] -->> [GET, /, HTTP/1.1]
+[DEBUG][DEBUG] method [checkValidHttpRequest] -->> GET
+[DEBUG][DEBUG] scheme [checkValidHttpRequest] -->> HTTP/1.1
+[DEBUG][DEBUG] method.equals(methodE.str) [checkValidHttpRequest] -->> true
+[DEBUG][DEBUG] requestLineArray [parse] -->> [GET, /, HTTP/1.1]
+[DEBUG][DEBUG] requestLineArray.length [parse] -->> 3
+[DEBUG][DEBUG] method [parse] -->> GET
+[DEBUG][DEBUG] path [parse] -->> /
+[DEBUG][DEBUG] scheme [parse] -->> HTTP/1.1
+[DEBUG][DEBUG] headerLine [parse] -->> connection: keep-alive
+[DEBUG][DEBUG] headerLine == null [parse] -->> false
+[DEBUG][DEBUG] headerLine.isempty() [parse] -->> false
+[DEBUG][DEBUG] inf [parse/while]
+[DEBUG][DEBUG] headerLineNew [parse] -->> host: www.sendloop.com
+[DEBUG][DEBUG] inf [parse/while]
+[DEBUG][DEBUG] headerLineNew [parse] -->>
+[DEBUG][DEBUG] HttpRequest initialization #after [HttpServer/run]
+[DEBUG][DEBUG] method [HttpServer/run] -->> GET
+[DEBUG][DEBUG] path [HttpServer/run] -->> /
+[DEBUG][DEBUG] scheme [HttpServer/run] -->> HTTP/1.1
+[DEBUG][DEBUG] MethodEnum.valueOf(method) [HttpServer/run] -->> GET
+[DEBUG][DEBUG] HttpResponse initialization #before [HttpServer/run]
+[DEBUG][DEBUG] GET / HttpResponse initialization #before [HttpServer/run/switch]
+[DEBUG][DEBUG] handle_GET called [HttpServer/handle_GET]
+[DEBUG][DEBUG] req.headers.containsKey(Host) --> [HttpServer/handle_GET]false
+[DEBUG][DEBUG] status [HttpServer/handle_GET] -->> Bad Request
+[DEBUG][DEBUG] outputFile [HttpServer/handle_GET] -->> www/400.html
+[DEBUG][DEBUG] statusReturned [HttpServer/handle_GET] -->> true
+[DEBUG][DEBUG] byte[] bodyByte [HttpServer/handle_GET] -->> null
+[DEBUG][DEBUG] fastestIO [HttpServer/handle_GET] -->> readFile_IO
+[DEBUG][DEBUG] readFile_IO [HttpServer/handle_GET]
+[DEBUG][DEBUG] byte[] bodyByte [HttpServer/handle_GET] -->> [B@74c6179f
+[DEBUG][DEBUG] statusReturned [HttpServer/handle_GET] -->> true
+[DEBUG][DEBUG] DATE HEADER [HttpServer/handle_GET] -->> Thu, 14 Jan 2021 11:02:17 GMT
+[DEBUG][DEBUG] CONTENT LANG [HttpServer/handle_GET] -->> en_US
+[DEBUG][DEBUG] MIMETYPE [HttpServer/handle_GET] -->> text/html
+[DEBUG][DEBUG] HttpResponseBuilder building HttpResponse #before [HttpServer/handle_GET]
+Exception in thread "pool-2-thread-1" java.lang.NullPointerException
+	at com.egehurturk.lifecycle.HttpResponseBuilder.setHeader(HttpResponseBuilder.java:41)
+	at com.egehurturk.HttpServer$HttpManager.handle_GET(HttpServer.java:757)
+	at com.egehurturk.HttpServer$HttpManager.run(HttpServer.java:523)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
+	at java.base/java.lang.Thread.run(Thread.java:832)
