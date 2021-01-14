@@ -67,22 +67,6 @@ public class HttpResponse {
      */
     public int code;
 
-    /**
-     * A string message representing the relevant message for HTTP
-     * For example:
-     * "GET", "POST", "HEAD", "OPTIONS", "PUT", "PATCH", "DELETE", etc.
-     *
-     * Sample methods include:
-     * <ul>
-     *     <li> GET </li>
-     *     <li> HEAD </li>
-     *     <li> POST </li>
-     *     <li> PUT </li>
-     *     <li> DELETE </li>
-     *     <li> PATCH </li>
-     * </ul>
-     *
-     */
     public String message;
 
     /**
@@ -110,34 +94,38 @@ public class HttpResponse {
      * @return                          - new {@link HttpResponse} object
      * @throws HttpResponseException    - any errors associated with response lifecycle
      */
-    public static HttpResponse create(HashMap<String, String> map, String scheme, int code, String message, String body)
+    public static HttpResponse create(HashMap<String, String> map, String scheme, int code, String message, byte[] body)
             throws HttpResponseException  {
+        System.out.println("[DEBUG][DEBUG] inside HttpResponse create function [HttpResponse/create]");
         HttpResponse resp = new HttpResponse();
 
         Set<Integer> codes = prepareCodes(new HashSet<Integer>());
         Set<String> messages = prepareMessages(new HashSet<String>());
-
+        System.out.println("[DEBUG][DEBUG] check code [HttpResponse/create] -->> " + codes.contains(code));
         if (!codes.contains(code)) {
             logger.info("Status code does not exists, or not implemented");
             throw new NotImplemented501Exception("Status code does not exists, or is not" +
                     "implemented by me. See future versions for more", 501, "Not Implemented");
         }
-
+        System.out.println("[DEBUG][DEBUG] check message [HttpResponse/create] -->> " + codes.contains(message));
         if (!messages.contains(message)) {
             logger.info("Message does not exists, or not implemented");
             throw new com.egehurturk.exceptions.NotImplemented501Exception("Message does not exists, or is not" +
                     "implemented by me. See future versions for more", 501, "Not Implemented");
         }
-
+        System.out.println("[DEBUG][DEBUG] setting fields for response [HttpResponse/create]");
         resp.code = code;
         resp.message = message;
         resp.scheme = scheme;
         resp.headers = map;
-        resp.body = body.getBytes();
+        resp.body = body;
+        System.out.println("[DEBUG][DEBUG] finished creating response (return) [HttpResponse/create]");
         return resp;
     }
 
     public <K extends String, V extends String> void set(K key, V value) {
+        System.out.println("[DEBUG][DEBUG] ARG key (K) ->  [HttpResponse/set] -->> " + key);
+        System.out.println("[DEBUG][DEBUG] ARG value (V) ->  [HttpResponse/set] -->> " + value);
         this.headers.put(key, value);
     }
 
