@@ -9,10 +9,10 @@ import java.util.HashMap;
 
 public class HttpResponseBuilder {
     private String scheme;
-    private String body;
+    private byte[] body;
     private int code;
     private String message;
-    private HashMap<String, String> headers;
+    private HashMap<String, String> headers = new HashMap<String, String>();
     protected static Logger logger = LogManager.getLogger(HttpResponseBuilder.class);
 
     public HttpResponseBuilder() {}
@@ -22,7 +22,7 @@ public class HttpResponseBuilder {
         return this;
     }
 
-    public HttpResponseBuilder body(String body) {
+    public HttpResponseBuilder body(byte[] body) {
         this.body = body;
         return this;
     }
