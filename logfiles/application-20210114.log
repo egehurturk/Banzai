@@ -1,0 +1,2 @@
+[33m2021-01-14 14:54:07,232[m [pool-2-thread-4] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-14 14:54:07,233[m [pool-2-thread-4] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
