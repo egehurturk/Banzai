@@ -638,9 +638,10 @@ public final class HttpServer extends BaseServer implements Closeable {
             String resolvedFilePathUrl;
             File outputFile = null;
             boolean statusReturned = false;
-            System.out.println("[DEBUG][DEBUG] req.headers.containsKey(Host) --> [HttpServer/handle_GET]" + this.req.headers.containsKey(HeaderEnum.HOST.NAME));
+            System.out.println("[DEBUG][DEBUG] req.headers.containsKey(Host) --> [HttpServer/handle_GET]" + this.req.headers.containsKey("host"));
             // if "Host: " header is not present in the headers throw a 400 error
-            if (!this.req.headers.containsKey(HeaderEnum.HOST.NAME)) {
+            // TODO: Remove constant
+            if (!this.req.headers.containsKey("host")) {
                 this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
                 System.out.println("[DEBUG][DEBUG] status [HttpServer/handle_GET] -->> " + this.status);
                 outputFile = new File(this._strWebRoot, BAD_REQ);
@@ -675,7 +676,6 @@ public final class HttpServer extends BaseServer implements Closeable {
             }
 
             byte[] bodyByte = null;
-            System.out.println("[DEBUG][DEBUG] byte[] bodyByte [HttpServer/handle_GET] -->> " + bodyByte);
             // handle_GET, handle_POST functions
             System.out.println("[DEBUG][DEBUG] fastestIO [HttpServer/handle_GET] -->> " + FASTEST_IO);
             switch (FASTEST_IO) {
