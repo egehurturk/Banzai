@@ -1,0 +1,88 @@
+[33m2021-01-13 20:50:31,406[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 20:50:31,408[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 20:57:38,149[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-13 20:57:38,150[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 20:59:04,126[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 20:59:04,127[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 20:59:04,129[m [pool-2-thread-2] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 20:59:04,132[m [pool-2-thread-2] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 20:59:28,433[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 20:59:28,434[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:02:39,887[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-13 21:02:39,890[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:03:43,163[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-13 21:03:43,165[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:03:48,231[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:03:48,233[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:04:15,181[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-13 21:04:15,182[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:05:26,846[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-13 21:05:26,848[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:06:23,494[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-13 21:06:23,495[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:07:25,949[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-13 21:07:25,950[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:14:57,654[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:14:57,657[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:17:57,012[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:17:57,014[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:20:50,288[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:20:50,293[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:21:00,173[m [pool-2-thread-2] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:21:00,175[m [pool-2-thread-2] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:21:50,825[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:21:50,826[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:21:50,828[m [pool-2-thread-5] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:21:50,828[m [pool-2-thread-5] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:24:01,867[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:24:01,869[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:28:04,554[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:28:04,558[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:30:46,006[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:30:46,007[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:33:28,552[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:33:28,553[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:34:06,076[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:34:06,078[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:34:51,358[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:34:51,366[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:34:52,042[m [pool-2-thread-2] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:34:52,043[m [pool-2-thread-2] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:34:52,609[m [pool-2-thread-3] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:34:52,610[m [pool-2-thread-3] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:36:11,726[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:36:11,729[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:37:08,409[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:37:08,411[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:37:08,412[m [pool-2-thread-3] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:37:08,413[m [pool-2-thread-3] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:49:20,485[m [Thread-0] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:49:20,487[m [Thread-0] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:49:43,761[m [Thread-0] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:49:43,764[m [Thread-0] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:50:26,561[m [Thread-0] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:50:26,562[m [Thread-0] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:54:25,806[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:54:25,807[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:56:26,573[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:56:26,574[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:56:29,768[m [pool-2-thread-2] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:56:29,769[m [pool-2-thread-2] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 21:58:34,022[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 21:58:34,023[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 22:00:54,212[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 22:00:54,214[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 22:40:01,965[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 22:40:01,966[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 22:40:22,905[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 22:40:22,907[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 22:42:26,273[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 22:42:26,277[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 22:42:26,278[m [pool-2-thread-2] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 22:42:26,280[m [pool-2-thread-2] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 22:42:26,280[m [pool-2-thread-3] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 22:42:26,281[m [pool-2-thread-3] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 22:44:48,161[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 22:44:48,162[m [pool-2-thread-1] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request
+[33m2021-01-13 23:55:54,468[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-13 23:55:54,472[m [main] [31mERROR[m com.egehurturk.lifecycle.HttpRequest - [ERROR] Could not parse client request

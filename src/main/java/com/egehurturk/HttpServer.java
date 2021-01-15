@@ -4,6 +4,10 @@ import com.egehurturk.exceptions.FileSizeOverflowException;
 import com.egehurturk.lifecycle.HttpRequest;
 import com.egehurturk.lifecycle.HttpResponse;
 import com.egehurturk.lifecycle.HttpResponseBuilder;
+import com.egehurturk.util.HeaderEnum;
+import com.egehurturk.util.MethodEnum;
+import com.egehurturk.util.StatusEnum;
+import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -13,19 +17,17 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * HTTP Server for providing HTTP connection. Uses TCP as
@@ -56,7 +58,7 @@ import java.util.Properties;
  * @version     1.0 - SNAPSHOT
  */
 
-public final class HttpServer extends BaseServer {
+public final class HttpServer extends BaseServer implements Closeable {
     /* Extends {@link BaseServer} class for base TCP/IPv4 connection activity */
 
     /**
@@ -93,6 +95,7 @@ public final class HttpServer extends BaseServer {
      * file, located in the resources directory in the standard
      * Maven project DIR.
      */
+    // TODO: Close the input stream
     protected InputStream propertiesStream = ClassLoader.getSystemClassLoader()
             .getResourceAsStream( CONFIG_PROP_FILE );
 
@@ -111,7 +114,13 @@ public final class HttpServer extends BaseServer {
      * Does nothing. Used for configuring from
      * an external properties file
      */
-    public HttpServer() {}
+    public HttpServer() throws UnknownHostException {
+        this(8080, InetAddress.getLocalHost(), 50, "unnamed", "www");
+    }
+
+    public HttpServer(String fileConfigPath) {
+        // TODO: Implement with configuration file path constructor
+        }
 
     /**
      * Base constructor that has all fields as arguments. Is used for manually
@@ -175,6 +184,38 @@ public final class HttpServer extends BaseServer {
         return super.getConfigPropFile();
     }
 
+    public static String getPortProp() {
+        return PORT_PROP;
+    }
+
+    public static String getHostProp() {
+        return HOST_PROP;
+    }
+
+    public static String getNameProp() {
+        return NAME_PROP;
+    }
+
+    public static String getWebrootProp() {
+        return WEBROOT_PROP;
+    }
+
+    public static void setPortProp(String portProp) {
+        PORT_PROP = portProp;
+    }
+
+    public static void setHostProp(String hostProp) {
+        HOST_PROP = hostProp;
+    }
+
+    public static void setNameProp(String nameProp) {
+        NAME_PROP = nameProp;
+    }
+
+    public static void setWebrootProp(String webrootProp) {
+        WEBROOT_PROP = webrootProp;
+    }
+
     /**
      * Setter for configuration property file. This is
      * used to configurate the server from an external
@@ -197,11 +238,30 @@ public final class HttpServer extends BaseServer {
     // <<<<<<<<<<<<<<<<< CORE <<<<<<<<<<<<<<<<<<
     @Override
     public void start() throws IOException {
+        System.out.println("[DEBUG][DEBUG] start() called [HttpServer/start]");
+        ExecutorService pool = Executors.newFixedThreadPool(500);
+        logger.info("Server started on port " + this.serverPort);
+        this.server = new ServerSocket(this.serverPort, this.backlog, this.serverHost);
+        while (this.server.isBound() && !this.server.isClosed()) {
+            System.out.println("[DEBUG][DEBUG] inside while() [HttpServer/start]");
+            Socket cli = this.server.accept();
+            System.out.println("[DEBUG][DEBUG] recieved client [HttpServer/start]");
+            HttpManager manager = new HttpManager(cli, this.config);
+            System.out.println("[DEBUG][DEBUG] HttpManager created [HttpServer/start]");
+            pool.execute(manager);
+            System.out.println("[DEBUG][DEBUG] pool executed manager [HttpServer/start]");
+            logger.info("Connection established with " + cli + "");
+        }
+    }
+
+
+    @Override
+    public void stop() throws IOException {
 
     }
 
     @Override
-    public void stop() throws IOException {
+    public void close() throws IOException {
 
     }
 
@@ -249,6 +309,7 @@ public final class HttpServer extends BaseServer {
         return super.isDirectory(dirPath);
     }
 
+
     /**
      * Manager class for handling {@link Socket} object client. Using
      * the {@link BufferedReader}, this class access the HTTP Request (since HTTP)
@@ -277,7 +338,7 @@ public final class HttpServer extends BaseServer {
      * associated with these classes are located inside {@link com.egehurturk.exceptions}
      *
      */
-    public class HttpManager implements Runnable {
+    public class HttpManager implements Runnable, Closeable {
         /**
          * The client {@code Socket} object that is connected
          * to the {@code ServerSocket}, via accept() method:
@@ -402,11 +463,7 @@ public final class HttpServer extends BaseServer {
 
         public String FASTEST_IO = "readFile_IO";
 
-        /**
-         * Maximum length of a file which stores web page
-         * 20_000 bytes is 20kb
-         */
-        protected long MAX_FILE_LENGTH = 20000000000L;
+        public String status;
 
 
         /**
@@ -416,6 +473,7 @@ public final class HttpServer extends BaseServer {
          * @throws FileNotFoundException        - If webRoot is not a directory throw an error
          */
         protected HttpManager(Socket socket, Properties config) throws IOException {
+            System.out.println("[DEBUG][DEBUG] HttpManager called [HttpServer/HttpManager/constructor]");
             this.client = socket;
             this.configuration = config;
             this._strWebRoot = config.getProperty(WEBROOT_PROP);
@@ -427,261 +485,70 @@ public final class HttpServer extends BaseServer {
                         "is the top parent directory.");
             }
             this.webRoot = new File(this._strWebRoot);
-            this.req = new HttpRequest(new BufferedReader(
-                    new InputStreamReader(this.client.getInputStream())
-            ));
-            this.res = new HttpResponse();
+//            System.out.println("[DEBUG][DEBUG] creating HttpRequest in [HttpServer/HttpManager/Constructor]");
+//            this.req = new HttpRequest(new BufferedReader(
+//                    new InputStreamReader(this.client.getInputStream())
+//            ));
+//            this.res = new HttpResponse();
         }
 
-        // TODO: implement this
         @Override
         public void run() {
+            System.out.println("[DEBUG][DEBUG] run() called in [HttpServer/run]");
             OutputStream put = null;
 
             try {
+                System.out.println("[DEBUG][DEBUG] client.getinputstream called in [HttpServer/run] -->> " + client.getInputStream());
+                if (client.getInputStream() == null) {
+                    close();
+                    return;
+                }
                 this.in = new BufferedReader(
                         new InputStreamReader(client.getInputStream())
                 );
+                System.out.println("[DEBUG][DEBUG] client.getoutputstream called in [HttpServer/run] -->> " + client.getOutputStream());
                 this.out = new PrintWriter(client.getOutputStream(), false);
+                System.out.println("[DEBUG][DEBUG] HttpRequest initialization #before [HttpServer/run]");
                 this.req = new HttpRequest(in);
-                Map<String, String> mappedReq = this.req.toMap();
+                System.out.println("[DEBUG][DEBUG] HttpRequest initialization #after [HttpServer/run]");
 
-                String method = this.req.method;
-                String path = this.req.path;
-                String scheme = this.req.scheme;
-
-
-                // URLPath urlPath = new URLPath(path);
-
-                String status;
-                String resolvedFilePathUrl;
-                File outputFile = null;
-
-                boolean statusReturned = false;
-
-                if (!mappedReq.containsKey(HttpValues.Headers.HOST)) {
-                    status = HttpValues.StatusCodeMessage.BAD_REQ;
-                    outputFile = new File(this._strWebRoot, BAD_REQ);
-                    statusReturned = true;
-                }
-
-                // bad request if path contains directory format
-                if ((path.contains("./") || path.contains("../")) && isDirectory(path) && !statusReturned) {
-                    status = HttpValues.StatusCodeMessage.BAD_REQ;
-                    outputFile = new File(this._strWebRoot, BAD_REQ);
-                } else if (isDirectory(path) && !statusReturned){
-                    status = HttpValues.StatusCodeMessage.BAD_REQ;
-                    outputFile = new File(this._strWebRoot, BAD_REQ);
-                } else if (HttpValues.Method.GET.equals(method) && !statusReturned) {
-                    resolvedFilePathUrl = resolvePath(path);
-                    outputFile = new File(this._strWebRoot, resolvedFilePathUrl);
-
-                    if (!outputFile.exists()) {
-                        status = HttpValues.StatusCodeMessage.NOT_FOUND;
-                        outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
-                    } else {
-                        if (outputFile.isDirectory()) {
-                            outputFile = new File(outputFile, INDEX);
-                        }
-                        if (outputFile.exists()) {
-                            status = HttpValues.StatusCodeMessage.OK;
-                        } else {
-                            status = HttpValues.StatusCodeMessage.NOT_FOUND;
-                            outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
-                        }
-                    }
-                    // TODO: Handle absolute paths
-                } else {
-                    outputFile = new File(this._strWebRoot, _NOT_IMPLEMENTED);
-                    status = HttpValues.StatusCodeMessage.NOT_IMPLEMENTED;
-                }
-
-                byte[] bodyByte;
-
-                switch (FASTEST_IO) {
-                    case "readFile_IO":
-                        bodyByte = readFile_IO(outputFile);
+                String method = this.req.method, path = this.req.path, scheme = this.req.scheme;
+                System.out.println("[DEBUG][DEBUG] method [HttpServer/run] -->> " + method);
+                System.out.println("[DEBUG][DEBUG] path [HttpServer/run] -->> " + path);
+                System.out.println("[DEBUG][DEBUG] scheme [HttpServer/run] -->> " + scheme);
+                System.out.println("[DEBUG][DEBUG] MethodEnum.valueOf(method) [HttpServer/run] -->> " + (MethodEnum.valueOf(method)));
+                System.out.println("[DEBUG][DEBUG] HttpResponse initialization #before [HttpServer/run]");
+                switch (MethodEnum.valueOf(method)) {
+                    case GET:
+                        System.out.println("[DEBUG][DEBUG] GET / HttpResponse initialization #before [HttpServer/run/switch]");
+                        this.res = handle_GET(this.req);
+                        System.out.println("[DEBUG][DEBUG] GET / HttpResponse initialization #after [HttpServer/run/switch]");
                         break;
-                    case "readFile_NIO":
-                        bodyByte = readFile_NIO(outputFile);
-                        break;
-                    case "readFile_NIO_DIRECT":
-                        bodyByte = readFile_NIO_DIRECT(outputFile);
+                    case POST:
+                        System.out.println("[DEBUG][DEBUG] POST / HttpResponse initialization #before [HttpServer/run/switch]");
+                        this.res = handle_POST(this.req);
+                        System.out.println("[DEBUG][DEBUG] POST / HttpResponse initialization #after [HttpServer/run/switch]");
                         break;
                     default:
-                        MappedByteBuffer _mappedBuffer = read_NIO_MAP(outputFile);
-                        bodyByte = new byte[_mappedBuffer.remaining()];
-                        _mappedBuffer.get(bodyByte);
-                        break;
+                        System.out.println("[DEBUG][DEBUG] DEFAULT / HttpResponse initialization #before [HttpServer/run/switch]");
+                        this.res = handle_NOT_IMPLEMENTED(this.req);
+                        System.out.println("[DEBUG][DEBUG] DEFAULT / HttpResponse initialization #after [HttpServer/run/switch]");
                 }
-                ZonedDateTime now = ZonedDateTime.now();
+                System.out.println("[DEBUG][DEBUG] HttpResponse initialization #after [HttpServer/run]");
 
-                String dateHeader = now.format(DateTimeFormatter.ofPattern(
-                        "EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).withZone(
-                                ZoneId.of("GMT")
-                        )
-                );
-                String contentLang = "en_US";
-                String mime_TYPE = Files.probeContentType(outputFile.toPath());
-                String content_Encoding;
-                // TODO: Get content encoding, clean up the stuff.
-
-                HttpResponseBuilder builder = new HttpResponseBuilder();
-                this.res = builder
-                            .scheme("HTTP/1.1")
-                            .code(Integer.parseInt(status.substring(1, 4)))
-                            .message(status.substring(5))
-                            .body(Arrays.toString(bodyByte))
-                            .setHeader(HttpValues.Headers.DATE, dateHeader)
-                            .setHeader(HttpValues.Headers.SERVER, this.configuration.getProperty(NAME_PROP))
-                            .setHeader(HttpValues.Headers.CONTENT_LANGUAGE, contentLang)
-                            .setHeader(HttpValues.Headers.CONTENT_LENGTH, ""+(bodyByte.length))
-                            .setHeader(HttpValues.Headers.CONTENT_TYPE, mime_TYPE)
-                            .setHeader(HttpValues.Headers.CONTENT_ENCODING, "a")
-                            .build();
-
-
-
-
-
-            } catch (IOException | FileSizeOverflowException e) {
+                System.out.println("[DEBUG][DEBUG] writeResponseToStream call #before [HttpServer/run]");
+                writeResponseToStream(this.res, this.out);
+                System.out.println("[DEBUG][DEBUG] writeResponseToStream call #after [HttpServer/run]");
+            } catch (IOException e) {
                 e.printStackTrace();
             } finally {
                 try {
-                    client.close();
+                   close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
 
-        }
-
-        /**
-         * Reads file from given {@link File} object. This method uses "old"
-         * {@link java.io} style, where the source is coming from {@link InputStream}
-         * and {@link OutputStream}, more specifically {@link FileInputStream}.
-         * A buffer ({@code byte[] array} is used to buffer file contents from {@link InputStream}
-         * This method closes all streams
-         *
-         * @param file                              - {@link File} object that is the file to be read
-         * @return                                  - {@code byte[] array} buffer
-         * @throws IOException                      - IO operation error
-         * @throws FileSizeOverflowException        - If file length is very long
-         */
-        private byte[] readFile_IO(File file) throws IOException, FileSizeOverflowException {
-            if (file.length() > MAX_FILE_LENGTH) {
-                throw new com.egehurturk.exceptions.FileSizeOverflowException("File " +
-                        file.getName() + "is too big to handle. Server accepts " +
-                        MAX_FILE_LENGTH + " file size, the requested file is " +
-                        file.length() + " bytes.");
-            }
-
-            byte[] _buffer = new byte[(int) file.length()];
-            InputStream in = null;
-
-            try {
-                in = new FileInputStream(file);
-                if ( in.read(_buffer) == -1 ) {
-                   throw new IOException(
-                           "EOF reached while reading file. File is probably empty");
-                }
-            }
-            finally {
-                try {
-                    if (in != null)
-                        in.close();
-                }
-                catch (IOException err) {
-                    logger.error("Can't read file and save into buffer");
-                    err.printStackTrace();
-                }
-            }
-            return _buffer;
-        }
-
-
-        /**
-         * Reads file from given {@link File} object. This method uses "new"
-         * {@link java.nio} style, where the source is coming from {@link java.nio.channels.Channel}
-         * more specifically {@link FileChannel}.
-         * A buffer ({@link ByteBuffer} is used to buffer file contents from {@link FileChannel}
-         * This method closes all channels and returns {@link ByteBuffer} as {@code byte[]} array
-         *
-         * @param file                              - {@link File} object that is the file to be read
-         * @return                                  - {@code byte[] array} buffer (from {@link ByteBuffer})
-         * @throws IOException                      - IO operation error
-         */
-        private byte[] readFile_NIO(File file) throws IOException {
-            RandomAccessFile rFile = new RandomAccessFile(file.getName(), "rw");
-            FileChannel inChannel = rFile.getChannel();
-
-            ByteBuffer _buffer = ByteBuffer.allocate(1024);
-
-            // read from buffer to channel
-            int bytesRead = inChannel.read(_buffer);
-
-            while (bytesRead != -1) {
-                // flip buffer to read
-                _buffer.flip();
-
-                while (_buffer.hasRemaining()) {
-                    // read from buffer and store it in byte
-                    byte b = _buffer.get();
-                }
-                // clear for overflow
-                _buffer.clear();
-
-                // read the buffer again
-                bytesRead = inChannel.read(_buffer);
-            }
-            // close all channels
-            inChannel.close();
-            rFile.close();
-            return _buffer.array();
-        }
-
-        /**
-         * This method uses a direct approach and uses the "new"
-         * style, {@link java.nio}.
-         * @param file              - {@link File} to be read
-         * @return                  - {@code byte[]} array, buffer
-         * @throws IOException      - IO operation error
-         */
-        private byte[] readFile_NIO_DIRECT(File file) throws IOException {
-            byte[] buffer = Files.readAllBytes(file.toPath());
-            return buffer;
-        }
-
-        /**
-         * A "fast" approach to read from a {@link File} with {@link MappedByteBuffer}
-         * However, in my experiments, this resulted in the slowest performance, whereas
-         * {@link #readFile_IO(File)} was the fastest
-         *
-         * @param file               - {@link File} to be read
-         * @return                   - {@link MappedByteBuffer} object
-         * @throws IOException       - IO operation error
-         */
-        private MappedByteBuffer read_NIO_MAP(File file) throws IOException {
-            RandomAccessFile rFile = new RandomAccessFile(file.getName(), "rw");
-            FileChannel inChannel = rFile.getChannel();
-
-            // create a new mappedbyte buffer
-            MappedByteBuffer buffer = inChannel.map(
-                    FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
-
-            // load the buffer
-            buffer.load();
-            for (int i = 0; i < buffer.limit(); i++)
-            {
-                // get from buffer
-                byte a = buffer.get();
-            }
-            buffer.clear();
-
-            // close all the channels
-            inChannel.close();
-            rFile.close();
-            return buffer;
         }
 
         private String resolvePath(String reqPath) {
@@ -700,13 +567,229 @@ public final class HttpServer extends BaseServer {
             return resolved.toString();
         }
 
-        private void writeResponseToStream(HttpResponse res) {
-
+        private void writeResponseToStream(HttpResponse res, PrintWriter out) {
+            // Todo: to be improved
+            String body = new String(res.body);
+            out.println(res.scheme + " " + res.code + " " + res.message);
+            out.println(HeaderEnum.SERVER.NAME + name);
+            out.println(HeaderEnum.DATE.NAME + res.headers.get(HeaderEnum.DATE.NAME));
+            out.println(HeaderEnum.CONTENT_TYPE.NAME + res.headers.get(HeaderEnum.CONTENT_TYPE.NAME) + ";charset=\"utf-8\"");
+            out.println(HeaderEnum.CONTENT_LENGTH.NAME + res.headers.get(HeaderEnum.CONTENT_LENGTH.NAME));
+            out.println(HeaderEnum.CONNECTION.NAME + "close");
+            out.println();
+            out.println(body);
+            out.println();
+            out.flush();
         }
 
         private boolean isAbsolute(String path) {
             File f = new File(path);
             return f.isAbsolute();
+        }
+
+        private File prepareOutputWithMethod(HttpRequest req) {
+            File outputFile = null;
+            String resolvedFilePathUrl;
+            System.out.println("[DEBUG][DEBUG] req.method.equals(GET) [HttpServer/prepareOutputWithMethod] -->> " + req.method.equals(MethodEnum.GET.str));
+            if (req.method.equals(MethodEnum.GET.str)) {
+                resolvedFilePathUrl = resolvePath(req.path);
+                System.out.println("[DEBUG][DEBUG] resolvedFile[HttpServer/prepareOutputWithMethod] -->> " + resolvedFilePathUrl);
+                outputFile = new File(this._strWebRoot, resolvedFilePathUrl);
+                System.out.println("[DEBUG][DEBUG] outputFile [HttpServer/prepareOutputWithMethod] -->> " + outputFile);
+                System.out.println("[DEBUG][DEBUG] outputFile.exists() [HttpServer/prepareOutputWithMethod] -->> " + outputFile.exists());
+                if (!outputFile.exists()) {
+                      this.status = StatusEnum._404_NOT_FOUND.MESSAGE;
+                      System.out.println("[DEBUG][DEBUG] status [HttpServer/prepareOutputWithMethod] -->> " + status);
+                      outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
+                    System.out.println("[DEBUG][DEBUG] outputFile [HttpServer/prepareOutputWithMethod] -->> " + outputFile);
+                } else {
+                    System.out.println("[DEBUG][DEBUG] outputFile.isDirectory() [HttpServer/prepareOutputWithMethod] -->> " + outputFile.isDirectory());
+                    if (outputFile.isDirectory()) {
+                        // /file -> index.html
+                        outputFile = new File(outputFile, INDEX);
+                        System.out.println("[DEBUG][DEBUG] outputFile [HttpServer/prepareOutputWithMethod] -->> " + outputFile);
+                    }
+                    if (outputFile.exists()) {
+                        this.status = StatusEnum._200_OK.MESSAGE;
+                        System.out.println("[DEBUG][DEBUG] status [HttpServer/prepareOutputWithMethod] -->> " + status);
+                    } else {
+                        this.status = StatusEnum._404_NOT_FOUND.MESSAGE;
+                        System.out.println("[DEBUG][DEBUG] stats [HttpServer/prepareOutputWithMethod] -->> " + status);
+                        outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
+                        System.out.println("[DEBUG][DEBUG] outputFile [HttpServer/prepareOutputWithMethod] -->> " + outputFile);
+                    }
+                }
+                // TODO: Handle absolute paths
+            } else if (req.method.equals(MethodEnum.POST.str)) {
+                System.out.println("[DEBUG][DEBUG] request POST [HttpServer/prepareOutputWithMethod]");
+                // TODO: Handle later
+            } else {
+                this.status = StatusEnum._501_NOT_IMPLEMENTED.MESSAGE;
+                System.out.println("[DEBUG][DEBUG] status [HttpServer/prepareOutputWithMethod] -->> " + status);
+                outputFile = new File(this._strWebRoot, _NOT_IMPLEMENTED);
+                System.out.println("[DEBUG][DEBUG] outputFile [HttpServer/prepareOutputWithMethod] -->> " + outputFile);
+            }
+            return outputFile;
+
+        }
+
+        public HttpResponse handle_GET(HttpRequest req) {
+            System.out.println("[DEBUG][DEBUG] handle_GET called [HttpServer/handle_GET]");
+            String resolvedFilePathUrl;
+            File outputFile = null;
+            boolean statusReturned = false;
+            System.out.println("[DEBUG][DEBUG] req.headers.containsKey(Host) --> [HttpServer/handle_GET]" + this.req.headers.containsKey("host"));
+            // if "Host: " header is not present in the headers throw a 400 error
+            // TODO: Remove constant
+            if (!this.req.headers.containsKey("host")) {
+                this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
+                System.out.println("[DEBUG][DEBUG] status [HttpServer/handle_GET] -->> " + this.status);
+                outputFile = new File(this._strWebRoot, BAD_REQ);
+                System.out.println("[DEBUG][DEBUG] outputFile [HttpServer/handle_GET] -->> " + outputFile);
+                statusReturned = true;
+                System.out.println("[DEBUG][DEBUG] statusReturned [HttpServer/handle_GET] -->> " + statusReturned);
+            }
+
+            // bad request if path contains directory format
+            if (!statusReturned) {
+                System.out.println("[DEBUG][DEBUG] req.path.contains(./ || ../) [HttpServer/handle_GET] -->> " + (req.path.contains("./") || req.path.contains("../")));
+                if (req.path.contains("./") || req.path.contains("../")) {
+                    this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
+                    System.out.println("[DEBUG][DEBUG] status [HttpServer/handle_GET] -->> " + this.status);
+                    outputFile = new File(this._strWebRoot, BAD_REQ);
+                    System.out.println("[DEBUG][DEBUG] outputfile [HttpServer/handle_GET] -->> " + outputFile);
+                    statusReturned = true;
+                    System.out.println("[DEBUG][DEBUG] statusReturned [HttpServer/handle_GET] -->> " + statusReturned);
+                }
+
+                else if (isDirectory(req.path)){
+                    this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
+                    System.out.println("[DEBUG][DEBUG] status [HttpServer/handle_GET] -->> " + this.status);
+                    outputFile = new File(this._strWebRoot, BAD_REQ);
+                    System.out.println("[DEBUG][DEBUG] outputfile [HttpServer/handle_GET] -->> " + outputFile);
+                    statusReturned = true;
+                    System.out.println("[DEBUG][DEBUG] statusReturned [HttpServer/handle_GET] -->> " + statusReturned);
+                }
+                System.out.println("[DEBUG][DEBUG] prepareOutputWithMethod #before [HttpServer/handle_GET]");
+                outputFile = prepareOutputWithMethod(this.req);
+                System.out.println("[DEBUG][DEBUG] prepareOutputWithMethod #after [HttpServer/handle_GET]");
+            }
+
+            byte[] bodyByte = null;
+            // handle_GET, handle_POST functions
+            System.out.println("[DEBUG][DEBUG] fastestIO [HttpServer/handle_GET] -->> " + FASTEST_IO);
+            switch (FASTEST_IO) {
+                case "readFile_IO":
+                    System.out.println("[DEBUG][DEBUG] readFile_IO [HttpServer/handle_GET]");
+                    try {
+                        bodyByte = Utility.readFile_IO(outputFile);
+                        System.out.println("[DEBUG][DEBUG] byte[] bodyByte [HttpServer/handle_GET] -->> " + bodyByte);
+                    } catch (IOException  | FileSizeOverflowException e) {
+                        this.logger.error("File size is too large");
+                        e.printStackTrace();
+                    }
+                    break;
+                case "readFile_NIO":
+                    try {
+                        bodyByte = Utility.readFile_NIO(outputFile);
+                    } catch (IOException e) {
+                        this.logger.error("Could not read the file");
+                        e.printStackTrace();
+                    }
+                    break;
+                case "readFile_NIO_DIRECT":
+                    try {
+                        bodyByte = Utility.readFile_NIO_DIRECT(outputFile);
+                    } catch (IOException e) {
+                        this.logger.error("Could not read the file");
+                        e.printStackTrace();
+                    }
+                    break;
+                default:
+                    MappedByteBuffer _mappedBuffer = null;
+                    try {
+                        _mappedBuffer = Utility.read_NIO_MAP(outputFile);
+                    } catch (IOException e) {
+                        this.logger.error("Could not read the file");
+                        e.printStackTrace();
+                    }
+                    if (_mappedBuffer != null) {
+                        bodyByte = new byte[_mappedBuffer.remaining()];
+                        _mappedBuffer.get(bodyByte);
+                    } else {
+                        this.logger.error("Cannot read file and store in memory");
+                    }
+                    break;
+            }
+            System.out.println("[DEBUG][DEBUG] statusReturned [HttpServer/handle_GET] -->> " + statusReturned);
+            if (!statusReturned) {
+                System.out.println("[DEBUG][DEBUG] byte[] bodyByte [HttpServer/handle_GET] -->> " + bodyByte);
+                if (bodyByte == null) {
+                    this.logger.error("Could not read file contents in memory");
+                    this.status = StatusEnum._500_INTERNAL_ERROR.MESSAGE;
+                    System.out.println("[DEBUG][DEBUG] status [HttpServer/handle_GET] -->> " + status);
+                    statusReturned = true;
+                    System.out.println("[DEBUG][DEBUG] statusReturned [HttpServer/handle_GET] -->> " + statusReturned);
+                }
+            }
+
+            // <<<<<<<<<<<<< HEADER SETTING <<<<<<<<<<<<<<<<<<<<<
+            ZonedDateTime now = ZonedDateTime.now();
+            String dateHeader = now.format(DateTimeFormatter.ofPattern(
+                    "EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).withZone(
+                    ZoneId.of("GMT")
+                    )
+            );
+            System.out.println("[DEBUG][DEBUG] DATE HEADER [HttpServer/handle_GET] -->> " + dateHeader);
+            String contentLang = "en_US", mimeType = null;
+            System.out.println("[DEBUG][DEBUG] CONTENT LANG [HttpServer/handle_GET] -->> " + contentLang);
+            try {
+                mimeType = Files.probeContentType(outputFile.toPath());
+                System.out.println("[DEBUG][DEBUG] MIMETYPE [HttpServer/handle_GET] -->> " + mimeType);
+            } catch (IOException e) {
+                this.logger.error("Cannot determine the MIME type of file");
+                e.printStackTrace();
+            }
+
+            System.out.println("[DEBUG][DEBUG] HttpResponseBuilder building HttpResponse #before [HttpServer/handle_GET]");
+            System.out.println("[DEBUG][DEBUG] ~~~~HEADER CHECKING~~~~ [HttpServer/handle_GET]");
+            System.out.println("[DEBUG][DEBUG] status code [HttpServer/handle_GET] -->> " + StatusEnum.valueOf(Utility.enumStatusToString(status)).STATUS_CODE);
+            System.out.println("[DEBUG][DEBUG] message [HttpServer/handle_GET] -->> " + StatusEnum.valueOf(Utility.enumStatusToString(status)).MESSAGE);
+            System.out.println("[DEBUG][DEBUG] date, date [HttpServer/handle_GET] -->> " + HeaderEnum.DATE.NAME + dateHeader);
+            System.out.println("[DEBUG][DEBUG] server, server [HttpServer/handle_GET] -->> " + HeaderEnum.SERVER.NAME + this.configuration.getProperty(NAME_PROP));
+            System.out.println("[DEBUG][DEBUG] contentlang, contentlang [HttpServer/handle_GET] -->> " + HeaderEnum.CONTENT_LANGUAGE.NAME + contentLang);
+            System.out.println("[DEBUG][DEBUG] contentlen, contentlen [HttpServer/handle_GET] -->> " + HeaderEnum.CONTENT_LENGTH.NAME + bodyByte.length);
+            System.out.println("[DEBUG][DEBUG] mime, mime [HttpServer/handle_GET] -->> " + HeaderEnum.CONTENT_TYPE.NAME + mimeType);
+            HttpResponseBuilder builder = new HttpResponseBuilder();
+            HttpResponse response = builder
+                    .scheme("HTTP/1.1")
+                    .code(StatusEnum.valueOf(Utility.enumStatusToString(status)).STATUS_CODE)
+                    .message(StatusEnum.valueOf(Utility.enumStatusToString(status)).MESSAGE)
+                    .body(bodyByte)
+                    .setHeader(HeaderEnum.DATE.NAME, dateHeader)
+                    .setHeader(HeaderEnum.SERVER.NAME, this.configuration.getProperty(NAME_PROP))
+                    .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
+                    .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(bodyByte.length))
+                    .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
+//                    .setHeader(HeaderEnum.CONTENT_ENCODING.NAME, "a")
+                    .build();
+            System.out.println("[DEBUG][DEBUG] HttpResponseBuilder building HttpResponse #after [HttpServer/handle_GET]");
+            return response;
+        }
+
+        public HttpResponse handle_POST(HttpRequest req) {
+            return new HttpResponse();
+        }
+
+        public HttpResponse handle_NOT_IMPLEMENTED(HttpRequest req) {
+            return new HttpResponse();
+        }
+
+        @Override
+        public void close() throws IOException {
+            this.client.close();
+            this.in.close();
+            this.out.close();
         }
 
     }
@@ -725,3 +808,4 @@ public final class HttpServer extends BaseServer {
 }
 
 // ../resources/q.txt
+

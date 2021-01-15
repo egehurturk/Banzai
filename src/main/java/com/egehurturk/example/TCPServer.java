@@ -1,14 +1,15 @@
-// A DUMMY TEST SERVER CLASS FOR TESTING PURPOSES
-// BASIC TCP [X]
+/*
+ * All rights reserved
+ */
 
-package com.egehurturk;
+package com.egehurturk.example;
 
 
+import com.egehurturk.BaseServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -23,30 +24,24 @@ public class TCPServer extends BaseServer {
         super(serverPort);
     }
 
-    public static void main(String[] args) throws IOException {
+    public TCPServer() {}
 
+    public TCPServer(String configFilePath) {
+        configureServer(configFilePath);
+    }
+
+
+    @Override
+    public void start() throws IOException {
         ExecutorService pool = Executors.newFixedThreadPool(500);
-        logger.info("Server started on port " + 9090);
-        ServerSocket sv = new ServerSocket(9090, 50, InetAddress.getByName("0.0.0.0"));
+        logger.info("Server started on port " + this.serverPort);
+        ServerSocket sv = new ServerSocket(this.serverPort, this.backlog, this.serverHost);
         while (true) {
             Socket cli = sv.accept();
             ConnectionManager manager = new ConnectionManager(cli);
             logger.info("Connection established with " + cli + "");
             pool.execute(manager);
         }
-    }
-
-
-    @Override
-    public void start() throws IOException {
-//        ExecutorService pool = Executors.newFixedThreadPool(500);
-//        System.out.println("[SERVER STARED] on port " + this.serverPort + " and on host " + this.serverHost);
-//        ServerSocket sv = new ServerSocket(this.serverPort);
-//        while (true) {
-//            ConnectionManager manager = new ConnectionManager(sv.accept());
-//            pool.execute(manager);
-//        }
-        System.out.println("Hello, world!");
     }
 
     @Override

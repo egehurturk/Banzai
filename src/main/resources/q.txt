@@ -84,3 +84,4 @@ This server should be run from CLI, by using a bash file:
  TODO: Implement resToMap method in HttpResponse
  TODO: HttpServer should initialize a connection manager in constructor
  TODO: Raise 400 error on bad requests
+ TODO: More generic exceptions and all inherit from two requests: HttpRequestException and HttpResponsException
