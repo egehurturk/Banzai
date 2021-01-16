@@ -8,7 +8,6 @@ public class DriverClassForTest {
         HttpServer tcpServer = new HttpServer();
         tcpServer.setConfigPropFile("src/main/resources/server.properties");
         tcpServer.configureServer();
-        System.out.println("[DEBUG][DEBUG] starting server from driver [DriverClassForTest/main]");
         tcpServer.start();
     }
 }
