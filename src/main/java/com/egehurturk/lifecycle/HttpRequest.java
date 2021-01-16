@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 
 // http://web-sniffer.net/rfc/rfc2616.html#section-14.1
@@ -109,38 +108,24 @@ public class HttpRequest {
      */
     public HashMap<String, String> headers = new HashMap<>();
 
-    public HttpRequest(BufferedReader data) {
-        try {
-            System.out.println("[DEBUG][DEBUG] parse [constructor]" );
-            parse(data);
-        }
-        catch (IOException err){
-            err.printStackTrace();
-            logger.error("[ERROR]: Could not parse client request");
-        }
-        catch (HttpRequestException err) {
-            err.printStackTrace();
-            logger.error("[ERROR] Could not parse client request");
-        }
+    // todo: try-catch errors
+    public HttpRequest(BufferedReader data) throws HttpRequestException, IOException {
+        parse(data);
 
     }
 
     private void parse(BufferedReader in) throws IOException, HttpRequestException {
-        System.out.println("[DEBUG][DEBUG] bufferedreader in [parse] -->> " + in);
         if (in == null) {
             logger.error("Input stream of client is null, or empty, Check for client connection");
             throw new com.egehurturk.exceptions.BadRequest400Exception("Input stream is null or empty. Check for client" +
                     "connection that sends the request", 400, "Bad Request");
         }
         String requestLine = in.readLine();
-        System.out.println("[DEBUG][DEBUG] requestLine [parse] -->> " + requestLine);
-        System.out.println("[DEBUG][DEBUG] requestLine == null [parse] -->> " + (requestLine == null));
         if (requestLine == null || requestLine.isEmpty()) {
             logger.error("Input stream of client is null, or empty, Check for client connection");
             throw new com.egehurturk.exceptions.BadRequest400Exception("Input stream is null or empty. Check for client" +
                     " connection that sends the request", 400, "Bad Request");
         }
-        System.out.println("[DEBUG][DEBUG] checkValidHttpRequest [parse] -->> " + checkValidHttpRequest(requestLine));
         if (!checkValidHttpRequest(requestLine)) {
             logger.error("Request is not valid (check scheme)");
             throw new com.egehurturk.exceptions.BadRequest400Exception("Request does not match HTTP standards. Check the request again" +
@@ -149,8 +134,6 @@ public class HttpRequest {
         }
 
         String[] requestLineArray = requestLine.split(" ");
-        System.out.println("[DEBUG][DEBUG] requestLineArray [parse] -->> " + Arrays.toString(requestLineArray));
-        System.out.println("[DEBUG][DEBUG] requestLineArray.length [parse] -->> " + requestLineArray.length);
         if (requestLineArray.length != 3) {
             logger.error("Request line (e.g. GET /index HTTP/1.1 is not found");
             throw new com.egehurturk.exceptions.BadRequest400Exception("Request does not match HTTP standards. Check the request again" +
@@ -160,18 +143,11 @@ public class HttpRequest {
         this.method = requestLineArray[0].toUpperCase(); // ensure it is all upper ("GET")
         this.path = requestLineArray[1].toLowerCase(); // ensure it is all lower, i.e ("/index.html")
         this.scheme = requestLineArray[2]; // by default it is all upper. Case here does not matter
-        System.out.println("[DEBUG][DEBUG] method [parse] -->> " + method);
-        System.out.println("[DEBUG][DEBUG] path [parse] -->> " + path);
-        System.out.println("[DEBUG][DEBUG] scheme [parse] -->> " + scheme);
 
         // read headers line by line
         // TODO: check for null `in`
         String  headerLine = in.readLine().toLowerCase().trim();
-        System.out.println("[DEBUG][DEBUG] headerLine [parse] -->> " + headerLine);
-        System.out.println("[DEBUG][DEBUG] headerLine == null [parse] -->> " + (headerLine == null));
-        System.out.println("[DEBUG][DEBUG] headerLine.isempty() [parse] -->> " + (headerLine.isEmpty()));
         while ( !headerLine.isEmpty() && headerLine != null) { // check if lines are not empty
-            System.out.println("[DEBUG][DEBUG] inf [parse/while]");
             // <key> : <value>
             // trim: <key>:<value>
             // connection:keep-alive, accept:text/html
@@ -186,7 +162,6 @@ public class HttpRequest {
                 this.headers.put(headerLine.substring(0, idx), headerLine.substring(idx+1));
             }
             headerLine = in.readLine().toLowerCase().trim();
-            System.out.println("[DEBUG][DEBUG] headerLineNew [parse] -->> " + (headerLine));
 
         }
         // in POST requests
@@ -195,7 +170,6 @@ public class HttpRequest {
             String bodyMsg;
             StringBuilder _bodyTemplate = new StringBuilder();
             while ( (bodyMsg = in.readLine()) != null ) {
-                System.out.println("CHECK 2");
                 _bodyTemplate.append(bodyMsg).append("\r\n"); // append carriage return
             }
             this.body = _bodyTemplate.toString().getBytes();
@@ -220,11 +194,12 @@ public class HttpRequest {
     private boolean checkValidHttpRequest(String firstLine) {
 
         String[] requestLine = firstLine.split(" ");
+        if (requestLine.length != 3) {
+            logger.error("Request line (e.g. GET /index HTTP/1.1 is not found");
+            return false;
+        }
         String method = requestLine[0].toUpperCase(); // "GET"
         String scheme = requestLine[2];
-        System.out.println("[DEBUG][DEBUG] requestLine [checkValidHttpRequest] -->> " + Arrays.toString(requestLine));
-        System.out.println("[DEBUG][DEBUG] method [checkValidHttpRequest] -->> " + method);
-        System.out.println("[DEBUG][DEBUG] scheme [checkValidHttpRequest] -->> " + scheme);
 
         if (!(scheme.equals(HTTP_V_1_1) || scheme.equals(HTTP_V_1_0))) {
             logger.info("HTTP Version not supported");
@@ -232,7 +207,6 @@ public class HttpRequest {
         }
 
         for (MethodEnum methodE: MethodEnum.values()) {
-            System.out.println("[DEBUG][DEBUG] method.equals(methodE.str) [checkValidHttpRequest] -->> " + method.equals(methodE.str));
             if (method.equals(methodE.str)) {
                 return true;
             }
