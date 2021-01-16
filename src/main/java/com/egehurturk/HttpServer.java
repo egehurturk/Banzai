@@ -58,7 +58,7 @@ import java.util.concurrent.Executors;
  * @version     1.0 - SNAPSHOT
  */
 
-public final class HttpServer extends BaseServer implements Closeable {
+public class HttpServer extends BaseServer implements Closeable {
     /* Extends {@link BaseServer} class for base TCP/IPv4 connection activity */
 
     /**
