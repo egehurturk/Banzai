@@ -468,7 +468,7 @@ public class HttpServer extends BaseServer implements Closeable {
          *                                          input and output tasks are done with the socket's I/O streams.
          * @throws FileNotFoundException        - If webRoot is not a directory throw an error
          */
-        protected HttpManager(Socket socket, Properties config) throws IOException {
+        public HttpManager(Socket socket, Properties config) throws IOException {
             this.client = socket;
             this.configuration = config;
             this._strWebRoot = config.getProperty(WEBROOT_PROP);
@@ -611,12 +611,17 @@ public class HttpServer extends BaseServer implements Closeable {
                     statusReturned = true;
                 }
 
+                else if (req.path.equals("/")) {
+                    outputFile = prepareOutputWithMethod(this.req);
+                }
                 else if (isDirectory(req.path)){
                     this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
                     outputFile = new File(this._strWebRoot, BAD_REQ);
                     statusReturned = true;
                 }
-                outputFile = prepareOutputWithMethod(this.req);
+                else {
+                    outputFile = prepareOutputWithMethod(this.req);
+                }
             }
 
             byte[] bodyByte = null;
