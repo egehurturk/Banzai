@@ -10,6 +10,9 @@
  *      - https://tools.ietf.org/html/rfc7230
  *      - https://tools.ietf.org/html/rfc7231
  *      - https://tools.ietf.org/html/rfc7232
+ *      - https://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art076
+ *      - https://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art077
+ *      - https://commandlinefanatic.com/cgi-bin/showarticle.cgi?article=art078
  */
 
 /*
