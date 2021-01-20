@@ -12,6 +12,7 @@ public class URLPath {
      * {@link URL} address
      */
     public URL url;
+    public String defaultURL;
 
     /**
      * Wrapper constructor
@@ -19,7 +20,11 @@ public class URLPath {
      * @throws MalformedURLException    - exception
      */
     public URLPath(String url) throws MalformedURLException {
-        this.url = new URL(url);
+        System.out.println(url);
+        if (url.equals("/*"))
+            this.defaultURL = url;
+        else
+            this.url = new URL(url);
     }
 
     /**
@@ -51,6 +56,9 @@ public class URLPath {
     }
 
     public String getPath() {
+        if (defaultURL != null && !defaultURL.isEmpty()) {
+            return this.defaultURL;
+        }
         return this.url.getPath();
     }
 
