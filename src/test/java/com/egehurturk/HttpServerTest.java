@@ -1,5 +1,6 @@
 package com.egehurturk;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ public class HttpServerTest {
 
     @BeforeEach
     public void setUp() throws IOException {
+        System.out.println("========== TEST STARTING ==========");
         outputStream = new ByteArrayOutputStream();
         Mockito.lenient().when(client.getOutputStream()).thenReturn(outputStream);
         Mockito.lenient().when(client.getInetAddress()).thenReturn(InetAddress.getByName("localhost"));
@@ -40,6 +42,15 @@ public class HttpServerTest {
         serverTest = new HttpServer();
         manager = serverTest.new HttpManager(client, props);
     }
+
+    @AfterEach
+    public void tearDown() throws IOException {
+        System.out.println("========== TEST FINISHING ==========");
+        outputStream.close();
+        manager.close();
+        client.close();
+    }
+
 
     @Test
     public void testGetRequestResponseStatusLinePathSlashDirectory() throws IOException {
