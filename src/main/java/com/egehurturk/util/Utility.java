@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Utility {
 
@@ -167,5 +168,13 @@ public class Utility {
                 break;
         }
         return returnedVal;
+    }
+
+    public static boolean isDirectory(String dirPath) {
+        return Files.isDirectory(Paths.get(dirPath));
+    }
+
+    public static String removeLastChars(String str, int chars) {
+        return str.substring(0, str.length() - chars);
     }
 }
