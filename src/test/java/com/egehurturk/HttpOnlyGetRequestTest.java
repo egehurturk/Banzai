@@ -2,7 +2,8 @@ package com.egehurturk;
 
 
 import com.egehurturk.exceptions.HttpRequestException;
-import com.egehurturk.lifecycle.HttpRequest;
+import com.egehurturk.httpd.HttpServer;
+import com.egehurturk.httpd.HttpRequest;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -67,7 +68,7 @@ public class HttpOnlyGetRequestTest {
     @DisplayName("Test valid http request's method to be GET")
     public void testHttpRequestMethod(String http) throws IOException, HttpRequestException {
         testRequest = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(http))));
-        Assert.assertEquals(testRequest.method, "GET");
+        Assert.assertEquals(testRequest.getMethod(), "GET");
     }
 
     @ParameterizedTest
@@ -75,7 +76,7 @@ public class HttpOnlyGetRequestTest {
     @DisplayName("Test valid http request's scheme to be HTTP/1.1")
     public void testHttpRequestScheme(String http) throws IOException, HttpRequestException {
         testRequest = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(http))));
-        Assert.assertEquals(testRequest.scheme, "HTTP/1.1");
+        Assert.assertEquals(testRequest.getScheme(), "HTTP/1.1");
     }
 
     @ParameterizedTest
@@ -83,7 +84,7 @@ public class HttpOnlyGetRequestTest {
     @DisplayName("Test valid http request's path to be /")
     public void testHttpRequestPath(String http) throws IOException, HttpRequestException {
         testRequest = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(http))));
-        Assert.assertEquals(testRequest.path, "/");
+        Assert.assertEquals(testRequest.getPath(), "/");
     }
 
     @ParameterizedTest
@@ -116,7 +117,7 @@ public class HttpOnlyGetRequestTest {
     @DisplayName("Test valid http request's header body to be null (b/c it is GET)")
     public void testHttpRequestBodyToBeNullInGetRequest(String http) throws IOException, HttpRequestException {
         testRequest = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(http))));
-        Assert.assertNull(testRequest.body);
+        Assert.assertNull(testRequest.getBody());
     }
 
     /*
