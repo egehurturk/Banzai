@@ -1,6 +1,6 @@
 [DEBUG][DEBUG] starting server from driver [DriverClassForTest/main]
 [DEBUG][DEBUG] start() called [HttpServer/start]
-2021-01-14 13:54:59  INFO com.egehurturk.HttpServer - Server started on port 8090
+2021-01-14 13:54:59  INFO com.egehurturk.httpd.HttpServer - Server started on port 8090
 [DEBUG][DEBUG] inside while() [HttpServer/start]
 [DEBUG][DEBUG] recieved client [HttpServer/start]
 [DEBUG][DEBUG] parse [constructor]
@@ -39,7 +39,7 @@
 [DEBUG][DEBUG] HttpRequest initialization #before [HttpServer/run]
 [DEBUG][DEBUG] parse [constructor]
 [DEBUG][DEBUG] bufferedreader in [parse] -->> java.io.BufferedReader@21fda431
-2021-01-14 13:59:14  INFO com.egehurturk.HttpServer - Connection established with Socket[addr=/127.0.0.1,port=56107,localport=8090]
+2021-01-14 13:59:14  INFO com.egehurturk.httpd.HttpServer - Connection established with Socket[addr=/127.0.0.1,port=56107,localport=8090]
 [DEBUG][DEBUG] inside while() [HttpServer/start]
 [DEBUG][DEBUG] requestLine [parse] -->> GET / HTTP/1.1
 [DEBUG][DEBUG] requestLine.isEmpty() [parse] -->> false
@@ -87,9 +87,9 @@
 [DEBUG][DEBUG] MIMETYPE [HttpServer/handle_GET] -->> text/html
 [DEBUG][DEBUG] HttpResponseBuilder building HttpResponse #before [HttpServer/handle_GET]
 Exception in thread "pool-2-thread-1" java.lang.NullPointerException
-	at com.egehurturk.lifecycle.HttpResponseBuilder.setHeader(HttpResponseBuilder.java:41)
-	at com.egehurturk.HttpServer$HttpManager.handle_GET(HttpServer.java:757)
-	at com.egehurturk.HttpServer$HttpManager.run(HttpServer.java:523)
+	at com.egehurturk.httpd.HttpResponseBuilder.setHeader(HttpResponseBuilder.java:41)
+	at com.egehurturk.httpd.HttpServer$HttpManager.handle_GET(HttpServer.java:757)
+	at com.egehurturk.httpd.HttpServer$HttpManager.run(HttpServer.java:523)
 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
 	at java.base/java.lang.Thread.run(Thread.java:832)
