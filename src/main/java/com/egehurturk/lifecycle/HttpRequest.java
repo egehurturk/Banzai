@@ -108,10 +108,8 @@ public class HttpRequest {
      */
     public HashMap<String, String> headers = new HashMap<>();
 
-    // todo: try-catch errors
     public HttpRequest(BufferedReader data) throws HttpRequestException, IOException {
         parse(data);
-
     }
 
     private void parse(BufferedReader in) throws IOException, HttpRequestException {
@@ -145,7 +143,6 @@ public class HttpRequest {
         this.scheme = requestLineArray[2]; // by default it is all upper. Case here does not matter
 
         // read headers line by line
-        // TODO: check for null `in`
         String  headerLine = in.readLine().toLowerCase().trim();
         while ( !headerLine.isEmpty() && headerLine != null) { // check if lines are not empty
             // <key> : <value>
@@ -216,3 +213,4 @@ public class HttpRequest {
 }
 
 /* https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages */
+// TODO: Encapsulation (private fields) and getters (no setters)
