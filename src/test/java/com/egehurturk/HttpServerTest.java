@@ -1,5 +1,9 @@
 package com.egehurturk;
 
+import com.egehurturk.handlers.HandlerTemplate;
+import com.egehurturk.handlers.HttpController;
+import com.egehurturk.handlers.HttpHandler;
+import com.egehurturk.util.MethodEnum;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -27,8 +33,8 @@ public class HttpServerTest {
 
     private ByteArrayOutputStream outputStream;
 
-    public HttpServer serverTest;
-    public HttpServer.HttpManager manager;
+    public HttpController manager;
+    public HttpHandler handler;
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -39,8 +45,11 @@ public class HttpServerTest {
         Properties props = new Properties();
         props.put("server.name", "Banzai");
         props.put("server.webroot", "www");
-        serverTest = new HttpServer();
-        manager = serverTest.new HttpManager(client, props);
+        handler = new HttpHandler(props);
+        List<HandlerTemplate> handlers = new ArrayList<>();
+        HandlerTemplate temp = new HandlerTemplate(MethodEnum.GET, new String("/*"), handler);
+        handlers.add(temp);
+        manager = new HttpController(client, handlers);
     }
 
     @AfterEach
