@@ -67,7 +67,7 @@ public class HttpServer extends BaseServer implements Closeable {
      */
     protected static Logger logger = LogManager.getLogger(HttpServer.class);
     /**
-     * Required for configurating {@link #logger} field with the {@code log4j2.xml} file
+     * Required for configuring {@link #logger} field with the {@code log4j2.xml} file
      */
     protected static LoggerContext context =  ( org.apache.logging.log4j.core.LoggerContext ) LogManager
                                                                         .getContext(false);
@@ -102,7 +102,7 @@ public class HttpServer extends BaseServer implements Closeable {
 
 
     /**
-     * Chained constructor for initalizing with only port.
+     * Chained constructor for initializing with only port.
      * @param serverPort                - server port that the HTTP server is running on
      * @throws UnknownHostException     - required for {@link InetAddress} to hold the host name (IPv4)
      */
@@ -120,8 +120,9 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 
     public HttpServer(String fileConfigPath) {
-        // TODO: Implement with configuration file path constructor
-        }
+        setConfigPropFile(fileConfigPath);
+        configureServer(fileConfigPath);
+    }
 
     /**
      * Base constructor that has all fields as arguments. Is used for manually
@@ -219,7 +220,7 @@ public class HttpServer extends BaseServer implements Closeable {
 
     /**
      * Setter for configuration property file. This is
-     * used to configurate the server from an external
+     * used to configure the server from an external
      * properties file.
      * @param configPropFile        - name of file
      */
@@ -238,14 +239,27 @@ public class HttpServer extends BaseServer implements Closeable {
 
     // <<<<<<<<<<<<<<<<< CORE <<<<<<<<<<<<<<<<<<
     @Override
-    public void start() throws IOException {
+    public void start() {
         ExecutorService pool = Executors.newFixedThreadPool(500);
         logger.info("Server started on port " + this.serverPort);
-        this.server = new ServerSocket(this.serverPort, this.backlog, this.serverHost);
+        try {
+            this.server = new ServerSocket(this.serverPort, this.backlog, this.serverHost);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         while (this.server.isBound() && !this.server.isClosed()) {
-            Socket cli = this.server.accept();
-            HttpManager manager = new HttpManager(cli, this.config);
-            pool.execute(manager);
+            Socket cli = null;
+            try {
+                cli = this.server.accept();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                HttpManager manager = new HttpManager(cli, this.config);
+                pool.execute(manager);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             logger.info("Connection established with " + cli + "");
         }
     }
@@ -582,7 +596,6 @@ public class HttpServer extends BaseServer implements Closeable {
                 }
                 // TODO: Handle absolute paths
             } else if (req.method.equals(MethodEnum.POST.str)) {
-                // TODO: Handle later
             } else {
                 this.status = StatusEnum._501_NOT_IMPLEMENTED.MESSAGE;
                 outputFile = new File(this._strWebRoot, _NOT_IMPLEMENTED);
@@ -724,7 +737,7 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 
 
-    protected HttpManager createHttpManager(Socket cli, Properties config) {
+    public HttpManager createHttpManager(Socket cli, Properties config) {
         HttpManager manager = null;
         try {
             manager =  new HttpManager(cli, config);
@@ -736,5 +749,4 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 }
 
-// ../resources/q.txt
 
