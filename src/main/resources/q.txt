@@ -73,15 +73,6 @@ This server should be run from CLI, by using a bash file:
         'close' done by server.
 
 
- TODO: HttpServer class
- TODO: Think about how to store, parse, write HTTP Headers
- TODO: Think about how to open and read HTML files
- TODO: Implement run method of httpserver
  TODO: close the stream of client whenever the request is received and the response is sent. Otherwise
         it will cost too much
- TODO: Think on your fields for only HTTP server class. Create constructors accordingly
- TODO: implement this class. Rewrite the methods
- TODO: Implement resToMap method in HttpResponse
  TODO: HttpServer should initialize a connection manager in constructor
- TODO: Raise 400 error on bad requests
- TODO: More generic exceptions and all inherit from two requests: HttpRequestException and HttpResponsException
