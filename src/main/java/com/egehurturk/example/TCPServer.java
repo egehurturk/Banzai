@@ -5,7 +5,7 @@
 package com.egehurturk.example;
 
 
-import com.egehurturk.BaseServer;
+import com.egehurturk.core.BaseServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
