@@ -249,10 +249,10 @@ public class HttpServer extends BaseServer implements Closeable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            logger.info("Connection established with " + cli + "");
             HttpController controller = new HttpController(cli, handlers);
             controller.setAllowForCustomMapping(this.allowCustomUrlMapping);
             pool.execute(controller);
-            logger.info("Connection established with " + cli + "");
         }
     }
 

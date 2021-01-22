@@ -8,9 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 // http://web-sniffer.net/rfc/rfc2616.html#section-14.1
 
@@ -108,7 +106,6 @@ public class HttpRequest {
      * in this object.
      */
     public HashMap<String, String> headers = new HashMap<>();
-    public List<String> requestURLMappings = new ArrayList<>();
 
     public HttpRequest(BufferedReader data) throws HttpRequestException, IOException {
         parse(data);
