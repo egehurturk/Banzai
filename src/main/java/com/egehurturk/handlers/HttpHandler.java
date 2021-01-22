@@ -114,13 +114,20 @@ public class HttpHandler implements Handler {
      */
     @Override
     public HttpResponse handle(HttpRequest request, HttpResponse response) {
-        HttpResponse res = new HttpResponse();
+        System.out.println("[DEBUG][DEBUG] HTTPHandler.handle is called ");
+        System.out.println("[DEBUG][DEBUG] creating new HttpResponse (empty) ");
+        HttpResponse res;
+        System.out.println("[DEBUG][DEBUG] request.method -->> " + request.getMethod());
         switch (MethodEnum.valueOf(request.getMethod())) {
             case GET:
+                System.out.println("[DEBUG][DEBUG] handle_GET method is reached");
                 res = handle_GET(request, response);
+                System.out.println("[DEBUG][DEBUG] handle_GET method is finished");
                 break;
             case POST:
+                System.out.println("[DEBUG][DEBUG] handle_POST method is reached");
                 res = handle_POST(request, response);
+                System.out.println("[DEBUG][DEBUG] handle_POSt method is finished");
                 break;
             default:
                 res = handle_NOT_IMPLEMENTED(request, response);
@@ -196,6 +203,7 @@ public class HttpHandler implements Handler {
      * @return              - {@link HttpResponse} response
      */
     public HttpResponse handle_GET(HttpRequest req, HttpResponse res) {
+        System.out.println("[DEBUG][DEBUG] handle_GET called");
         String resolvedFilePathUrl;
         File outputFile = null;
         boolean statusReturned = false;
@@ -295,6 +303,7 @@ public class HttpHandler implements Handler {
             e.printStackTrace();
         }
 
+        System.out.println("[DEBUG][DEBUG] http response is building");
         HttpResponseBuilder builder = new HttpResponseBuilder();
         HttpResponse response = builder
                 .scheme("HTTP/1.1")
@@ -308,10 +317,12 @@ public class HttpHandler implements Handler {
                 .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(bodyByte.length))
                 .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
                 .build();
+        System.out.println("[DEBUG][DEBUG] http response is done");
         return response;
     }
 
     public HttpResponse handle_POST(HttpRequest req, HttpResponse res) {
+        System.out.println("[DEBUG][DEBUG] handle_POST is called");
         return new HttpResponse();
     }
 
