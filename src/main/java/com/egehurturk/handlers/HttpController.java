@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -91,6 +92,7 @@ public class HttpController implements Closeable, Runnable {
      * Stored as {@link HandlerTemplate}
      */
     public List<HandlerTemplate> handlers;
+    private boolean allowForCustomMapping;
 
     /**
      * Default constructor for this class.
@@ -124,7 +126,8 @@ public class HttpController implements Closeable, Runnable {
             // get all handlers that implements {@code req.getMethod}. E.g, this list can contain all handlers
             // that accepts GET request
             List<HandlerTemplate> methodTemplates = findHandlerTemplateListFromMethod(req.getMethod());
-
+            System.out.println("[DEBUG][DEBUG] handlers associated with [" + req.getMethod() + "] --> " + Arrays.toString(methodTemplates.toArray()));
+            System.out.println("[DEBUG][DEBUG] methodTemplates.isEmtpy() --> " + methodTemplates.isEmpty());
             if (methodTemplates.isEmpty()) {
                 logger.error("No handler configurated for the path or method does not exists");
                 throw new MethodNotAllowedException("Method is not allowed at path " + req.getPath(), 405, "Method Not Allowed");
@@ -132,22 +135,38 @@ public class HttpController implements Closeable, Runnable {
 
             // iterate over all handlers and find the handler template that is assigned to path
             for (HandlerTemplate templ: methodTemplates) {
+                System.out.println("[DEBUG][DEBUG] current handler template in methodTemplate --> " + templ);
                 // if exists
+                System.out.println("[DEBUG][DEBUG] templ's path equals request's path --> " + templ.path.equals(req.getPath()));
                 if (templ.path.equals(req.getPath())) {
+                    System.out.println("[DEBUG][DEBUG] RESPONSE OBJECT BEING CREATED #before");
                     res = templ.handler.handle(req, res); // let handler to handle the request
+                    System.out.println("[DEBUG][DEBUG] RESPONSE OBJECT BEING CREATED #after");
+                    System.out.println("[DEBUG][DEBUG] sending response #before");
                     res.send();
+                    System.out.println("[DEBUG][DEBUG] sending response #after");
                     foundHandler = true; // we found a handler
                     break;
                 }
             }
 
+            System.out.println("[DEBUG][DEBUG] foundHandler --> " + foundHandler);
+
             if (!foundHandler) {
                 // check for default handler (all paths)
                 for (HandlerTemplate template: methodTemplates) {
+                    System.out.println("[DEBUG][DEBUG] current hadndler template looking for default --> " + template);
+                    System.out.println("[DEBUG][DEBUG] template.path.equals(\"*/\") --> " + template.path.equals("/*"));
                     if (template.path.equals("/*")) {
+                        System.out.println("[DEBUG][DEBUG] found default handler");
+                        System.out.println("[DEBUG][DEBUG] prepareing response #before");
                         res = template.handler.handle(req, res);
+                        System.out.println("[DEBUG][DEBUG] preparing response #after");
+                        System.out.println("[DEBUG][DEBUG] sending response #before");
                         res.send();
+                        System.out.println("[DEBUG][DEBUG] sending request #after");
                     } else {
+                        // TODO: DONT THROW EXCEPTION
                         throw new NotFound404Exception("Handler is not found", 404, "Not Found");
                     }
                 }
@@ -159,6 +178,7 @@ public class HttpController implements Closeable, Runnable {
             e.printStackTrace();
         } finally {
             try {
+                // TODO: Server not closing?
                 close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -172,10 +192,14 @@ public class HttpController implements Closeable, Runnable {
     }
 
     private List<HandlerTemplate> findHandlerTemplateListFromMethod(String method) {
+        System.out.println("[DEBUG][DEBUG] findHandlerTemplateListFromMethod() called");
         List<HandlerTemplate> returnTemplate = new ArrayList<>();
 
         for (HandlerTemplate handler : handlers) {
+            System.out.println("[DEBUG][DEBUG] current handler -->> " + handler);
+            System.out.println("[DEBUG][DEBUG] handler.method.str.equals(method) -->> " + handler.method.str.equals(method));
             if (handler.method.str.equals(method)) {
+                System.out.println("[DEBUG][DEBUG] template added to list");
                 returnTemplate.add(handler);
             }
         }
@@ -190,6 +214,10 @@ public class HttpController implements Closeable, Runnable {
         this.out.close();
     }
 
+
+    public void setAllowForCustomMapping(boolean b) {
+        this.allowForCustomMapping = b;
+    }
 
 
 }
