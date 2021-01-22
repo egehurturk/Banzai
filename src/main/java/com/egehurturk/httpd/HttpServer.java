@@ -75,6 +75,7 @@ public class HttpServer extends BaseServer implements Closeable {
     protected static String HOST_PROP = "server.host";
     protected static String NAME_PROP = "server.name";
     protected static String WEBROOT_PROP = "server.webroot";
+    public boolean allowCustomUrlMapping =  false;
 
     /**
      * File location of {@code .properties} file located
@@ -208,6 +209,10 @@ public class HttpServer extends BaseServer implements Closeable {
         WEBROOT_PROP = webrootProp;
     }
 
+    public void allowCustomUrlMapping(boolean allow) {
+        this.allowCustomUrlMapping = allow;
+    }
+
     /**
      * Setter for configuration property file. This is
      * used to configure the server from an external
@@ -245,6 +250,7 @@ public class HttpServer extends BaseServer implements Closeable {
                 e.printStackTrace();
             }
             HttpController controller = new HttpController(cli, handlers);
+            controller.setAllowForCustomMapping(this.allowCustomUrlMapping);
             pool.execute(controller);
             logger.info("Connection established with " + cli + "");
         }
