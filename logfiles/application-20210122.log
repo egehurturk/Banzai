@@ -13,3 +13,43 @@
 [33m2021-01-22 18:04:55,914[m [pool-2-thread-13] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong...
 [33m2021-01-22 18:06:53,371[m [pool-2-thread-16] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
 [33m2021-01-22 18:06:53,372[m [pool-2-thread-16] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong...
+[33m2021-01-22 19:25:36,193[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request line (e.g. GET /index HTTP/1.1 is not found
+[33m2021-01-22 19:25:36,194[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,252[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,262[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,268[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,273[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,277[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,282[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,288[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,300[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,329[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,337[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,342[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,348[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,353[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:25:36,355[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-22 19:25:36,361[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-22 19:29:22,137[m [pool-2-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:22,144[m [pool-2-thread-2] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:22,146[m [pool-2-thread-3] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:23,238[m [pool-2-thread-4] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:23,239[m [pool-2-thread-5] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:23,242[m [pool-2-thread-6] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:28,266[m [pool-2-thread-7] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:28,267[m [pool-2-thread-8] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:28,270[m [pool-2-thread-9] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:39,885[m [pool-2-thread-10] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:39,886[m [pool-2-thread-11] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:39,888[m [pool-2-thread-12] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:40,561[m [pool-2-thread-13] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:40,563[m [pool-2-thread-14] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:29:40,565[m [pool-2-thread-15] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:31:27,504[m [pool-2-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:33:24,860[m [pool-2-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:34:52,227[m [pool-2-thread-3] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:35:36,982[m [pool-2-thread-5] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:35:46,735[m [pool-2-thread-6] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:42:22,236[m [pool-2-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - Something's gone wrong... [IN HTTP CONTROLLER]
+[33m2021-01-22 19:44:30,222[m [pool-2-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-22 19:51:10,001[m [pool-2-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
