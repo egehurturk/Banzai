@@ -15,12 +15,12 @@ public class DriverClassForTest {
         httpServer.setConfigPropFile("src/main/resources/server.properties");
         httpServer.configureServer();
         HttpHandler handler = new HttpHandler(httpServer.getConfig());
-        // FIXME: DOES NOT WORK ON CUSTOM URL'S
-        String path = "/hello";
         httpServer.allowCustomUrlMapping(true);
-        httpServer.addHandler(MethodEnum.GET, path, new MyHandler());
-        httpServer.addHandler(MethodEnum.GET, path, handler);
-        httpServer.addHandler(MethodEnum.POST, path, handler);
+        httpServer.addHandler(MethodEnum.GET, "/*", handler);
+        httpServer.addHandler(MethodEnum.GET, "/hello", new MyHandler());
+        httpServer.addHandler(MethodEnum.POST, "/*", handler);
+        httpServer.addHandler(MethodEnum.GET, "/thismynewserver", new MyNewHandler());
+        httpServer.addHandler(MethodEnum.GET, "/cemhurturk", new MyHandler());
 
         httpServer.start();
     }
@@ -39,13 +39,24 @@ public class DriverClassForTest {
             return res;
         }
     }
+
+    static class MyNewHandler implements Handler {
+        @Override
+        public HttpResponse handle(HttpRequest request, HttpResponse response) {
+            HttpResponse res = new HttpResponseBuilder().scheme("HTTP/1.1")
+                    .code(404)
+                    .message("OK")
+                    .body("<h1>404 Error</h1>".getBytes())
+                    .setStream(new PrintWriter(response.getStream(), false))
+                    .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+("<h1>404 Error</h1>".length()))
+                    .setHeader(HeaderEnum.CONTENT_TYPE.NAME, "text/html")
+                    .build();
+            return res;
+        }
+    }
 }
 
 
 /*
  * FIXME: POST REQUEST IS VERY VERY SLOW?
- */
-
-/*
-TODO: If a handler is installed with /*, and also another handler with e.g. path /hello is installed, the latter one should have higher priority
  */
