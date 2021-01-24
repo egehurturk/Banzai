@@ -203,7 +203,7 @@ public abstract class BaseServer {
      * @throws  UnknownHostException    - Required for {@code .getLocalHost()}.
      */
     public BaseServer (int serverPort) throws UnknownHostException {
-        this(serverPort, InetAddress.getLocalHost(), 50, "unnamed", "www");
+        this(serverPort, InetAddress.getLocalHost(), 50, "banzai_unnamed", "www");
     }
 
     /**
