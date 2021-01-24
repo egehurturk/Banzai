@@ -11,7 +11,10 @@ import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.MappedByteBuffer;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -84,7 +87,8 @@ public class HttpHandler implements Handler {
     /**
      * Configuration file
      */
-    private final Properties configuration;
+    private Properties configuration = null;
+    private String name;
 
     protected Logger logger = LogManager.getLogger(HttpHandler.class);
 
@@ -106,6 +110,20 @@ public class HttpHandler implements Handler {
         this.webRoot = new File(this._strWebRoot);
     }
 
+    public HttpHandler(String _strWebRoot, String name) throws FileNotFoundException {
+        this._strWebRoot = _strWebRoot;
+        if (!Utility.isDirectory(this._strWebRoot)) {
+            logger.error("Web root is not a directory. Check if there exists a directory" +
+                    "at root/www");
+            throw new FileNotFoundException( "Web root directory not found. It should be" +
+                    " placed in \"root/www\" where root" +
+                    "is the top parent directory.");
+        }
+        this.webRoot = new File(_strWebRoot);
+        this.name = name;
+    }
+
+
 
     /**
      * Handle method overriding {@link Handler}
@@ -114,20 +132,13 @@ public class HttpHandler implements Handler {
      */
     @Override
     public HttpResponse handle(HttpRequest request, HttpResponse response) {
-        System.out.println("[DEBUG][DEBUG] HTTPHandler.handle is called ");
-        System.out.println("[DEBUG][DEBUG] creating new HttpResponse (empty) ");
         HttpResponse res;
-        System.out.println("[DEBUG][DEBUG] request.method -->> " + request.getMethod());
         switch (MethodEnum.valueOf(request.getMethod())) {
             case GET:
-                System.out.println("[DEBUG][DEBUG] handle_GET method is reached");
                 res = handle_GET(request, response);
-                System.out.println("[DEBUG][DEBUG] handle_GET method is finished");
                 break;
             case POST:
-                System.out.println("[DEBUG][DEBUG] handle_POST method is reached");
                 res = handle_POST(request, response);
-                System.out.println("[DEBUG][DEBUG] handle_POSt method is finished");
                 break;
             default:
                 res = handle_NOT_IMPLEMENTED(request, response);
@@ -203,7 +214,6 @@ public class HttpHandler implements Handler {
      * @return              - {@link HttpResponse} response
      */
     public HttpResponse handle_GET(HttpRequest req, HttpResponse res) {
-        System.out.println("[DEBUG][DEBUG] handle_GET called");
         String resolvedFilePathUrl;
         File outputFile = null;
         boolean statusReturned = false;
@@ -303,7 +313,7 @@ public class HttpHandler implements Handler {
             e.printStackTrace();
         }
 
-        System.out.println("[DEBUG][DEBUG] http response is building");
+        String nameHeader = (this.configuration == null) ? this.name : this.configuration.getProperty(NAME_PROP);
         HttpResponseBuilder builder = new HttpResponseBuilder();
         HttpResponse response = builder
                 .scheme("HTTP/1.1")
@@ -312,17 +322,15 @@ public class HttpHandler implements Handler {
                 .body(bodyByte)
                 .setStream(new PrintWriter(res.getStream(), false))
                 .setHeader(HeaderEnum.DATE.NAME, dateHeader)
-                .setHeader(HeaderEnum.SERVER.NAME, this.configuration.getProperty(NAME_PROP))
+                .setHeader(HeaderEnum.SERVER.NAME, nameHeader)
                 .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
                 .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(bodyByte.length))
                 .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
                 .build();
-        System.out.println("[DEBUG][DEBUG] http response is done");
         return response;
     }
 
     public HttpResponse handle_POST(HttpRequest req, HttpResponse res) {
-        System.out.println("[DEBUG][DEBUG] handle_POST is called");
         return new HttpResponse();
     }
 
