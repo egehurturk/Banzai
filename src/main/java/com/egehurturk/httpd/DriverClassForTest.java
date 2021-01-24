@@ -45,7 +45,7 @@ public class DriverClassForTest {
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
             HttpResponse res = new HttpResponseBuilder().scheme("HTTP/1.1")
                     .code(404)
-                    .message("OK")
+                    .message("Not Found")
                     .body("<h1>404 Error</h1>".getBytes())
                     .setStream(new PrintWriter(response.getStream(), false))
                     .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+("<h1>404 Error</h1>".length()))
