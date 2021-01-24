@@ -51,7 +51,9 @@ This server should be run from CLI, by using a bash file:
     ------------------------------------------------------------
     Http Versions
     - `$ banzai run http --name Hey`                            (runs default HTTP server, port 8080, localhost)
-    - `$ banzai run http -p 8080 -h localhost -b 50 --name Hey` (runs HTTP server with CLA config)
+    - `$ banzai run http --config src/main/resources/server.properties`
+    - `$ banzai run http --port 8080 --host localhost --backlog 50 --name Hey` --webroot www (runs HTTP server with CLA config)
+    - `$ banzai run http --port 8080`
     - `$ banzai stop http --name Hey`                           (stops HTTP server)
  */
 
