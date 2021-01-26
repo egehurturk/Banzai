@@ -1,6 +1,7 @@
 package com.egehurturk.httpd;
 
 import com.egehurturk.core.BaseServer;
+import com.egehurturk.exceptions.ConfigurationException;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.HandlerTemplate;
 import com.egehurturk.handlers.HttpController;
@@ -297,7 +298,7 @@ public class HttpServer extends BaseServer implements Closeable {
      * {@link BaseServer#configureServer()}
      */
     @Override
-    public void configureServer() {
+    public void configureServer() throws ConfigurationException {
         super.configureServer();
     }
 
@@ -306,7 +307,11 @@ public class HttpServer extends BaseServer implements Closeable {
      */
     @Override
     public void configureServer(String propertiesFilePath) {
-        super.configureServer(propertiesFilePath);
+        try {
+            super.configureServer(propertiesFilePath);
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
