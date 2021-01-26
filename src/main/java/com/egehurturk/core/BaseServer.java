@@ -1,5 +1,6 @@
 package com.egehurturk.core;
 
+import com.egehurturk.exceptions.ConfigurationException;
 import com.egehurturk.httpd.HttpServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -413,10 +414,18 @@ public abstract class BaseServer {
      *
      * @throws IllegalArgumentException     - where the web root directory is not correct
      */
-    public void configureServer() {
-        propertiesStream = ClassLoader.getSystemClassLoader()
+    public void configureServer() throws ConfigurationException {
+        System.out.println("[DEBUG][DEBUG] config_prop_file --> " + CONFIG_PROP_FILE);
+        System.out.println("[DEBUG][DEBUG] classloader.systemclassloader.getResourceAsStream() --> " + ClassLoader.getSystemClassLoader().getResource(CONFIG_PROP_FILE));
+        this.propertiesStream = ClassLoader.getSystemClassLoader()
                 .getResourceAsStream( CONFIG_PROP_FILE );
+        System.out.println("[DEBUG][DEBUG] propertyStream -->> " + ((this.propertiesStream == null) ? "null" : "nonnull"));
         this.config = serveConfigurations(System.getProperties(), propertiesStream);
+        if (this.config == null) {
+            throw new ConfigurationException("System Configuration Error: Are you sure that a properties " +
+                    "file is located under resources folder as stated in standard Maven " +
+                    "directory template?");
+        }
         try {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
@@ -444,9 +453,14 @@ public abstract class BaseServer {
      *
      * @param propertiesFilePath        - Property file name (path)
      */
-    public void configureServer(String propertiesFilePath) {
+    public void configureServer(String propertiesFilePath) throws ConfigurationException {
         this.config = serveConfigurations(System.getProperties(), ClassLoader.getSystemClassLoader()
                                                                     .getResourceAsStream(propertiesFilePath));
+        if (this.config == null) {
+            throw new ConfigurationException("System Configuration Error: Are you sure that a properties " +
+                    "file is located under resources folder as stated in standard Maven " +
+                    "directory template?");
+        }
         try {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
@@ -484,9 +498,8 @@ public abstract class BaseServer {
                         " file is located under resources folder as stated in standard Maven " +
                         " directory template?");
             }
-            // TODO :ERROR
             serverConfig.load(file);
-
+            System.out.println(serverConfig);
             userConfig.keySet().
                     forEach(val -> {
                         String key = (String) val;
@@ -496,9 +509,7 @@ public abstract class BaseServer {
                     });
         }
         catch (IOException err) {
-            System.err.println("System Configuration Error: Are you sure that a properties" +
-                               " file is located under resources folder as stated in standard Maven " +
-                               " directory template?");
+            return null;
         }
         return serverConfig;
     }
@@ -647,3 +658,4 @@ public abstract class BaseServer {
 }
 
 // end of class
+// todo: remove all debug statements
