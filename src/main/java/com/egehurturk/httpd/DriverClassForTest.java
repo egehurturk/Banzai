@@ -12,18 +12,31 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 
 public class DriverClassForTest {
-    public static void main(String[] args) throws IOException, ParseException {
-
+    public static void main(String[] args) throws IOException {
         Options options = generateOptions();
         CommandLineParser parser = new DefaultParser();
-        CommandLine cmd = parser.parse(options, args);
+        CommandLine cmd = null;
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException err) {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("banzai", options);
+            return;
+        }
         HttpServer httpServer = new HttpServer();
         HttpHandler handler = null;
+
         if (cmd.hasOption("config")) {
             httpServer.setConfigPropFile(cmd.getOptionValue("config"));
+            System.out.println(httpServer.getConfigPropFile());
             httpServer.configureServer();
             handler = new HttpHandler(httpServer.getConfig());
         } else if (cmd.hasOption("port") && cmd.hasOption("host") && cmd.hasOption("name") && cmd.hasOption("webroot") && cmd.hasOption("backlog")) {
+            System.out.println("[DEBUG][DEBUG] port from cmd is -->> " + cmd.getOptionValue("port"));
+            System.out.println("[DEBUG][DEBUG] host from cmd is -->> " + cmd.getOptionValue("host"));
+            System.out.println("[DEBUG][DEBUG] backlog from cmd is -->> " + cmd.getOptionValue("backlog"));
+            System.out.println("[DEBUG][DEBUG] name from cmd is -->> " + cmd.getOptionValue("name"));
+            System.out.println("[DEBUG][DEBUG] webroot from cmd is -->> " + cmd.getOptionValue("webroot"));
             httpServer = new HttpServer(Integer.parseInt(cmd.getOptionValue("port")), InetAddress.getByName(cmd.getOptionValue("host")), Integer.parseInt(cmd.getOptionValue("backlog")), cmd.getOptionValue("name"), cmd.getOptionValue("webroot"));
             handler = new HttpHandler(httpServer.getWebRoot(), httpServer.getName());
         } else if (cmd.hasOption("port") && cmd.getArgs().length == 1) {
@@ -120,11 +133,12 @@ public class DriverClassForTest {
         options.addOption(config);
         return options;
     }
+
 }
 
 
-/*
- * FIXME: POST REQUEST IS VERY VERY SLOW?
- */
 
+// FIXME: POST REQUEST IS VERY VERY SLOW?
+/* FIXME: When `--congig <>` is passed as CLA, the server works. However, when all arguments are passed in as seperate
+    fields, then the server closes because of `Port is already in use` */
 
