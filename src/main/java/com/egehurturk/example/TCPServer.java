@@ -6,6 +6,7 @@ package com.egehurturk.example;
 
 
 import com.egehurturk.core.BaseServer;
+import com.egehurturk.exceptions.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,7 +28,11 @@ public class TCPServer extends BaseServer {
     public TCPServer() {}
 
     public TCPServer(String configFilePath) {
-        configureServer(configFilePath);
+        try {
+            configureServer(configFilePath);
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+        }
     }
 
 
