@@ -190,8 +190,9 @@ public abstract class BaseServer {
      * file, located in the resources directory in the standard
      * Maven project DIR.
      */
-    protected InputStream propertiesStream = ClassLoader.getSystemClassLoader()
-            .getResourceAsStream( CONFIG_PROP_FILE );
+    protected InputStream propertiesStream;
+
+    // TODO: DO NOT INSTANTIATE PROPERTIESSTERAM HERE, INSTANTIATE AT CONFIGURESERVER()
 
     /**
      * Chained constructor for intializing with only port.
@@ -413,6 +414,8 @@ public abstract class BaseServer {
      * @throws IllegalArgumentException     - where the web root directory is not correct
      */
     public void configureServer() {
+        propertiesStream = ClassLoader.getSystemClassLoader()
+                .getResourceAsStream( CONFIG_PROP_FILE );
         this.config = serveConfigurations(System.getProperties(), propertiesStream);
         try {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
@@ -481,7 +484,7 @@ public abstract class BaseServer {
                         " file is located under resources folder as stated in standard Maven " +
                         " directory template?");
             }
-
+            // TODO :ERROR
             serverConfig.load(file);
 
             userConfig.keySet().
