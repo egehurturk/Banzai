@@ -236,11 +236,13 @@ public class HttpServer extends BaseServer implements Closeable {
     @Override
     public void start() {
         ExecutorService pool = Executors.newFixedThreadPool(500);
-        logger.info("Server started on port " + this.serverPort);
         try {
             this.server = new ServerSocket(this.serverPort, this.backlog, this.serverHost);
+            logger.info("Server started on port " + this.serverPort);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Server could not be instantiated (probably due to port conflict) \n\n" +  e.getClass().getCanonicalName() );
+            close();
+            return;
         }
         while (this.server.isBound() && !this.server.isClosed()) {
             Socket cli = null;
@@ -263,8 +265,14 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
 
+        try {
+            this.server.close();
+            this.propertiesStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
