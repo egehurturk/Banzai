@@ -1,6 +1,7 @@
 package com.egehurturk.httpd;
 
 
+import com.egehurturk.exceptions.ConfigurationException;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.HttpHandler;
 import com.egehurturk.util.HeaderEnum;
@@ -11,7 +12,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 
+
+
+
 public class DriverClassForTest {
+
+    /**
+     * Note that configuration should not be as path, it only needs to be the name of the properties file
+     */
+
+
     public static void main(String[] args) throws IOException {
         Options options = generateOptions();
         CommandLineParser parser = new DefaultParser();
@@ -29,14 +39,14 @@ public class DriverClassForTest {
         if (cmd.hasOption("config")) {
             httpServer.setConfigPropFile(cmd.getOptionValue("config"));
             System.out.println(httpServer.getConfigPropFile());
-            httpServer.configureServer();
+            try {
+                httpServer.configureServer();
+            } catch (ConfigurationException e) {
+                System.err.println("Configuration exception: Check configuraton property file path");
+                return;
+            }
             handler = new HttpHandler(httpServer.getConfig());
         } else if (cmd.hasOption("port") && cmd.hasOption("host") && cmd.hasOption("name") && cmd.hasOption("webroot") && cmd.hasOption("backlog")) {
-            System.out.println("[DEBUG][DEBUG] port from cmd is -->> " + cmd.getOptionValue("port"));
-            System.out.println("[DEBUG][DEBUG] host from cmd is -->> " + cmd.getOptionValue("host"));
-            System.out.println("[DEBUG][DEBUG] backlog from cmd is -->> " + cmd.getOptionValue("backlog"));
-            System.out.println("[DEBUG][DEBUG] name from cmd is -->> " + cmd.getOptionValue("name"));
-            System.out.println("[DEBUG][DEBUG] webroot from cmd is -->> " + cmd.getOptionValue("webroot"));
             httpServer = new HttpServer(Integer.parseInt(cmd.getOptionValue("port")), InetAddress.getByName(cmd.getOptionValue("host")), Integer.parseInt(cmd.getOptionValue("backlog")), cmd.getOptionValue("name"), cmd.getOptionValue("webroot"));
             handler = new HttpHandler(httpServer.getWebRoot(), httpServer.getName());
         } else if (cmd.hasOption("port") && cmd.getArgs().length == 1) {
