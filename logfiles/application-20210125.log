@@ -1,0 +1,16 @@
+[33m2021-01-25 14:45:23,832[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict)
+[33m2021-01-25 14:50:59,444[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict)
+[33m2021-01-25 14:53:19,393[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict)
+[33m2021-01-25 14:54:26,902[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict)
+[33m2021-01-25 14:56:17,297[m [main] [36mDEBUG[m com.egehurturk.httpd.HttpServer - port number: 9090
+[33m2021-01-25 14:56:17,298[m [main] [36mDEBUG[m com.egehurturk.httpd.HttpServer - host: localhost/127.0.0.1
+[33m2021-01-25 14:56:17,298[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict)
+[33m2021-01-25 14:58:09,661[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict)
+[33m2021-01-25 14:58:57,312[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict)
+[33m2021-01-25 14:59:30,030[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict)
+[33m2021-01-25 15:01:08,640[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict) 
+
+java.net.BindException
+[33m2021-01-25 15:01:25,865[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict) 
+
+class java.net.BindException
