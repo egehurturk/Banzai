@@ -181,3 +181,20 @@ java.net.BindException
 [33m2021-01-26 15:06:44,092[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
 [33m2021-01-26 15:06:44,093[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
 [33m2021-01-26 15:06:44,095[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,846[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request line (e.g. GET /index HTTP/1.1 is not found
+[33m2021-01-26 17:04:11,847[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,887[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,893[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,895[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,899[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,901[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,906[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,910[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,917[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,927[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,934[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,937[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,940[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,942[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-26 17:04:11,943[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-26 17:04:11,946[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)

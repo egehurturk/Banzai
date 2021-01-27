@@ -1,0 +1,191 @@
+[33m2021-01-27 11:04:36,808[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request line (e.g. GET /index HTTP/1.1 is not found
+[33m2021-01-27 11:04:36,809[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,859[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,868[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,875[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,881[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,886[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,890[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,895[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,905[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,930[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,937[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,942[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,948[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,953[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:04:36,955[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 11:04:36,959[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,858[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request line (e.g. GET /index HTTP/1.1 is not found
+[33m2021-01-27 11:07:22,859[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,889[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,893[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,896[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,898[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,901[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,903[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,905[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,910[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,919[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,922[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,925[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,927[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,930[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 11:07:22,931[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 11:07:22,933[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,009[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request line (e.g. GET /index HTTP/1.1 is not found
+[33m2021-01-27 18:06:56,010[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,048[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,053[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,055[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,058[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,061[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,065[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,067[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,073[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,085[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,089[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,091[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,094[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,097[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:06:56,098[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:06:56,100[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,275[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request line (e.g. GET /index HTTP/1.1 is not found
+[33m2021-01-27 18:07:50,276[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,305[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,309[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,312[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,314[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,316[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,319[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,321[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,326[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,335[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,338[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,341[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,343[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,345[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:07:50,346[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:07:50,348[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,927[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request line (e.g. GET /index HTTP/1.1 is not found
+[33m2021-01-27 18:09:43,927[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,955[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,959[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,961[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,964[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,966[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,968[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,970[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,976[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,985[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,988[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,991[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,994[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,996[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:09:43,997[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:09:43,999[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+[33m2021-01-27 18:27:26,494[m [pool-2-thread-65] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:26,494[m [pool-2-thread-65] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:26,494[m [pool-2-thread-66] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:26,494[m [pool-2-thread-67] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:26,494[m [pool-2-thread-67] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:26,494[m [pool-2-thread-64] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:26,494[m [pool-2-thread-68] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-65] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-64] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-65] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-66] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-67] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-66] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-69] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-64] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-67] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-68] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-64] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-70] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-66] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:26,495[m [pool-2-thread-69] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:26,501[m [pool-2-thread-70] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:30,384[m [pool-2-thread-3] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:30,385[m [pool-2-thread-3] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:56,746[m [pool-2-thread-159] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:56,746[m [pool-2-thread-163] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:56,746[m [pool-2-thread-162] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:56,746[m [pool-2-thread-164] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:56,746[m [pool-2-thread-162] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:56,746[m [pool-2-thread-164] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:56,747[m [pool-2-thread-163] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:56,747[m [pool-2-thread-159] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:56,747[m [pool-2-thread-158] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:56,747[m [pool-2-thread-166] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:56,747[m [pool-2-thread-167] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:56,747[m [pool-2-thread-166] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:56,747[m [pool-2-thread-167] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:56,747[m [pool-2-thread-158] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:56,747[m [pool-2-thread-168] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:56,748[m [pool-2-thread-168] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:27:56,748[m [pool-2-thread-170] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:27:56,748[m [pool-2-thread-170] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,931[m [pool-2-thread-155] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-177] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-186] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-195] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-198] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-203] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-200] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-222] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-155] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-198] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-186] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-195] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-200] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-222] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-176] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-199] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-202] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-215] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-196] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-177] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-215] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-196] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-199] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,932[m [pool-2-thread-197] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,931[m [pool-2-thread-218] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,931[m [pool-2-thread-220] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,931[m [pool-2-thread-174] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,931[m [pool-2-thread-181] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,931[m [pool-2-thread-179] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,931[m [pool-2-thread-172] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,931[m [pool-2-thread-211] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,931[m [pool-2-thread-183] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-176] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-203] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-183] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-211] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-172] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-179] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-181] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-174] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-220] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-218] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-197] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:28:07,933[m [pool-2-thread-202] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:29:19,888[m [pool-2-thread-4] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:29:19,888[m [pool-2-thread-6] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:29:19,888[m [pool-2-thread-484] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:29:19,888[m [pool-2-thread-8] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:29:19,888[m [pool-2-thread-476] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:29:19,888[m [pool-2-thread-495] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:29:19,888[m [pool-2-thread-11] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:29:19,888[m [pool-2-thread-498] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:29:19,888[m [pool-2-thread-500] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:29:19,889[m [pool-2-thread-484] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:29:19,888[m [pool-2-thread-16] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 18:29:19,889[m [pool-2-thread-6] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:29:19,889[m [pool-2-thread-4] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:29:19,889[m [pool-2-thread-495] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:29:19,889[m [pool-2-thread-476] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:29:19,889[m [pool-2-thread-8] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:29:19,889[m [pool-2-thread-498] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:29:19,889[m [pool-2-thread-16] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:29:19,889[m [pool-2-thread-11] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 18:29:19,889[m [pool-2-thread-500] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
