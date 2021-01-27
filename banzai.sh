@@ -15,6 +15,7 @@ echo "
       ░                      ░
 
 Banzai Server, V1.0 (SNAPSHOT) -
+~Ege Hurturk~
 "
 config="noconfig"
 
@@ -31,11 +32,6 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 echo "========================= SERVER STARTING ========================="
-echo "port: $port"
-echo "host: $host"
-echo "name: $name"
-echo "webroot: $webroot"
-echo "backlog: $backlog"
 
 if [ "$port" = " " ]; then
   echo "PORT IS EQUAL TO BLANK"
