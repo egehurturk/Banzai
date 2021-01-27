@@ -105,9 +105,9 @@ These instructions will get you a copy of the project up and running on your loc
    git clone https://github.com/egehurturk/HttpServer.git
    ```
 2. Change permissions of starter bash file:
-  ```sh
-  chmod +x banzai.sh
-  ```
+    ```sh
+    chmod +x banzai.sh
+    ```
 
 3. Run the server
    ```sh
@@ -139,8 +139,8 @@ Configuration can happen in two ways. One is to pass in CLA (Command Line Argume
   
 2. Using a `properties` file:
    ```sh
-  ./banzai --config server.properties
-  ```
+    ./banzai --config server.properties
+   ```
   One can also configure the server with using a `properties` file located in `root/src/main/resources/server.properties` directory. Every
   argument is passed as a key=value pair. Server reads all keys and values from the file and sets values accordingly. Same arguments are present.
 
