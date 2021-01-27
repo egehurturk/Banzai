@@ -415,11 +415,8 @@ public abstract class BaseServer {
      * @throws IllegalArgumentException     - where the web root directory is not correct
      */
     public void configureServer() throws ConfigurationException {
-        System.out.println("[DEBUG][DEBUG] config_prop_file --> " + CONFIG_PROP_FILE);
-        System.out.println("[DEBUG][DEBUG] classloader.systemclassloader.getResourceAsStream() --> " + ClassLoader.getSystemClassLoader().getResource(CONFIG_PROP_FILE));
         this.propertiesStream = ClassLoader.getSystemClassLoader()
                 .getResourceAsStream( CONFIG_PROP_FILE );
-        System.out.println("[DEBUG][DEBUG] propertyStream -->> " + ((this.propertiesStream == null) ? "null" : "nonnull"));
         this.config = serveConfigurations(System.getProperties(), propertiesStream);
         if (this.config == null) {
             throw new ConfigurationException("System Configuration Error: Are you sure that a properties " +
