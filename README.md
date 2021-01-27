@@ -104,9 +104,18 @@ These instructions will get you a copy of the project up and running on your loc
    ```sh
    git clone https://github.com/egehurturk/HttpServer.git
    ```
-2. Run bash scripts to start the server
+2. Change permissions of starter bash file:
+  ```sh
+  chmod +x banzai.sh
+  ```
+
+3. Run the server
    ```sh
-   banzai run http -p 8080 -h localhost -b 50 --name Hello 
+   ./banzai --port 9090 --host 0.0.0.0 --backlog 50 --name Banzai --webroot www
+   ```
+   OR
+   ```sh
+   sh banzai.sh --port 9090 --host 0.0.0.0 --backlog 50 --name Banzai --webroot www
    ```
    See [#configuration] for details on configuring the server
    
@@ -115,20 +124,23 @@ Configuration can happen in two ways. One is to pass in CLA (Command Line Argume
 
 1. CLA (Command Line Arguments)
   ```sh
-  banzai run http -p 9090 -h 127.0.0.1 -b 50 --name AwesomeServer
+  banzai run http -p 9090 -h 127.0.0.1 -b 50 -n AwesomeServer -w www
   ```
-  This creates a server running on port `9090`, host `127.0.0.1`, a backlog of `50`, and a name of `AwesomeServer`
+  This creates a server running on port `9090`, host `127.0.0.1`, a backlog of `50`, a name of `AwesomeServer`, and determines web root as `/www`
   
   All command line arguments:
   <ol>
-  <li> -p: port numer that the server is running on</li>
-    <li> -h: host</li>
-    <li> -b: backlog (maximum number of Http threads in queue)</li>
-    <li> --name: name of the server</li>
-    <li> -w: web root of server</li>
+  <li> --port | -p: port numer that the server is running on</li>
+    <li> --host | -h: host</li>
+    <li> --backlog | -b: backlog (maximum number of Http threads in queue)</li>
+    <li> --name | -n: name of the server</li>
+    <li> --webroot | -w: web root of server</li>
   </ol>
   
 2. Using a `properties` file:
+   ```sh
+  ./banzai --config server.properties
+  ```
   One can also configure the server with using a `properties` file located in `root/src/main/resources/server.properties` directory. Every
   argument is passed as a key=value pair. Server reads all keys and values from the file and sets values accordingly. Same arguments are present.
 
