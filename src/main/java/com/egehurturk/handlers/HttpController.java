@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -130,7 +129,6 @@ public class HttpController implements Closeable, Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("[DEBUG][DEBUG] client input stream in [HttpController-Run] -->> " + (client.getInputStream() == null ? "null" : "nonnull"));
             // if client input stream is null close the server gracefully
             if (client.getInputStream() == null) {
                 close();
@@ -142,19 +140,14 @@ public class HttpController implements Closeable, Runnable {
             this.out = new PrintWriter(client.getOutputStream(), false);
 
             // parse request
-            System.out.println("[DEBUG][DEBUG] Http Request initialization #before [HttpController-Run");
             HttpRequest req = new HttpRequest(in);
-            System.out.println("[DEBUG][DEBUG] Http Request initialization #after [HttpController-Run]");
-            System.out.println("[DEBUG][DEBUG] HANDLER FINDING STEP AND HANDLING [HttpController-Run]");
 
             boolean foundHandler = false;
             HttpResponse res = new HttpResponse(this.out);
 
             // get all handlers that implements {@code req.getMethod}. E.g, this list can contain all handlers
             // that accepts GET request
-            System.out.println("[DEBUG][DEBUG] templates -->> " + Arrays.toString(this.handlers.toArray()));
             List<HandlerTemplate> methodTemplates = findHandlerTemplateListFromMethod(req.getMethod());
-            System.out.println("[DEBUG][DEBUG] methodTemplates -->> " + Arrays.toString(methodTemplates.toArray()));
             if (methodTemplates.isEmpty()) {
                 throw new MethodNotAllowedException("Method is not allowed at path " + req.getPath(), 405, "Method Not Allowed");
             }
@@ -165,6 +158,7 @@ public class HttpController implements Closeable, Runnable {
                 if (templ.path.equals(req.getPath())) {
                     res = templ.handler.handle(req, res); // let handler to handle the request
                     res.send();
+                    logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                     foundHandler = true; // we found a handler
                     break;
                 }
@@ -176,6 +170,7 @@ public class HttpController implements Closeable, Runnable {
                     if (template.path.equals("/*")) {
                         res = template.handler.handle(req, res);
                         res.send();
+                        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         break;
                     } else {
                         // TODO: DONT THROW EXCEPTION
@@ -192,7 +187,7 @@ public class HttpController implements Closeable, Runnable {
             logger.error("An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}");
         } finally {
             try {
-                // TODO: Server not closing?
+
                 close();
             } catch (IOException e) {
                 e.printStackTrace();
