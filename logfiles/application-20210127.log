@@ -189,3 +189,21 @@
 [33m2021-01-27 18:29:19,889[m [pool-2-thread-16] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
 [33m2021-01-27 18:29:19,889[m [pool-2-thread-11] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
 [33m2021-01-27 18:29:19,889[m [pool-2-thread-500] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 22:16:25,126[m [pool-2-thread-2] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 22:16:25,127[m [pool-2-thread-2] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 22:18:10,551[m [pool-2-thread-200] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 22:18:10,551[m [pool-2-thread-198] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 22:18:10,551[m [pool-2-thread-202] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 22:18:10,551[m [pool-2-thread-156] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 22:18:10,551[m [pool-2-thread-149] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 22:18:10,551[m [pool-2-thread-197] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 22:18:10,552[m [pool-2-thread-156] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 22:18:10,552[m [pool-2-thread-149] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 22:18:10,552[m [pool-2-thread-198] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 22:18:10,552[m [pool-2-thread-202] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 22:18:10,552[m [pool-2-thread-197] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 22:18:10,552[m [pool-2-thread-200] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 22:20:38,879[m [pool-2-thread-291] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 22:20:38,879[m [pool-2-thread-285] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-01-27 22:20:38,879[m [pool-2-thread-291] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+[33m2021-01-27 22:20:38,880[m [pool-2-thread-285] [31mERROR[m com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
