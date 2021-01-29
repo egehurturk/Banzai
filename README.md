@@ -119,6 +119,19 @@ These instructions will get you a copy of the project up and running on your loc
    ```
    See [#configuration] for details on configuring the server
    
+4. Optional linking
+  You can link the executable (see 2nd step) to use `banzai` executable without being in the installed directory
+  Create a symbolic link
+   ```sh
+   sudo ln -s <banzai.sh_path> /usr/local/bin/banzai
+   ```
+   And then use `banzai` as a program:
+   ```sh
+   banzai --config server.properties
+   ```
+   Note: you don't need to be in any path, `banzai.sh` will automatically discover which path you are in and then call the `jar` file and will look for `server.properties` automatically.
+   
+   
 ### Configuration
 Configuration can happen in two ways. One is to pass in CLA (Command Line Arguments) while executing or running the server:
 
