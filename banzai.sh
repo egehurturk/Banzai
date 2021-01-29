@@ -18,6 +18,8 @@ Banzai Server, V1.0 (SNAPSHOT) -
 ~Ege Hurturk~
 "
 config="noconfig"
+currentDir=`which banzai`
+symbolicDir="/usr/local/bin/banzai"
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -37,10 +39,10 @@ if [ "$port" = " " ]; then
   echo "PORT IS EQUAL TO BLANK"
 fi
 
-
 if [ "$config" = "noconfig" ]; then
   java -jar target/BanzaiServer-1.0-SNAPSHOT-jar-with-dependencies.jar --port $port --host $host --webroot $webroot --name $name --backlog $backlog
 else
+  cd /Users/egehurturk/Development/BanzaiServer
   java -jar target/BanzaiServer-1.0-SNAPSHOT-jar-with-dependencies.jar --config $config
 fi
 
