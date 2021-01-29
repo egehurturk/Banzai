@@ -119,7 +119,7 @@ These instructions will get you a copy of the project up and running on your loc
    ```
    See [#configuration] for details on configuring the server
    
-4. Optional linking
+4. Optional linking \
   You can link the executable (see 2nd step) to use `banzai` executable without being in the installed directory
   Create a symbolic link
    ```sh
