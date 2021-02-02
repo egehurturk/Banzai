@@ -1,0 +1,3 @@
+2021-02-02 19:33:07 ERROR com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
+2021-02-02 19:33:07 ERROR com.egehurturk.handlers.HttpController - An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}
+
