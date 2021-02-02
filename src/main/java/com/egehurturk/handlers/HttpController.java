@@ -1,18 +1,24 @@
 package com.egehurturk.handlers;
 
-import com.egehurturk.exceptions.HttpRequestException;
-import com.egehurturk.exceptions.MethodNotAllowedException;
-import com.egehurturk.exceptions.NotFound404Exception;
+import com.egehurturk.exceptions.*;
 import com.egehurturk.httpd.HttpRequest;
 import com.egehurturk.httpd.HttpResponse;
+import com.egehurturk.httpd.HttpResponseBuilder;
 import com.egehurturk.httpd.HttpServer;
+import com.egehurturk.util.HeaderEnum;
+import com.egehurturk.util.StatusEnum;
+import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Manager class for handling {@link java.net.Socket} object client. Using
@@ -178,16 +184,92 @@ public class HttpController implements Closeable, Runnable {
                     }
                 }
             }
-
+            // TODO: SEND 500 STATUS CODES
         } catch (IOException e) {
-            logger.error("An exception occured in HttpController with error IOException");
-            // TODO: THROW 500 ERROR AT EVERY CATCH
-            e.printStackTrace();
+            try {
+                close();
+            } catch (IOException ioException) {
+                try {
+                    this.in.close();
+                } catch (IOException exception) {
+                    logger.error("Could not close input stream of client");
+                    // TODO: return?
+                }
+                this.out.close();
+                try {
+                    this.client.close();
+                } catch (IOException exception) {
+                    logger.error("Could not close client stream");
+                    // TODO: return?
+                }
+            }
+        } catch (BadRequest400Exception e) {
+            try {
+                byte[] res = Utility.readFile_IO(new File("www/400.html"));
+                respond("HTTP/1.1", e.message, res,
+                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
+                close();
+            } catch (IOException | FileSizeOverflowException ioException) {
+                try {
+                    this.in.close();
+                } catch (IOException exception) {
+                    logger.error("Could not close input stream of client");
+                    // TODO: return?
+                }
+                this.out.close();
+                try {
+                    this.client.close();
+                } catch (IOException exception) {
+                    logger.error("Could not close client stream");
+                    // TODO: return?
+                }
+            }
+        } catch (MethodNotAllowedException e) {
+            try {
+                byte[] res = Utility.readFile_IO(new File("www/403.html"));
+                respond("HTTP/1.1", e.message, res,
+                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
+                close();
+            } catch (IOException | FileSizeOverflowException ioException) {
+                try {
+                    this.in.close();
+                } catch (IOException exception) {
+                    logger.error("Could not close input stream of client");
+                    // TODO: return?
+                }
+                this.out.close();
+                try {
+                    this.client.close();
+                } catch (IOException exception) {
+                    logger.error("Could not close client stream");
+                    // TODO: return?
+                }
+            }
+        } catch (NotFound404Exception e) {
+            try {
+                byte[] res = Utility.readFile_IO(new File("www/404.html"));
+                respond("HTTP/1.1", e.message, res,
+                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
+                close();
+            } catch (IOException | FileSizeOverflowException ioException) {
+                try {
+                    this.in.close();
+                } catch (IOException exception) {
+                    logger.error("Could not close input stream of client");
+                    // TODO: return?
+                }
+                this.out.close();
+                try {
+                    this.client.close();
+                } catch (IOException exception) {
+                    logger.error("Could not close client stream");
+                    // TODO: return?
+                }
+            }
         } catch (HttpRequestException e) {
-            logger.error("An exception occured in HttpController with error HttpRequestException, with probably due to {HttpRequest}");
+            e.printStackTrace();
         } finally {
             try {
-
                 close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -216,6 +298,31 @@ public class HttpController implements Closeable, Runnable {
         this.client.close();
         this.in.close();
         this.out.close();
+    }
+
+    private void respond(String scheme, String status, byte[] body, PrintWriter stream, String name) {
+        HttpResponseBuilder builder = new HttpResponseBuilder();
+        HttpResponse res = builder
+                .scheme(scheme)
+                .code(StatusEnum.valueOf(Utility.enumStatusToString(status)).STATUS_CODE)
+                .message(StatusEnum.valueOf(Utility.enumStatusToString(status)).MESSAGE)
+                .body(body)
+                .setStream(stream)
+                .setHeader(HeaderEnum.DATE.NAME, ZonedDateTime.now().format(DateTimeFormatter.ofPattern(
+                        "EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).withZone(
+                        ZoneId.of("GMT")
+                        )
+                ))
+                .setHeader(HeaderEnum.SERVER.NAME, name)
+                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, "en_US")
+                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(body.length))
+                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, "text/html")
+                .build();
+        try {
+            res.send();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
