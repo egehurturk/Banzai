@@ -1,8 +1,8 @@
 package com.egehurturk.httpd;
 
 import com.egehurturk.core.BaseServer;
+import com.egehurturk.exceptions.BadRequest400Exception;
 import com.egehurturk.exceptions.HttpRequestException;
-import com.egehurturk.util.MethodEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -111,7 +111,7 @@ public class HttpRequest {
         parse(data);
     }
 
-    private void parse(BufferedReader in) throws IOException, HttpRequestException {
+    private void parse(BufferedReader in) throws IOException, BadRequest400Exception {
         if (in == null) {
             logger.error("Input stream of client is null, or empty, Check for client connection");
             throw new com.egehurturk.exceptions.BadRequest400Exception("Input stream is null or empty. Check for client" +
@@ -124,7 +124,10 @@ public class HttpRequest {
                     " connection that sends the request", 400, "Bad Request");
         }
         if (!checkValidHttpRequest(requestLine)) {
-            logger.error("Request is not valid (check scheme)");
+            // TODO: Close connection with the status code 400
+            logger.error("Request does not match HTTP standards. Check the request again" +
+                    "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
+                    "HTTP scheme (\"HTTP/1.1\"), and path");
             throw new com.egehurturk.exceptions.BadRequest400Exception("Request does not match HTTP standards. Check the request again" +
                     "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
                     "HTTP scheme (\"HTTP/1.1\"), and path", 400, "Bad Request");
@@ -132,7 +135,10 @@ public class HttpRequest {
 
         String[] requestLineArray = requestLine.split(" ");
         if (requestLineArray.length != 3) {
-            logger.error("Request line (e.g. GET /index HTTP/1.1 is not found");
+            // TODO: Close connection with status code 400
+            logger.error("Request does not match HTTP standards. Check the request again" +
+                    "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
+                    "HTTP scheme (\"HTTP/1.1\"), and path");
             throw new com.egehurturk.exceptions.BadRequest400Exception("Request does not match HTTP standards. Check the request again" +
                     "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
                     "HTTP scheme (\"HTTP/1.1\"), and path", 400, "Bad Request");
@@ -201,13 +207,12 @@ public class HttpRequest {
             logger.info("HTTP Version not supported");
             return false;
         }
-
-        for (MethodEnum methodE: MethodEnum.values()) {
-            if (method.equals(methodE.str)) {
-                return true;
-            }
-        }
-        return false;
+//        for (MethodEnum methodE: MethodEnum.values()) {
+//            if (method.equals(methodE.str)) {
+//                return false;
+//            }
+//        }
+        return true;
     }
 
     public String getScheme() {
