@@ -143,11 +143,11 @@ Configuration can happen in two ways. One is to pass in CLA (Command Line Argume
   
   All command line arguments:
   <ol>
-  <li> --port | -p: port numer that the server is running on</li>
-    <li> --host | -h: host</li>
-    <li> --backlog | -b: backlog (maximum number of Http threads in queue)</li>
-    <li> --name | -n: name of the server</li>
-    <li> --webroot | -w: web root of server</li>
+  <li> `--port` | `-p`: port numer that the server is running on</li>
+    <li> `--host` | `-h`: host</li>
+    <li> `--backlog` | `-b`: backlog (maximum number of Http threads in queue)</li>
+    <li> `--name` | `-n`: name of the server</li>
+    <li> `--webroot` | `-w`: web root of server</li>
   </ol>
   
 2. Using a `properties` file:
