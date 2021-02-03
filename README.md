@@ -142,13 +142,13 @@ Configuration can happen in two ways. One is to pass in CLA (Command Line Argume
   This creates a server running on port `9090`, host `127.0.0.1`, a backlog of `50`, a name of `AwesomeServer`, and determines web root as `/www`
   
   All command line arguments:
-  <ol>
-  <li> `--port` | `-p`: port numer that the server is running on</li>
-    <li> `--host` | `-h`: host</li>
-    <li> `--backlog` | `-b`: backlog (maximum number of Http threads in queue)</li>
-    <li> `--name` | `-n`: name of the server</li>
-    <li> `--webroot` | `-w`: web root of server</li>
-  </ol>
+  
+  1  `--port` | `-p`: port numer that the server is running on\
+  2 `--host` | `-h`: host\
+  3 `--backlog` | `-b`: backlog (maximum number of Http threads in queue)\
+  4 `--name` | `-n`: name of the server\
+  5 `--webroot` | `-w`: web root of server\
+
   
 2. Using a `properties` file:
    ```sh
