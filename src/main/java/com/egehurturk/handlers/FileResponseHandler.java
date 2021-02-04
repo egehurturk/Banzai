@@ -1,6 +1,9 @@
 package com.egehurturk.handlers;
 
+import com.egehurturk.exceptions.FileSizeOverflowException;
 import com.egehurturk.httpd.HttpResponse;
+import com.egehurturk.httpd.HttpResponseBuilder;
+import com.egehurturk.util.HeaderEnum;
 import com.egehurturk.util.StatusEnum;
 import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
@@ -8,9 +11,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
+import java.nio.file.Files;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 
 /**
@@ -27,12 +34,12 @@ public class FileResponseHandler {
      */
     private final String path;
     /**
-     * {@link PrintWriter} necessary for {@link #toHttpResponse()}
+     * {@link PrintWriter} necessary for {@link #toHttpResponse(String)}
      * method
      */
     private final PrintWriter writer;
     /**
-     * Status necessary for {@link #toHttpResponse()}
+     * Status necessary for {@link #toHttpResponse(String)}
      * method
      */
     private StatusEnum status;
@@ -40,26 +47,16 @@ public class FileResponseHandler {
     public final String INDEX = "index.html";
     public final String _404_NOT_FOUND = "404.html";
     public final String _NOT_IMPLEMENTED = "501.html";
-    public String webroot;
 
 
     /**
      * Constructor that verifies path
      * @param path:                     request path, e.g. "/hello"
      * @param writer:                   Response writer
-     * @param webRoot:                  Web root where HTML files live in, e.g. "www"
      */
-    public FileResponseHandler(String path, PrintWriter writer, String webRoot) throws FileNotFoundException {
+    public FileResponseHandler(String path, PrintWriter writer) throws FileNotFoundException {
         this.path = path;
         this.writer = writer;
-        if (!Utility.isDirectory(webRoot)) {
-            logger.error("Web root is not a directory. Check if there exists a directory" +
-                    "at root/www");
-            // TODO: return
-            return;
-
-        }
-        this.webroot = webRoot;
     }
 
 
@@ -84,47 +81,53 @@ public class FileResponseHandler {
      *
      * @return Http response object ready to being send in {@link Handler} interfaces
      */
-    public HttpResponse toHttpResponse() {
-        File outputFile= prepareOutputWithMethod();
-        return null;
-    }
+    public HttpResponse toHttpResponse(String name) {
+        File outputFile = prepareOutput();
+        byte[] buffer = memoryAllocateForFile(outputFile);
 
-    /**
-     * Resolves path, i.e translates URL to local system path
-     * @param reqPath           - requested path
-     * @return resolved path    - resolved path
-     */
-    private String resolvePath(String reqPath) {
-        Path resolved = FileSystems.getDefault().getPath("");
-        Path other = FileSystems.getDefault().getPath(reqPath);
-        for (Path path: other) {
-            // security
-            if (!path.startsWith(".") && !path.startsWith("..")) {
-                resolved = resolved.resolve(path);
-            }
+        ZonedDateTime now = ZonedDateTime.now();
+        String dateHeader = now.format(DateTimeFormatter.ofPattern(
+                "EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).withZone(
+                ZoneId.of("GMT")
+                )
+        );
+        String contentLang = "en_US", mimeType = null;
+        try {
+            mimeType = Files.probeContentType(outputFile.toPath());
+        } catch (IOException e) {
+            this.logger.error("Cannot determine the MIME type of file");
+            e.printStackTrace();
         }
 
-        if (resolved.startsWith("")) {
-            // if empty then use index.html
-            resolved = resolved.resolve(INDEX);
-        }
-        return resolved.toString();
+        HttpResponseBuilder builder = new HttpResponseBuilder();
+        HttpResponse response = builder
+                .scheme("HTTP/1.1")
+                .code(this.status.STATUS_CODE)
+                .message(this.status.MESSAGE)
+                .body(buffer)
+                .setStream(this.writer)
+                .setHeader(HeaderEnum.DATE.NAME, dateHeader)
+                .setHeader(HeaderEnum.SERVER.NAME, name)
+                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
+                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(buffer.length))
+                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
+                .build();
+        return response;
     }
 
     /**
      * Prepare the HTML file given GET request
      * @return                      - {@link File} output file
      */
-    private File prepareOutputWithMethod() {
-        File outputFile = null;
+    private File prepareOutput() {
+        File outputFile;
         String resolvedFilePathUrl;
         // resolve the file and get the file that is stored in www/${resolvedFilePathUrl}
-        resolvedFilePathUrl = resolvePath(this.path);
-        outputFile = new File(this.webroot, resolvedFilePathUrl);
+        outputFile = new File(this.path);
         // if the file does not exists throw 404
         if (!outputFile.exists()) {
             this.status = StatusEnum._404_NOT_FOUND;
-            outputFile = new File(this.webroot, _404_NOT_FOUND);
+            outputFile = new File("www", _404_NOT_FOUND);
         } else {
             if (outputFile.isDirectory()) {
                 // /file -> index.html
@@ -134,13 +137,22 @@ public class FileResponseHandler {
                 this.status = StatusEnum._200_OK;
             } else {
                 this.status = StatusEnum._404_NOT_FOUND;
-                outputFile = new File(this.webroot, _404_NOT_FOUND);
+                outputFile = new File("www", _404_NOT_FOUND);
             }
         }
         return outputFile;
     }
 
-
+    private byte[] memoryAllocateForFile(File file) {
+        byte[] bodyByte = null;
+        try {
+            bodyByte = Utility.readFile_IO(file);
+        } catch (IOException | FileSizeOverflowException e) {
+            this.logger.error("File size is too large");
+            return null;
+        }
+        return bodyByte;
+    }
 
 }
 
@@ -155,4 +167,3 @@ public class FileResponseHandler {
 // stream
 // date
 // server
-//
