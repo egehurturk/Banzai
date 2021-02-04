@@ -1,0 +1,2 @@
+[33m2021-02-03 00:02:21,421[m [pool-2-thread-2] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request line (e.g. GET /index HTTP/1.1 is not found
+[33m2021-02-03 00:02:21,422[m [pool-2-thread-2] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
