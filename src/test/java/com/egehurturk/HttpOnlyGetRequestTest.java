@@ -2,11 +2,10 @@ package com.egehurturk;
 
 
 import com.egehurturk.exceptions.HttpRequestException;
-import com.egehurturk.httpd.HttpServer;
 import com.egehurturk.httpd.HttpRequest;
 import org.junit.Assert;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -20,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class HttpOnlyGetRequestTest {
 
 
-    public HttpServer testServer;
     public HttpRequest testRequest;
     public static String validTestGetRequest = "GET / HTTP/1.1\r\n" +
             "Host: localhost:8080\r\n" +
