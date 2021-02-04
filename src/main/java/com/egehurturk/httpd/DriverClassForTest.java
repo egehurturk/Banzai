@@ -2,12 +2,14 @@ package com.egehurturk.httpd;
 
 
 import com.egehurturk.exceptions.ConfigurationException;
+import com.egehurturk.handlers.FileResponseHandler;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.HttpHandler;
 import com.egehurturk.util.HeaderEnum;
 import com.egehurturk.util.MethodEnum;
 import org.apache.commons.cli.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -63,6 +65,7 @@ public class DriverClassForTest {
         httpServer.addHandler(MethodEnum.POST, "/*", handler);
         httpServer.addHandler(MethodEnum.GET, "/thismynewserver", new MyNewHandler());
         httpServer.addHandler(MethodEnum.GET, "/cemhurturk", new MyHandler());
+        httpServer.addHandler(MethodEnum.GET, "/filehandling", new MyFileHandler());
 
         httpServer.start();
     }
@@ -81,6 +84,21 @@ public class DriverClassForTest {
             return res;
         }
     }
+
+    static class MyFileHandler implements com.egehurturk.handlers.Handler {
+        @Override
+        public HttpResponse handle(HttpRequest request, HttpResponse response) {
+            HttpResponse res = null;
+            try {
+                FileResponseHandler fil = new FileResponseHandler("www/custom.html", response.getStream());
+                res = fil.toHttpResponse("Banzai");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            return res;
+        }
+    }
+
 
     static class MyNewHandler implements Handler {
         @Override
