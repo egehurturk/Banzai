@@ -234,6 +234,22 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 
     // >>>>>>>>>>>>>>>>>>>>> CORE >>>>>>>>>>>>>>>>>>>>
+    /*
+             _________________________________________
+            / You are only young once, but you can    \
+            \ stay immature indefinitely.             /
+             -----------------------------------------
+               \
+                \
+                    .--.
+                   |o_o |
+                   |:_/ |
+                  //   \ \
+                 (|     | )
+                /'\_   _/`\
+                \___)=(___/
+    */
+
     @Override
     public void start() {
         ExecutorService pool = Executors.newFixedThreadPool(500);
