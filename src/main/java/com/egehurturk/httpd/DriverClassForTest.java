@@ -6,6 +6,7 @@ import com.egehurturk.handlers.FileResponseHandler;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.HttpHandler;
 import com.egehurturk.handlers.JsonResponseHandler;
+import com.egehurturk.renderers.HTMLRenderer;
 import com.egehurturk.util.HeaderEnum;
 import com.egehurturk.util.MethodEnum;
 import org.apache.commons.cli.*;
@@ -68,6 +69,9 @@ public class DriverClassForTest {
         httpServer.addHandler(MethodEnum.GET, "/cemhurturk", new MyHandler());
         httpServer.addHandler(MethodEnum.GET, "/filehandling", new MyFileHandler());
         httpServer.addHandler(MethodEnum.GET, "/jsontest", new Json());
+        httpServer.addHandler(MethodEnum.GET, "/paramtest", new Parameterized());
+        httpServer.addHandler(MethodEnum.GET, "/template", new TemplateTest());
+        httpServer.addHandler(MethodEnum.GET, "/soph", new Sophisticated());
 
         httpServer.start();
     }
@@ -101,6 +105,57 @@ public class DriverClassForTest {
         }
     }
 
+    static class Parameterized implements com.egehurturk.handlers.Handler {
+        @Override
+        public HttpResponse handle(HttpRequest request, HttpResponse response) {
+            HttpResponse res = new HttpResponseBuilder().scheme("HTTP/1.1")
+                    .code(200)
+                    .message("OK")
+                    .body(request.getQueryParam("name").getBytes())
+                    .setStream(new PrintWriter(response.getStream(), false))
+                    .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(request.getQueryParam("name").length()))
+                    .setHeader(HeaderEnum.CONTENT_TYPE.NAME, "text/html")
+                    .build();
+            return res;
+        }
+    }
+
+    static class TemplateTest implements com.egehurturk.handlers.Handler {
+        @Override
+        public HttpResponse handle(HttpRequest request, HttpResponse response) {
+
+            HTMLRenderer contentRenderer = new HTMLRenderer("www/dist.html", response.getStream());
+
+            contentRenderer.setVar("username", "monkey");
+            contentRenderer.setVar("name", "Monkey man");
+            contentRenderer.setVar("age", "23");
+            contentRenderer.setVar("location", "Turkey");
+
+            HTMLRenderer userRenderer = new HTMLRenderer("www/user.html", response.getStream());
+            userRenderer.setVar("title", "User Profile");
+            userRenderer.setVar("content", contentRenderer.render());
+            System.out.println(userRenderer.toHttpResponse().getCode());
+            return userRenderer.toHttpResponse();
+        }
+    }
+
+    static class Sophisticated implements com.egehurturk.handlers.Handler {
+        @Override
+        public HttpResponse handle(HttpRequest request, HttpResponse response) {
+            HTMLRenderer contentRenderer = new HTMLRenderer("www/dist.html", response.getStream());
+
+            contentRenderer.setVar("username", request.getQueryParam("username"));
+            contentRenderer.setVar("name", request.getQueryParam("name"));
+            contentRenderer.setVar("age", request.getQueryParam("age"));
+            contentRenderer.setVar("location", request.getQueryParam("location"));
+
+            HTMLRenderer userRenderer = new HTMLRenderer("www/user.html", response.getStream());
+            userRenderer.setVar("title", "User Profile");
+            userRenderer.setVar("content", contentRenderer.render());
+            return userRenderer.toHttpResponse();
+        }
+    }
+
 
     static class MyNewHandler implements Handler {
         @Override
@@ -108,9 +163,9 @@ public class DriverClassForTest {
             HttpResponse res = new HttpResponseBuilder().scheme("HTTP/1.1")
                     .code(404)
                     .message("Not Found")
-                    .body("<h1>404 Error</h1>".getBytes())
+                    .body("<h1>Not Found 404 err</h1>".getBytes())
                     .setStream(new PrintWriter(response.getStream(), false))
-                    .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+("<h1>404 Error</h1>".length()))
+                    .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+"<h1>Not Found 404 err</h1>".length())
                     .setHeader(HeaderEnum.CONTENT_TYPE.NAME, "text/html")
                     .build();
             return res;
