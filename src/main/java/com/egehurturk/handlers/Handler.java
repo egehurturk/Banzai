@@ -21,6 +21,5 @@ public interface Handler {
      * @return                              - {@link HttpResponse} object that the result is going to be
      *                                        written into
      */
-    // TODO: remove response from parameters
     HttpResponse handle(HttpRequest request, HttpResponse response);
 }
