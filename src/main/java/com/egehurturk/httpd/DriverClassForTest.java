@@ -5,6 +5,7 @@ import com.egehurturk.exceptions.ConfigurationException;
 import com.egehurturk.handlers.FileResponseHandler;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.HttpHandler;
+import com.egehurturk.handlers.JsonResponseHandler;
 import com.egehurturk.util.HeaderEnum;
 import com.egehurturk.util.MethodEnum;
 import org.apache.commons.cli.*;
@@ -66,6 +67,7 @@ public class DriverClassForTest {
         httpServer.addHandler(MethodEnum.GET, "/thismynewserver", new MyNewHandler());
         httpServer.addHandler(MethodEnum.GET, "/cemhurturk", new MyHandler());
         httpServer.addHandler(MethodEnum.GET, "/filehandling", new MyFileHandler());
+        httpServer.addHandler(MethodEnum.GET, "/jsontest", new Json());
 
         httpServer.start();
     }
@@ -114,6 +116,39 @@ public class DriverClassForTest {
             return res;
         }
     }
+
+    static class Json implements com.egehurturk.handlers.Handler {
+        @Override
+        public HttpResponse handle(HttpRequest request, HttpResponse response) {
+            HttpResponse res = null;
+            JsonResponseHandler json = new JsonResponseHandler(response.getStream());
+            json.setBody("{\n" +
+                    "    \"glossary\": {\n" +
+                    "        \"title\": \"example glossary\",\n" +
+                    "\t\t\"GlossDiv\": {\n" +
+                    "            \"title\": \"S\",\n" +
+                    "\t\t\t\"GlossList\": {\n" +
+                    "                \"GlossEntry\": {\n" +
+                    "                    \"ID\": \"SGML\",\n" +
+                    "\t\t\t\t\t\"SortAs\": \"SGML\",\n" +
+                    "\t\t\t\t\t\"GlossTerm\": \"Standard Generalized Markup Language\",\n" +
+                    "\t\t\t\t\t\"Acronym\": \"SGML\",\n" +
+                    "\t\t\t\t\t\"Abbrev\": \"ISO 8879:1986\",\n" +
+                    "\t\t\t\t\t\"GlossDef\": {\n" +
+                    "                        \"para\": \"A meta-markup language, used to create markup languages such as DocBook.\",\n" +
+                    "\t\t\t\t\t\t\"GlossSeeAlso\": [\"GML\", \"XML\"]\n" +
+                    "                    },\n" +
+                    "\t\t\t\t\t\"GlossSee\": \"markup\"\n" +
+                    "                }\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "}\n");
+            res = json.toHttpResponse();
+            return res;
+        }
+    }
+
 
     private static Options generateOptions() {
         Options options = new Options();
