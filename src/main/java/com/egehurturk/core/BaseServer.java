@@ -193,7 +193,6 @@ public abstract class BaseServer {
      */
     protected InputStream propertiesStream;
 
-    // TODO: DO NOT INSTANTIATE PROPERTIESSTERAM HERE, INSTANTIATE AT CONFIGURESERVER()
 
     /**
      * Chained constructor for intializing with only port.
@@ -655,4 +654,3 @@ public abstract class BaseServer {
 }
 
 // end of class
-// todo: remove all debug statements
