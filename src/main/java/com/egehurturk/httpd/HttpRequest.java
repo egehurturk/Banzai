@@ -92,6 +92,8 @@ public class HttpRequest {
      */
     private String method;
 
+    private HashMap<String, String> queryParams = new HashMap<String, String>();
+
     // logger instance
     private static Logger logger = LogManager.getLogger(HttpRequest.class);
 
@@ -144,7 +146,16 @@ public class HttpRequest {
                     "HTTP scheme (\"HTTP/1.1\"), and path", 400, "Bad Request");
         }
         this.method = requestLineArray[0].toUpperCase(); // ensure it is all upper ("GET")
-        this.path = requestLineArray[1].toLowerCase(); // ensure it is all lower, i.e ("/index.html")
+        System.out.println("[DEBUG][DEBUG] req.path contains ? --> " +requestLineArray[1].contains("?") );
+        if (!requestLineArray[1].contains("?")) {
+            this.path = requestLineArray[1].toLowerCase(); // ensure it is all lower, i.e ("/index.html")
+            System.out.println("[DEBUG][DEBUG] path --> " + this.path);
+        } else {
+            this.path = requestLineArray[1].substring(0, requestLineArray[1].indexOf("?")); // /index.html?a=3&b=4 -> /index.html
+            System.out.println("[DEBUG][DEBUG] path --> " + this.path);
+            parseQueryParams(requestLineArray[1].substring(                                 // a=3&b=4
+                    requestLineArray[1].indexOf("?") + 1));
+        }
         this.scheme = requestLineArray[2]; // by default it is all upper. Case here does not matter
 
         // read headers line by line
@@ -215,6 +226,19 @@ public class HttpRequest {
         return true;
     }
 
+    private void parseQueryParams(String queryStr) {
+        for (String param: queryStr.split("&")) {   // ["a=3"], ["b=4"], ["c=5"]
+            int separator = param.indexOf('='); // index of "="
+            if (separator > -1)  {              // if there is "="
+                queryParams.put(param.substring(0, separator),  // put {"a", "3"} in query parameters
+                        param.substring(separator + 1));
+            } else  {
+                queryParams.put(param, null);       // put {"d-43", null}
+            }
+        }
+    }
+
+
     public String getScheme() {
         return scheme;
     }
@@ -230,6 +254,11 @@ public class HttpRequest {
     public String getMethod() {
         return method;
     }
+
+    public String getQueryParam(String param) {
+        return queryParams.get(param);
+    }
 }
 
 /* https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages */
+// TODO: request.getQueryParam can return NULL!!!!!!!
