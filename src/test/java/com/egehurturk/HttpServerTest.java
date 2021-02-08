@@ -4,10 +4,7 @@ import com.egehurturk.handlers.HandlerTemplate;
 import com.egehurturk.handlers.HttpController;
 import com.egehurturk.handlers.HttpHandler;
 import com.egehurturk.util.MethodEnum;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -38,7 +35,6 @@ public class HttpServerTest {
 
     @BeforeEach
     public void setUp() throws IOException {
-        System.out.println("========== TEST STARTING ==========");
         outputStream = new ByteArrayOutputStream();
         Mockito.lenient().when(client.getOutputStream()).thenReturn(outputStream);
         Mockito.lenient().when(client.getInetAddress()).thenReturn(InetAddress.getByName("localhost"));
@@ -54,7 +50,6 @@ public class HttpServerTest {
 
     @AfterEach
     public void tearDown() throws IOException {
-        System.out.println("========== TEST FINISHING ==========");
         outputStream.close();
         manager.close();
         client.close();
@@ -62,6 +57,7 @@ public class HttpServerTest {
 
 
     @Test
+    @DisplayName("GET request to / path should return HTTP/1.1 200 OK")
     public void testGetRequestResponseStatusLinePathSlashDirectory() throws IOException {
         // setup the request
         prepareIncomingRequestStream(generateIncomingGetRequest("GET", "/"));
@@ -76,6 +72,7 @@ public class HttpServerTest {
     }
 
     @Test
+    @DisplayName("GET request to /index.html path should return HTTP/1.1 200 OK")
     public void testGetRequestResponseStatusLinePathIndexHtml() throws IOException {
         // setup the request
         prepareIncomingRequestStream(generateIncomingGetRequest("GET", "/index.html"));
@@ -89,18 +86,9 @@ public class HttpServerTest {
         Assertions.assertEquals("200", tokenizer.nextToken());
     }
 
-    @Test
-    public void requestSubdirectoryNotFound() throws IOException {
-        prepareIncomingRequestStream(generateIncomingGetRequest("GET", "/css/main.css"));
-        Assertions.assertNotNull(manager);
-        manager.run();
-
-        String[] splitted = new String(outputStream.toByteArray()).split(" ");
-        Assertions.assertEquals("HTTP/1.1", splitted[0]);
-        Assertions.assertEquals("200", splitted[1]);
-    }
 
     @Test
+    @DisplayName("GET request to subdirectory (/css/main.css) should return HTTP/1.1 200 OK")
     public void requestSubDirectoryFound() throws IOException {
         prepareIncomingRequestStream(generateIncomingGetRequest("GET", "/css/main.css"));
         Assertions.assertNotNull(manager);
@@ -112,6 +100,7 @@ public class HttpServerTest {
     }
 
     @Test
+    @DisplayName("GET request to /facivon.ico should return HTTP/1.1 404 Not Found")
     public void requestOtherSourceNotFound() throws IOException {
         prepareIncomingRequestStream(generateIncomingGetRequest("GET", "/favicon.ico"));
         Assertions.assertNotNull(manager);
@@ -124,6 +113,7 @@ public class HttpServerTest {
     }
 
     @Test
+    @DisplayName("GET request to higher path (../css/main.css) should return HTTP/1.1 400 Bad Request")
     public void requestRelativePathBadRequest() throws IOException {
         prepareIncomingRequestStream(generateIncomingGetRequest("GET", "../css/main.css"));
         Assertions.assertNotNull(manager);
@@ -132,6 +122,8 @@ public class HttpServerTest {
         String[] splitted = new String(outputStream.toByteArray()).split(" ");
         Assertions.assertEquals("HTTP/1.1", splitted[0]);
         Assertions.assertEquals("400", splitted[1]);
+
+
     }
 
 
