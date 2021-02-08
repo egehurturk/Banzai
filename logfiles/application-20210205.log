@@ -1,0 +1,1 @@
+[33m2021-02-05 23:55:45,645[m [pool-2-thread-3] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection

@@ -1,0 +1,3 @@
+[33m2021-02-07 01:09:21,925[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict) 
+
+java.net.BindException
