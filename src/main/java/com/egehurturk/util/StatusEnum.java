@@ -7,6 +7,7 @@ public enum StatusEnum {
     _403_FORBIDDEN(Constants.C403, Constants.CM403),
     _404_NOT_FOUND(Constants.C404, Constants.CM404),
     _405_METHOD_NOT_ALLOWED(Constants.C405, Constants.CM405),
+    _406_NOT_ACCEPTABLE(Constants.C406, Constants.CM406),
     _500_INTERNAL_ERROR(Constants.C500, Constants.CM500),
     _501_NOT_IMPLEMENTED(Constants.C501, Constants.CM501),
 
@@ -27,6 +28,7 @@ public enum StatusEnum {
         public static final int C403 = 403;
         public static final int C404 = 404;
         public static final int C405 = 405;
+        public static final int C406 = 406;
         public static final int C500 = 500;
         public static final int C501 = 501;
 
@@ -37,6 +39,7 @@ public enum StatusEnum {
         public static final String CM403 = "Forbidden";
         public static final String CM404 = "Not Found";
         public static final String CM405 = "Method Not Allowed";
+        public static final String CM406 = "Not Acceptable";
         public static final String CM500 = "Internal Server Error";
         public static final String CM501 = "Not Implemented";
 
