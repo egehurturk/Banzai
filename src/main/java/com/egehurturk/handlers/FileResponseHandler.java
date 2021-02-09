@@ -81,7 +81,7 @@ public class FileResponseHandler {
      *
      * @return Http response object ready to being send in {@link Handler} interfaces
      */
-    public HttpResponse toHttpResponse(String name) {
+    public HttpResponse toHttpResponse() {
         File outputFile = prepareOutput();
         byte[] buffer = memoryAllocateForFile(outputFile);
 
@@ -107,12 +107,45 @@ public class FileResponseHandler {
                 .body(buffer)
                 .setStream(this.writer)
                 .setHeader(HeaderEnum.DATE.NAME, dateHeader)
-                .setHeader(HeaderEnum.SERVER.NAME, name)
+                .setHeader(HeaderEnum.SERVER.NAME, "Banzai")
                 .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
                 .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(buffer.length))
                 .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
                 .build();
         return response;
+    }
+
+    public HttpResponse toHttpResponse(StatusEnum status, PrintWriter writer) {
+        File outputFile = prepareOutput();
+        byte[] buffer = memoryAllocateForFile(outputFile);
+
+        ZonedDateTime now = ZonedDateTime.now();
+        String dateHeader = now.format(DateTimeFormatter.ofPattern(
+                "EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).withZone(
+                ZoneId.of("GMT")
+                )
+        );
+        String contentLang = "en_US", mimeType = null;
+        try {
+            mimeType = Files.probeContentType(outputFile.toPath());
+        } catch (IOException e) {
+            this.logger.error("Cannot determine the MIME type of file");
+            e.printStackTrace();
+        }
+
+        HttpResponseBuilder builder = new HttpResponseBuilder();
+        return builder
+                .scheme("HTTP/1.1")
+                .code(status.STATUS_CODE)
+                .message(status.MESSAGE)
+                .body(buffer)
+                .setStream(writer)
+                .setHeader(HeaderEnum.DATE.NAME, dateHeader)
+                .setHeader(HeaderEnum.SERVER.NAME, "Banzai")
+                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
+                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(buffer.length))
+                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
+                .build();
     }
 
     /**
@@ -156,14 +189,3 @@ public class FileResponseHandler {
 
 }
 
-
-
-
-
-// scheme
-// code
-// body
-// message
-// stream
-// date
-// server
