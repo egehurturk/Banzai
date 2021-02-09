@@ -80,4 +80,3 @@ This server should be run from CLI, by using a bash file:
 
  TODO: close the stream of client whenever the request is received and the response is sent. Otherwise
         it will cost too much
- TODO: HttpServer should initialize a connection manager in constructor
