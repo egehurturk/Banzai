@@ -147,8 +147,6 @@ public class HttpController implements Closeable, Runnable {
 
             // parse request
             HttpRequest req = new HttpRequest(in);
-            System.out.println((req.getQueryParam("name") == null) ? "null" : "nonnull");
-            System.out.println(req.getPath());
             boolean foundHandler = false;
             HttpResponse res = new HttpResponse(this.out);
 
