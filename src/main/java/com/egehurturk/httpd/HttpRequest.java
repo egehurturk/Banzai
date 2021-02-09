@@ -3,6 +3,7 @@ package com.egehurturk.httpd;
 import com.egehurturk.core.BaseServer;
 import com.egehurturk.exceptions.BadRequest400Exception;
 import com.egehurturk.exceptions.HttpRequestException;
+import com.egehurturk.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -255,10 +256,31 @@ public class HttpRequest {
         return method;
     }
 
-    public String getQueryParam(String param) {
-        return queryParams.get(param);
+    public Pair<Boolean, String> getHeader(String name) {
+        // TODO: if the client does not have a header, should the server ignore it or act?
+        String ret = this.headers.get(name);
+        Pair<Boolean, String> pair;
+        System.out.println(ret);
+        if (ret == null) {
+            logger.error("Request header does not exist in HTTP Request");
+            pair = Pair.makePair(false, null);
+        } else {
+            pair = Pair.makePair(true, ret);
+        }
+        return pair;
+    }
+
+
+    public Pair<Boolean, String> getQueryParam(String param) {
+        Pair<Boolean, String> pair = null;
+        if (queryParams.get(param) == null) {
+            logger.error("Query parameter is null for " + param + " parameter");
+            pair = Pair.makePair(false, null);
+        } else {
+            pair =  Pair.makePair(true, queryParams.get(param));
+        }
+        return pair;
     }
 }
 
 /* https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages */
-// TODO: request.getQueryParam can return NULL!!!!!!!
