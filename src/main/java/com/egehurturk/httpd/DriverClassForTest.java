@@ -97,7 +97,7 @@ public class DriverClassForTest {
             HttpResponse res = null;
             try {
                 FileResponseHandler fil = new FileResponseHandler("www/custom.html", response.getStream());
-                res = fil.toHttpResponse("Banzai");
+                res = fil.toHttpResponse();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -108,12 +108,18 @@ public class DriverClassForTest {
     static class Parameterized implements com.egehurturk.handlers.Handler {
         @Override
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
+            String body;
+            if (request.getQueryParam("name").getFirst()) {
+                body = request.getQueryParam("name").getSecond();
+            } else {
+                body = "<h3><i>Check logs (console)</i></h3>";
+            }
             HttpResponse res = new HttpResponseBuilder().scheme("HTTP/1.1")
                     .code(200)
                     .message("OK")
-                    .body(request.getQueryParam("name").getBytes())
+                    .body(body.getBytes())
                     .setStream(new PrintWriter(response.getStream(), false))
-                    .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(request.getQueryParam("name").length()))
+                    .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(body.getBytes().length))
                     .setHeader(HeaderEnum.CONTENT_TYPE.NAME, "text/html")
                     .build();
             return res;
@@ -143,11 +149,15 @@ public class DriverClassForTest {
         @Override
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
             HTMLRenderer contentRenderer = new HTMLRenderer("www/dist.html", response.getStream());
+            String username = request.getQueryParam("username").getFirst() ? request.getQueryParam("username").getSecond() : "null";
+            String name = request.getQueryParam("name").getFirst() ? request.getQueryParam("name").getSecond() : "null";
+            String age = request.getQueryParam("age").getFirst() ? request.getQueryParam("age").getSecond() : "null";
+            String location = request.getQueryParam("location").getFirst() ? request.getQueryParam("location").getSecond() : "null";
 
-            contentRenderer.setVar("username", request.getQueryParam("username"));
-            contentRenderer.setVar("name", request.getQueryParam("name"));
-            contentRenderer.setVar("age", request.getQueryParam("age"));
-            contentRenderer.setVar("location", request.getQueryParam("location"));
+            contentRenderer.setVar("username", username);
+            contentRenderer.setVar("name", name);
+            contentRenderer.setVar("age", age);
+            contentRenderer.setVar("location", location);
 
             HTMLRenderer userRenderer = new HTMLRenderer("www/user.html", response.getStream());
             userRenderer.setVar("title", "User Profile");
@@ -177,6 +187,7 @@ public class DriverClassForTest {
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
             HttpResponse res = null;
             JsonResponseHandler json = new JsonResponseHandler(response.getStream());
+            json.validate(request);
             json.setBody("{\n" +
                     "    \"glossary\": {\n" +
                     "        \"title\": \"example glossary\",\n" +
