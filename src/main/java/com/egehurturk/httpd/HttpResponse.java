@@ -152,6 +152,7 @@ public class HttpResponse {
         code.add(StatusEnum._404_NOT_FOUND.STATUS_CODE);
         code.add(StatusEnum._501_NOT_IMPLEMENTED.STATUS_CODE);
         code.add(StatusEnum._200_OK.STATUS_CODE);
+        code.add(StatusEnum._406_NOT_ACCEPTABLE.STATUS_CODE);
 
         return code;
     }
@@ -164,6 +165,7 @@ public class HttpResponse {
         msg.add(StatusEnum._404_NOT_FOUND.MESSAGE);
         msg.add(StatusEnum._501_NOT_IMPLEMENTED.MESSAGE);
         msg.add(StatusEnum._200_OK.MESSAGE);
+        msg.add(StatusEnum._406_NOT_ACCEPTABLE.MESSAGE);
 
         return msg;
     }
