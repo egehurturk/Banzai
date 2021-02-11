@@ -2,10 +2,10 @@ package com.egehurturk.httpd;
 
 
 import com.egehurturk.exceptions.ConfigurationException;
-import com.egehurturk.handlers.FileResponseHandler;
+import com.egehurturk.handlers.FileResponse;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.HttpHandler;
-import com.egehurturk.handlers.JsonResponseHandler;
+import com.egehurturk.handlers.JsonResponse;
 import com.egehurturk.renderers.HTMLRenderer;
 import com.egehurturk.util.HeaderEnum;
 import com.egehurturk.util.MethodEnum;
@@ -96,7 +96,7 @@ public class DriverClassForTest {
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
             HttpResponse res = null;
             try {
-                FileResponseHandler fil = new FileResponseHandler("www/custom.html", response.getStream());
+                FileResponse fil = new FileResponse("www/custom.html", response.getStream());
                 res = fil.toHttpResponse();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -186,7 +186,7 @@ public class DriverClassForTest {
         @Override
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
             HttpResponse res = null;
-            JsonResponseHandler json = new JsonResponseHandler(response.getStream());
+            JsonResponse json = new JsonResponse(response.getStream(), request);
             json.validate(request);
             json.setBody("{\n" +
                     "    \"glossary\": {\n" +

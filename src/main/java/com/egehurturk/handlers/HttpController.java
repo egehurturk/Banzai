@@ -204,11 +204,8 @@ public class HttpController implements Closeable, Runnable {
             }
         } catch (BadRequest400Exception e) {
             try {
-                FileResponseHandler response = new FileResponseHandler("www/400.html", new PrintWriter(client.getOutputStream(), false));
+                FileResponse response = new FileResponse("www/400.html", new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse());
-//                byte[] res = Utility.readFile_IO(new File("www/400.html"));
-//                respond("HTTP/1.1", e.message, res,
-//                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
                 close();
             } catch (IOException ioException) {
                 try {
@@ -227,10 +224,7 @@ public class HttpController implements Closeable, Runnable {
             }
         } catch (MethodNotAllowedException e) {
             try {
-//                byte[] res = Utility.readFile_IO(new File("www/403.html"));
-//                respond("HTTP/1.1", e.message, res,
-//                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
-                FileResponseHandler response = new FileResponseHandler("www/403.html", new PrintWriter(client.getOutputStream(), false));
+                FileResponse response = new FileResponse("www/403.html", new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse());
                 close();
             } catch (IOException ioException) {
@@ -250,10 +244,7 @@ public class HttpController implements Closeable, Runnable {
             }
         } catch (NotFound404Exception e) {
             try {
-//                byte[] res = Utility.readFile_IO(new File("www/404.html"));
-//                respond("HTTP/1.1", e.message, res,
-//                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
-                FileResponseHandler response = new FileResponseHandler("www/404.html", new PrintWriter(client.getOutputStream(), false));
+                FileResponse response = new FileResponse("www/404.html", new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse());
                 close();
             } catch (IOException  ioException) {

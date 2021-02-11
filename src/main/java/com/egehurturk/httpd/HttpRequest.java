@@ -257,10 +257,8 @@ public class HttpRequest {
     }
 
     public Pair<Boolean, String> getHeader(String name) {
-        // TODO: if the client does not have a header, should the server ignore it or act?
         String ret = this.headers.get(name);
         Pair<Boolean, String> pair;
-        System.out.println(ret);
         if (ret == null) {
             logger.error("Request header does not exist in HTTP Request");
             pair = Pair.makePair(false, null);

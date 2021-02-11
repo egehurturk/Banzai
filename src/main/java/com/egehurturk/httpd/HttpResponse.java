@@ -189,4 +189,5 @@ public class HttpResponse {
     public PrintWriter getStream() {
         return stream;
     }
+
 }

@@ -298,7 +298,6 @@ public class HttpHandler implements Handler {
             }
         }
 
-        // <<<<<<<<<<<<< HEADER SETTING <<<<<<<<<<<<<<<<<<<<<
         ZonedDateTime now = ZonedDateTime.now();
         String dateHeader = now.format(DateTimeFormatter.ofPattern(
                 "EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).withZone(
