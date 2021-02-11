@@ -1,8 +1,8 @@
 package com.egehurturk;
 
 import com.egehurturk.exceptions.HttpRequestException;
-import com.egehurturk.handlers.FileResponseHandler;
-import com.egehurturk.handlers.JsonResponseHandler;
+import com.egehurturk.handlers.FileResponse;
+import com.egehurturk.handlers.JsonResponse;
 import com.egehurturk.httpd.HttpRequest;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.util.HeaderEnum;
@@ -22,13 +22,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /** Test Case Scenarios
  * ---- About validating ----
  * [X] Http request that contains "Accept: ֯֯●/●" (star/star)
  * [X] Http request that contains "Accept: application/json"
  * [X] Http Request that contains both
  * [X] Http request that does not contain any of them
- * [] If json.validate() is called before toHttpResponse(), this should throw IllegalStateException
+ * [X] If json.validate() is called after toHttpResponse(), this should throw IllegalStateException
+ * [X] If http request is not passed as a constructor and the validate method is not called, it should throw IllegalStateException
+ * [X]  If http request is not passed as a constructor and the validate method is called, it should work
  *
  * ---- About to Http response ----
  * [X] Date header should be equal to {current}
@@ -63,7 +67,7 @@ public class JsonResponseTest {
     @DisplayName("Validate get request to /jsontest with accept: */*")
     public void requestWithAcceptStarShouldValidateTrue(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         Assertions.assertTrue(json.isValid());
     }
@@ -73,7 +77,7 @@ public class JsonResponseTest {
     @DisplayName("Validate get request to /jsontest with accept: application/json")
     public void requestWithAcceptJsonShouldValidateTrue(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         Assertions.assertTrue(json.isValid());
     }
@@ -83,7 +87,7 @@ public class JsonResponseTest {
     @DisplayName("Validate get request to /jsontest with accept: application/json and */*")
     public void requestWithAcceptBothShouldValidateTrue(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         Assertions.assertTrue(json.isValid());
     }
@@ -93,7 +97,7 @@ public class JsonResponseTest {
     @DisplayName("Validate get request to /jsontest with accept: tex/html")
     public void requestWithAcceptNoneShouldValidateFalse(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         Assertions.assertFalse(json.isValid());
     }
@@ -103,7 +107,7 @@ public class JsonResponseTest {
     @DisplayName("Date header should be equal to the current date")
     public void jsonResponseDateHeaderMustBeEqualToCurrentDateTime(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         ZonedDateTime now = ZonedDateTime.now();
@@ -121,7 +125,7 @@ public class JsonResponseTest {
     @DisplayName("Content language header should be equal to en_US")
     public void jsonResponseContentLangMustBeEqualToEnUS(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
@@ -133,7 +137,7 @@ public class JsonResponseTest {
     @DisplayName("Mime Type should be equal to application/json")
     public void jsonResponseMimeTypeMustBeEqualToJson(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         System.out.println(new String(response.getBody()));
@@ -146,7 +150,7 @@ public class JsonResponseTest {
     @DisplayName("Status code should be 200 if JSON is valid")
     public void jsonResponseStatusCodeShouldBe200(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
@@ -158,7 +162,7 @@ public class JsonResponseTest {
     @DisplayName("Status message should be OK if JSON is valid")
     public void jsonResponseStatusMessageShouldBeOK(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
@@ -170,7 +174,7 @@ public class JsonResponseTest {
     @DisplayName("Invalid request: Status code should be 406")
     public void jsonResponseStatusCodeShouldBe406(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertFalse(json.isValid());
@@ -182,7 +186,7 @@ public class JsonResponseTest {
     @DisplayName("Invalid request: Status message should be Not Acceptable")
     public void jsonResponseStatusMessageShouldBeNotAcceptable(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertFalse(json.isValid());
@@ -194,11 +198,11 @@ public class JsonResponseTest {
     @DisplayName("Invalid request: Body should be 406.html")
     public void jsonResponseBodyShouldBe406Html(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertFalse(json.isValid());
-        FileResponseHandler file = new FileResponseHandler("www/406.html", new PrintWriter(System.out, true));
+        FileResponse file = new FileResponse("www/406.html", new PrintWriter(System.out, true));
         String content = new String(file.toHttpResponse().getBody());
         Assertions.assertEquals(content, new String(response.getBody()));
     }
@@ -208,7 +212,7 @@ public class JsonResponseTest {
     @DisplayName("Invalid request: Mime type should be text/html")
     public void jsonResponseMimeTypeShouldBeHtml(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertFalse(json.isValid());
@@ -220,7 +224,7 @@ public class JsonResponseTest {
     @DisplayName("JSON body should be the defined if the body is null (not set)")
     public void jsonResponseBodyNotSetShouldBeTheDefault(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
@@ -233,7 +237,7 @@ public class JsonResponseTest {
     @DisplayName("If body is not null and validate passes, response scheme should be HTTP/1.1")
     public void jsonResponseHTTPSchemeShouldBeHttp11(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
@@ -245,7 +249,7 @@ public class JsonResponseTest {
     @DisplayName("If body is not null and validate passes, response code should be 200")
     public void jsonResponseCodeShouldBe200(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
@@ -257,7 +261,7 @@ public class JsonResponseTest {
     @DisplayName("If body is not null and validate passes, response message should be OK")
     public void jsonResponseMessageShouldBeOK(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
@@ -269,7 +273,7 @@ public class JsonResponseTest {
     @DisplayName("If body is not null and validate passes, response body should be the body set")
     public void jsonResponseBodyShouldBeSetted(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         json.setBody("{Hi: Hello}");
         HttpResponse response = json.toHttpResponse();
@@ -282,7 +286,7 @@ public class JsonResponseTest {
     @DisplayName("If body is not null and validate passes, response mime type should be \"application/json\"")
     public void jsonResponseContentTypeShouldBeJson(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
@@ -294,7 +298,7 @@ public class JsonResponseTest {
     @DisplayName("If body is not null and validate passes, response server name should be Banzai")
     public void jsonResponseServerNameShouldBeBanzai(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
@@ -306,7 +310,7 @@ public class JsonResponseTest {
     @DisplayName("If body is not null and validate passes, response content language should be en_US")
     public void jsonResponseContentLangShouldBeEnUS(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
@@ -318,7 +322,7 @@ public class JsonResponseTest {
     @DisplayName("If body is not null and validate passes, response content length should be the set length")
     public void jsonResponseContentLengthShouldBeSet(String requestBody) throws IOException, HttpRequestException {
         request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
-        JsonResponseHandler json = new JsonResponseHandler(new PrintWriter(System.out, true));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
         json.validate(request);
         json.setBody("{Hello: Hi}");
         HttpResponse response = json.toHttpResponse();
@@ -370,15 +374,26 @@ public class JsonResponseTest {
                 "}", pretty);
     }
 
+    @ParameterizedTest
+    @MethodSource("getRequestWithAcceptStar")
+    @DisplayName("If json.validate() is called after toHttpResponse(), this should throw IllegalStateException")
+    public void validateNullExceptionShouldBeThrown(String requestBody) throws IOException, HttpRequestException {
+        request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true));
+        assertThrows(IllegalStateException.class,
+                json::toHttpResponse
+        );
+    }
 
-
-
-
-
-
-
-
-
+    @ParameterizedTest
+    @MethodSource("getRequestWithAcceptStar")
+    @DisplayName("If http request is not passed as a constructor and the validate method is called, it should work")
+    public void validateInConstructor(String requestBody) throws IOException, HttpRequestException {
+        request = new HttpRequest(new BufferedReader(new InputStreamReader(prepareIncomingRequestStream(requestBody))));
+        JsonResponse json = new JsonResponse(new PrintWriter(System.out, true), request);
+        Assertions.assertEquals(200, json.toHttpResponse().getCode());
+        Assertions.assertEquals("OK", json.toHttpResponse().getMessage());
+    }
 
 
     /* ~ Helper Functions ~ */
@@ -430,8 +445,3 @@ public class JsonResponseTest {
         );
     }
 }
-
-// TODO: if the json class is not validated, then it should throw illegalstateexception
-// TODO: if json.validate() is before tohttpResponse, error illegalstateexception
-// TODO: everything should be before toHTTPResponse
-// Todo: new get for http response
