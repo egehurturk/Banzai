@@ -3,7 +3,6 @@ package com.egehurturk.handlers;
 import com.egehurturk.exceptions.FileSizeOverflowException;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
-import com.egehurturk.util.HeaderEnum;
 import com.egehurturk.util.StatusEnum;
 import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
@@ -34,12 +33,12 @@ public class FileResponseHandler {
      */
     private final String path;
     /**
-     * {@link PrintWriter} necessary for {@link #toHttpResponse(String)}
+     * {@link PrintWriter} necessary for {@link #toHttpResponse()}
      * method
      */
     private final PrintWriter writer;
     /**
-     * Status necessary for {@link #toHttpResponse(String)}
+     * Status necessary for {@link #toHttpResponse()}
      * method
      */
     private StatusEnum status;
@@ -99,23 +98,25 @@ public class FileResponseHandler {
             e.printStackTrace();
         }
 
-        HttpResponseBuilder builder = new HttpResponseBuilder();
-        HttpResponse response = builder
-                .scheme("HTTP/1.1")
-                .code(this.status.STATUS_CODE)
-                .message(this.status.MESSAGE)
-                .body(buffer)
-                .setStream(this.writer)
-                .setHeader(HeaderEnum.DATE.NAME, dateHeader)
-                .setHeader(HeaderEnum.SERVER.NAME, "Banzai")
-                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
-                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(buffer.length))
-                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
-                .build();
-        return response;
+//        HttpResponseBuilder builder = new HttpResponseBuilder();
+//        HttpResponse response = builder
+//                .scheme("HTTP/1.1")
+//                .code(this.status.STATUS_CODE)
+//                .message(this.status.MESSAGE)
+//                .body(buffer)
+//                .setStream(this.writer)
+//                .setHeader(HeaderEnum.DATE.NAME, dateHeader)
+//                .setHeader(HeaderEnum.SERVER.NAME, "Banzai")
+//                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
+//                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(buffer.length))
+//                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
+//                .build();
+        return new HttpResponseBuilder().factory("HTTP/1.1", this.status.STATUS_CODE, this.status.MESSAGE, buffer, this.writer,
+                mimeType, dateHeader, "Banzai", contentLang, buffer.length
+        );
     }
 
-    public HttpResponse toHttpResponse(StatusEnum status, PrintWriter writer) {
+    public HttpResponse toHttpResponse(StatusEnum status, PrintWriter writer) { // TODO: static?
         File outputFile = prepareOutput();
         byte[] buffer = memoryAllocateForFile(outputFile);
 
@@ -133,19 +134,22 @@ public class FileResponseHandler {
             e.printStackTrace();
         }
 
-        HttpResponseBuilder builder = new HttpResponseBuilder();
-        return builder
-                .scheme("HTTP/1.1")
-                .code(status.STATUS_CODE)
-                .message(status.MESSAGE)
-                .body(buffer)
-                .setStream(writer)
-                .setHeader(HeaderEnum.DATE.NAME, dateHeader)
-                .setHeader(HeaderEnum.SERVER.NAME, "Banzai")
-                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
-                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(buffer.length))
-                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
-                .build();
+//        HttpResponseBuilder builder = new HttpResponseBuilder();
+//        return builder
+//                .scheme("HTTP/1.1")
+//                .code(status.STATUS_CODE)
+//                .message(status.MESSAGE)
+//                .body(buffer)
+//                .setStream(writer)
+//                .setHeader(HeaderEnum.DATE.NAME, dateHeader)
+//                .setHeader(HeaderEnum.SERVER.NAME, "Banzai")
+//                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
+//                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(buffer.length))
+//                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
+//                .build();
+        return new HttpResponseBuilder().factory("HTTP/1.1", status.STATUS_CODE, status.MESSAGE, buffer, writer,
+                mimeType, dateHeader, "Banzai", contentLang, buffer.length
+        );
     }
 
     /**
