@@ -204,11 +204,13 @@ public class HttpController implements Closeable, Runnable {
             }
         } catch (BadRequest400Exception e) {
             try {
-                byte[] res = Utility.readFile_IO(new File("www/400.html"));
-                respond("HTTP/1.1", e.message, res,
-                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
+                FileResponseHandler response = new FileResponseHandler("www/400.html", new PrintWriter(client.getOutputStream(), false));
+                respond(response.toHttpResponse());
+//                byte[] res = Utility.readFile_IO(new File("www/400.html"));
+//                respond("HTTP/1.1", e.message, res,
+//                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
                 close();
-            } catch (IOException | FileSizeOverflowException ioException) {
+            } catch (IOException ioException) {
                 try {
                     this.in.close();
                 } catch (IOException exception) {
@@ -225,11 +227,13 @@ public class HttpController implements Closeable, Runnable {
             }
         } catch (MethodNotAllowedException e) {
             try {
-                byte[] res = Utility.readFile_IO(new File("www/403.html"));
-                respond("HTTP/1.1", e.message, res,
-                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
+//                byte[] res = Utility.readFile_IO(new File("www/403.html"));
+//                respond("HTTP/1.1", e.message, res,
+//                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
+                FileResponseHandler response = new FileResponseHandler("www/403.html", new PrintWriter(client.getOutputStream(), false));
+                respond(response.toHttpResponse());
                 close();
-            } catch (IOException | FileSizeOverflowException ioException) {
+            } catch (IOException ioException) {
                 try {
                     this.in.close();
                 } catch (IOException exception) {
@@ -246,11 +250,13 @@ public class HttpController implements Closeable, Runnable {
             }
         } catch (NotFound404Exception e) {
             try {
-                byte[] res = Utility.readFile_IO(new File("www/404.html"));
-                respond("HTTP/1.1", e.message, res,
-                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
+//                byte[] res = Utility.readFile_IO(new File("www/404.html"));
+//                respond("HTTP/1.1", e.message, res,
+//                        new PrintWriter(this.client.getOutputStream(), false), "Banzai");
+                FileResponseHandler response = new FileResponseHandler("www/404.html", new PrintWriter(client.getOutputStream(), false));
+                respond(response.toHttpResponse());
                 close();
-            } catch (IOException | FileSizeOverflowException ioException) {
+            } catch (IOException  ioException) {
                 try {
                     this.in.close();
                 } catch (IOException exception) {
@@ -317,6 +323,14 @@ public class HttpController implements Closeable, Runnable {
                 .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(body.length))
                 .setHeader(HeaderEnum.CONTENT_TYPE.NAME, "text/html")
                 .build();
+        try {
+            res.send();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void respond(HttpResponse res) {
         try {
             res.send();
         } catch (IOException e) {
