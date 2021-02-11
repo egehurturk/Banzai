@@ -2,6 +2,7 @@ package com.egehurturk.httpd;
 
 
 import com.egehurturk.exceptions.HttpResponseException;
+import com.egehurturk.util.HeaderEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,7 +60,25 @@ public class HttpResponseBuilder {
             e.printStackTrace();
         }
         return res;
+    }
 
+    public HttpResponse factory(String scheme, int statusCode, String statusMessage, byte[] body, PrintWriter stream, String mime, String date,
+                                String name, String contentLanguage, int contentLength
+                                ) {
+        HttpResponse response = new HttpResponseBuilder()
+                .scheme(scheme)
+                .code(statusCode)
+                .message(statusMessage)
+                .body(body)
+                .setStream(stream)
+                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mime)
+                .setHeader(HeaderEnum.DATE.NAME, date)
+                .setHeader(HeaderEnum.SERVER.NAME, name)
+                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLanguage)
+                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+contentLength)
+                .build();
+        return response;
     }
 
 }
+

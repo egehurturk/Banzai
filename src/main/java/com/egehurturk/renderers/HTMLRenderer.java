@@ -2,7 +2,6 @@ package com.egehurturk.renderers;
 
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
-import com.egehurturk.util.HeaderEnum;
 import com.egehurturk.util.StatusEnum;
 
 import java.io.File;
@@ -96,20 +95,22 @@ public class HTMLRenderer {
                 )
         );
         String contentLang = "en_US", mimeType = "text/html", body = this.render();
-        HttpResponseBuilder builder = new HttpResponseBuilder();
-        HttpResponse response = builder
-                .scheme("HTTP/1.1")
-                .code(this.status.STATUS_CODE)
-                .message(this.status.MESSAGE)
-                .body(body.getBytes())
-                .setStream(this.writer)
-                .setHeader(HeaderEnum.DATE.NAME, dateHeader)
-                .setHeader(HeaderEnum.SERVER.NAME, "Banzai")
-                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
-                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(body.getBytes().length))
-                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
-                .build();
-        return response;
+//        HttpResponseBuilder builder = new HttpResponseBuilder();
+//        HttpResponse response = builder
+//                .scheme("HTTP/1.1")
+//                .code(this.status.STATUS_CODE)
+//                .message(this.status.MESSAGE)
+//                .body(body.getBytes())
+//                .setStream(this.writer)
+//                .setHeader(HeaderEnum.DATE.NAME, dateHeader)
+//                .setHeader(HeaderEnum.SERVER.NAME, "Banzai")
+//                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
+//                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(body.getBytes().length))
+//                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
+//                .build();
+        return new HttpResponseBuilder().factory("HTTP/1.1", this.status.STATUS_CODE, this.status.MESSAGE, body.getBytes(), this.writer,
+                mimeType, dateHeader, "Banzai", contentLang, body.getBytes().length
+        );
     }
 
 
