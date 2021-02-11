@@ -1,74 +1,150 @@
-[33m2021-02-11 14:27:06,608[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:27:06,629[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:27:06,640[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:27:28,421[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:27:28,443[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:27:28,455[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:27:28,464[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:28:35,247[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:28:35,265[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:28:35,276[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:29:29,662[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:29:29,683[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:29:29,692[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:29:52,561[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:29:52,585[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:29:52,597[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:30:39,404[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:30:39,424[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:30:39,434[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:31:20,615[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:31:20,640[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:31:20,657[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:32:11,794[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:32:11,819[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:32:11,825[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:32:11,830[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:32:25,665[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:32:25,683[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:32:25,694[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:32:25,703[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:40:42,656[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:41:09,418[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:42:20,819[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:43:24,770[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:43:27,626[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:46:30,411[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:47:54,305[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:47:57,251[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,045[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,078[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,116[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,120[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,126[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,140[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,155[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,169[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,177[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,188[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,201[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:57:59,205[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,298[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,336[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,363[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,369[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,375[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,386[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,402[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,415[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,423[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,435[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,446[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:58:38,452[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,299[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,340[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,371[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,379[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,385[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,395[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,410[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,423[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,431[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,442[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,451[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
-[33m2021-02-11 14:59:04,456[m [main] [31mERROR[m com.egehurturk.handlers.FileResponseHandler - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:27:06,608[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:27:06,629[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:27:06,640[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:27:28,421[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:27:28,443[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:27:28,455[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:27:28,464[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:28:35,247[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:28:35,265[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:28:35,276[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:29:29,662[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:29:29,683[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:29:29,692[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:29:52,561[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:29:52,585[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:29:52,597[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:30:39,404[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:30:39,424[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:30:39,434[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:31:20,615[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:31:20,640[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:31:20,657[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:32:11,794[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:32:11,819[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:32:11,825[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:32:11,830[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:32:25,665[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:32:25,683[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:32:25,694[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:32:25,703[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:40:42,656[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:41:09,418[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:42:20,819[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:43:24,770[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:43:27,626[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:46:30,411[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:47:54,305[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:47:57,251[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,045[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,078[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,116[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,120[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,126[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,140[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,155[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,169[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,177[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,188[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,201[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:57:59,205[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,298[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,336[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,363[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,369[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,375[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,386[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,402[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,415[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,423[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,435[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,446[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:58:38,452[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,299[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,340[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,371[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,379[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,385[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,395[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,410[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,423[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,431[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,442[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,451[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 14:59:04,456[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:18,777[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,661[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,688[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,727[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,736[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,742[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,753[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,758[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,773[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,781[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,788[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,797[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,808[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:24:36,812[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,297[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,335[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,371[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,378[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,381[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,393[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,400[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,417[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,430[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,436[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,445[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,455[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:25:04,461[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,270[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request line (e.g. GET /index HTTP/1.1 is not found
+[33m2021-02-11 18:37:28,272[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-11 18:37:28,319[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-11 18:37:28,332[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-11 18:37:28,346[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-11 18:37:28,350[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-11 18:37:28,353[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-11 18:37:28,356[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-11 18:37:28,358[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-02-11 18:37:28,362[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-11 18:37:28,400[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,415[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,438[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,442[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,445[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,450[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,453[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,465[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,473[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,477[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,485[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,497[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:37:28,500[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:39:04,582[m [pool-2-thread-13] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for username parameter
+[33m2021-02-11 18:39:04,582[m [pool-2-thread-13] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for name parameter
+[33m2021-02-11 18:39:04,583[m [pool-2-thread-13] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for age parameter
+[33m2021-02-11 18:39:04,583[m [pool-2-thread-13] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for location parameter
+[33m2021-02-11 18:39:31,639[m [pool-2-thread-14] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for username parameter
+[33m2021-02-11 18:39:31,640[m [pool-2-thread-14] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for age parameter
+[33m2021-02-11 18:39:31,640[m [pool-2-thread-14] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for location parameter
+[33m2021-02-11 18:39:43,541[m [pool-2-thread-15] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for username parameter
+[33m2021-02-11 18:39:43,543[m [pool-2-thread-15] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for age parameter
+[33m2021-02-11 18:39:43,543[m [pool-2-thread-15] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for location parameter
+[33m2021-02-11 18:39:47,913[m [pool-2-thread-16] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for username parameter
+[33m2021-02-11 18:39:47,914[m [pool-2-thread-16] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for age parameter
+[33m2021-02-11 18:39:47,914[m [pool-2-thread-16] [31mERROR[m com.egehurturk.httpd.HttpRequest - Query parameter is null for location parameter
+[33m2021-02-11 18:49:54,955[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:54,985[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:55,017[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:55,024[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:55,031[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:55,042[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:55,049[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:55,064[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:55,076[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:55,079[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:55,092[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:55,100[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-11 18:49:55,106[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
