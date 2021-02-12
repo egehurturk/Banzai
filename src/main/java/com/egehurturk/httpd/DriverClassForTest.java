@@ -72,6 +72,7 @@ public class DriverClassForTest {
         httpServer.addHandler(MethodEnum.GET, "/paramtest", new Parameterized());
         httpServer.addHandler(MethodEnum.GET, "/template", new TemplateTest());
         httpServer.addHandler(MethodEnum.GET, "/soph", new Sophisticated());
+        httpServer.addHandler(MethodEnum.GET, "/dashboard", new Dashboard());
 
         httpServer.start();
     }
@@ -97,6 +98,20 @@ public class DriverClassForTest {
             HttpResponse res = null;
             try {
                 FileResponse fil = new FileResponse("www/custom.html", response.getStream());
+                res = fil.toHttpResponse();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            return res;
+        }
+    }
+
+    static class Dashboard implements com.egehurturk.handlers.Handler {
+        @Override
+        public HttpResponse handle(HttpRequest request, HttpResponse response) {
+            HttpResponse res = null;
+            try {
+                FileResponse fil = new FileResponse("www/dashboard/index.html", response.getStream());
                 res = fil.toHttpResponse();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -140,7 +155,6 @@ public class DriverClassForTest {
             HTMLRenderer userRenderer = new HTMLRenderer("www/user.html", response.getStream());
             userRenderer.setVar("title", "User Profile");
             userRenderer.setVar("content", contentRenderer.render());
-            System.out.println(userRenderer.toHttpResponse().getCode());
             return userRenderer.toHttpResponse();
         }
     }
@@ -267,7 +281,6 @@ public class DriverClassForTest {
 
 
 
-// FIXME: POST REQUEST IS VERY VERY SLOW?
 /* FIXME: When `--congig <>` is passed as CLA, the server works. However, when all arguments are passed in as seperate
     fields, then the server closes because of `Port is already in use` */
 // TODO: debug mode (server.properties)
