@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration>
 
     <Appenders>
 
@@ -8,6 +8,7 @@
             <PatternLayout pattern="%style{%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss}}}{blue} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=blue} %logger{36} - %message\n"/>
 
         </Console>
+
 
         <File name="fout" fileName="./logfiles/application-${date:yyyyMMdd}.log" immediateFlush="false" append="true">
 
@@ -19,20 +20,12 @@
 
     <Loggers>
 
-        <Logger name="sss" level="info">
-
-            <AppenderRef ref="stdout"/>
-
-        </Logger>
-
         <Root level="debug">
             <AppenderRef ref="fout" level="error" />
+            <AppenderRef ref="stdout" level="debug" />
             <AppenderRef ref="stdout" level="info" />
         </Root>
-<!--        <Root level="error">-->
-<!--            <AppenderRef ref="fout"/>-->
-<!--            <AppenderRef ref="stdout" level="info" />-->
-<!--        </Root>-->
+
     </Loggers>
 </Configuration>
 
