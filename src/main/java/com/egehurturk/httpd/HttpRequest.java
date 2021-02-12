@@ -147,13 +147,10 @@ public class HttpRequest {
                     "HTTP scheme (\"HTTP/1.1\"), and path", 400, "Bad Request");
         }
         this.method = requestLineArray[0].toUpperCase(); // ensure it is all upper ("GET")
-        System.out.println("[DEBUG][DEBUG] req.path contains ? --> " +requestLineArray[1].contains("?") );
         if (!requestLineArray[1].contains("?")) {
             this.path = requestLineArray[1].toLowerCase(); // ensure it is all lower, i.e ("/index.html")
-            System.out.println("[DEBUG][DEBUG] path --> " + this.path);
         } else {
             this.path = requestLineArray[1].substring(0, requestLineArray[1].indexOf("?")); // /index.html?a=3&b=4 -> /index.html
-            System.out.println("[DEBUG][DEBUG] path --> " + this.path);
             parseQueryParams(requestLineArray[1].substring(                                 // a=3&b=4
                     requestLineArray[1].indexOf("?") + 1));
         }
@@ -260,7 +257,7 @@ public class HttpRequest {
         String ret = this.headers.get(name);
         Pair<Boolean, String> pair;
         if (ret == null) {
-            logger.error("Request header does not exist in HTTP Request");
+            logger.warn("Request header does not exist in HTTP Request");
             pair = Pair.makePair(false, null);
         } else {
             pair = Pair.makePair(true, ret);
@@ -272,7 +269,7 @@ public class HttpRequest {
     public Pair<Boolean, String> getQueryParam(String param) {
         Pair<Boolean, String> pair = null;
         if (queryParams.get(param) == null) {
-            logger.error("Query parameter is null for " + param + " parameter");
+            logger.warn("Query parameter is null for " + param + " parameter");
             pair = Pair.makePair(false, null);
         } else {
             pair =  Pair.makePair(true, queryParams.get(param));
