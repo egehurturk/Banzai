@@ -265,10 +265,10 @@ public class HttpServer extends BaseServer implements Closeable {
             Socket cli = null;
             try {
                 cli = this.server.accept();
+                logger.info("Connection established with { " + cli.getPort() + "/" + cli.getInetAddress() + " }");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            logger.info("Connection established with " + cli + "");
             HttpController controller = new HttpController(cli, handlers);
             controller.setAllowForCustomMapping(this.allowCustomUrlMapping);
             pool.execute(controller);
