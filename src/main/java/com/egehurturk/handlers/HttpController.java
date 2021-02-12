@@ -97,7 +97,7 @@ public class HttpController implements Closeable, Runnable {
      * Stored as {@link HandlerTemplate}
      */
     public List<HandlerTemplate> handlers;
-    private boolean allowForCustomMapping;
+    private Boolean allowForCustomMapping = false;
 
     /**
      * Default constructor for this class.
@@ -135,6 +135,7 @@ public class HttpController implements Closeable, Runnable {
     @Override
     public void run() {
         try {
+//            client.setSoTimeout(10000);
             // if client input stream is null close the server gracefully
             if (client.getInputStream() == null) {
                 close();
@@ -144,9 +145,17 @@ public class HttpController implements Closeable, Runnable {
                     new InputStreamReader(client.getInputStream())
             );
             this.out = new PrintWriter(client.getOutputStream(), false);
+//            boolean done = false;
 
-            // parse request
+//            while (!done) {
+                // parse request
             HttpRequest req = new HttpRequest(in);
+//                if (!req.getHeader("Connection".toLowerCase()).getFirst()) {
+//
+//                }
+//                else if (req.getHeader("Connection".toLowerCase()).getSecond().equalsIgnoreCase("close")) {
+//                    done = true;
+//                }
             boolean foundHandler = false;
             HttpResponse res = new HttpResponse(this.out);
 
@@ -157,15 +166,17 @@ public class HttpController implements Closeable, Runnable {
                 throw new MethodNotAllowedException("Method is not allowed at path " + req.getPath(), 405, "Method Not Allowed");
             }
 
-            // iterate over all handlers and find the handler template that is assigned to path
-            for (HandlerTemplate templ: methodTemplates) {
-                // if exists
-                if (templ.path.equals(req.getPath())) {
-                    res = templ.handler.handle(req, res); // let handler to handle the request
-                    res.send();
-                    logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
-                    foundHandler = true; // we found a handler
-                    break;
+            if (this.allowForCustomMapping) {
+                // iterate over all handlers and find the handler template that is assigned to path
+                for (HandlerTemplate templ: methodTemplates) {
+                    // if exists
+                    if (templ.path.equals(req.getPath())) {
+                        res = templ.handler.handle(req, res); // let handler to handle the request
+                        res.send();
+                        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
+                        foundHandler = true; // we found a handler
+                        break;
+                    }
                 }
             }
 
@@ -178,14 +189,18 @@ public class HttpController implements Closeable, Runnable {
                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         break;
                     } else {
-                        // TODO: DONT THROW EXCEPTION
+                        // TODO: this exception should not be 404, it should be unsupported handler kindofthing
                         throw new NotFound404Exception("Handler is not found", 404, "Not Found");
                     }
                 }
             }
-            // TODO: SEND 500 STATUS CODES
+
+//            }
+
         } catch (IOException e) {
             try {
+                FileResponse response = new FileResponse("www/500.html", new PrintWriter(client.getOutputStream(), false));
+                respond(response.toHttpResponse(StatusEnum.valueOf("Internal Server Error"), this.out));
                 close();
             } catch (IOException ioException) {
                 try {
@@ -205,7 +220,7 @@ public class HttpController implements Closeable, Runnable {
         } catch (BadRequest400Exception e) {
             try {
                 FileResponse response = new FileResponse("www/400.html", new PrintWriter(client.getOutputStream(), false));
-                respond(response.toHttpResponse());
+                respond(response.toHttpResponse(StatusEnum.valueOf(Utility.enumStatusToString(e.message)), this.out));
                 close();
             } catch (IOException ioException) {
                 try {
@@ -225,7 +240,7 @@ public class HttpController implements Closeable, Runnable {
         } catch (MethodNotAllowedException e) {
             try {
                 FileResponse response = new FileResponse("www/403.html", new PrintWriter(client.getOutputStream(), false));
-                respond(response.toHttpResponse());
+                respond(response.toHttpResponse(StatusEnum.valueOf(Utility.enumStatusToString(e.message)), this.out));
                 close();
             } catch (IOException ioException) {
                 try {
@@ -245,7 +260,7 @@ public class HttpController implements Closeable, Runnable {
         } catch (NotFound404Exception e) {
             try {
                 FileResponse response = new FileResponse("www/404.html", new PrintWriter(client.getOutputStream(), false));
-                respond(response.toHttpResponse());
+                respond(response.toHttpResponse(StatusEnum.valueOf(Utility.enumStatusToString(e.message)), this.out));
                 close();
             } catch (IOException  ioException) {
                 try {
