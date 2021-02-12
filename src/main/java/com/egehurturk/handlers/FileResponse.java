@@ -103,7 +103,7 @@ public class FileResponse implements ResponseType {
         );
     }
 
-    public HttpResponse toHttpResponse(StatusEnum status, PrintWriter writer) { // TODO: static?
+    public HttpResponse toHttpResponse(StatusEnum status, PrintWriter writer) {
         File outputFile = prepareOutput();
         byte[] buffer = memoryAllocateForFile(outputFile);
 
