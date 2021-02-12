@@ -60,7 +60,6 @@ public class JsonResponse implements ResponseType {
             return;
         }
         this.valid = accept.contains("application/json") || accept.contains("*/*");
-        System.out.println(this.valid);
     }
 
 
