@@ -34,6 +34,10 @@
 <br />
 <p align="center">
 
+   <a href="https://github.com/egehurturk/HttpServer">
+    <img src="external/banzai.jpg" alt="Banzai Logo" width="80" height="80">
+  </a>
+  
   <h2 align="center">Banzai Server (A HTTP Server)</h3>
 
   <p align="center">
