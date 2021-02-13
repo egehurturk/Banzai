@@ -135,7 +135,6 @@ public class HttpController implements Closeable, Runnable {
     @Override
     public void run() {
         try {
-//            client.setSoTimeout(10000);
             // if client input stream is null close the server gracefully
             if (client.getInputStream() == null) {
                 close();
@@ -145,17 +144,8 @@ public class HttpController implements Closeable, Runnable {
                     new InputStreamReader(client.getInputStream())
             );
             this.out = new PrintWriter(client.getOutputStream(), false);
-//            boolean done = false;
-
-//            while (!done) {
-                // parse request
+            // parse request
             HttpRequest req = new HttpRequest(in);
-//                if (!req.getHeader("Connection".toLowerCase()).getFirst()) {
-//
-//                }
-//                else if (req.getHeader("Connection".toLowerCase()).getSecond().equalsIgnoreCase("close")) {
-//                    done = true;
-//                }
             boolean foundHandler = false;
             HttpResponse res = new HttpResponse(this.out);
 
@@ -188,14 +178,10 @@ public class HttpController implements Closeable, Runnable {
                         res.send();
                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         break;
-                    } else {
-                        // TODO: this exception should not be 404, it should be unsupported handler kindofthing
-                        throw new NotFound404Exception("Handler is not found", 404, "Not Found");
                     }
                 }
-            }
 
-//            }
+            }
 
         } catch (IOException e) {
             try {
@@ -207,14 +193,14 @@ public class HttpController implements Closeable, Runnable {
                     this.in.close();
                 } catch (IOException exception) {
                     logger.error("Could not close input stream of client");
-                    // TODO: return?
+                    return;
                 }
                 this.out.close();
                 try {
                     this.client.close();
                 } catch (IOException exception) {
                     logger.error("Could not close client stream");
-                    // TODO: return?
+                    return;
                 }
             }
         } catch (BadRequest400Exception e) {
@@ -227,14 +213,13 @@ public class HttpController implements Closeable, Runnable {
                     this.in.close();
                 } catch (IOException exception) {
                     logger.error("Could not close input stream of client");
-                    // TODO: return?
+                    return;
                 }
                 this.out.close();
                 try {
                     this.client.close();
                 } catch (IOException exception) {
                     logger.error("Could not close client stream");
-                    // TODO: return?
                 }
             }
         } catch (MethodNotAllowedException e) {
@@ -247,14 +232,14 @@ public class HttpController implements Closeable, Runnable {
                     this.in.close();
                 } catch (IOException exception) {
                     logger.error("Could not close input stream of client");
-                    // TODO: return?
+                    return;
                 }
                 this.out.close();
                 try {
                     this.client.close();
                 } catch (IOException exception) {
                     logger.error("Could not close client stream");
-                    // TODO: return?
+                    return;
                 }
             }
         } catch (NotFound404Exception e) {
@@ -267,14 +252,13 @@ public class HttpController implements Closeable, Runnable {
                     this.in.close();
                 } catch (IOException exception) {
                     logger.error("Could not close input stream of client");
-                    // TODO: return?
+                    return;
                 }
                 this.out.close();
                 try {
                     this.client.close();
                 } catch (IOException exception) {
                     logger.error("Could not close client stream");
-                    // TODO: return?
                 }
             }
         } catch (HttpRequestException e) {
