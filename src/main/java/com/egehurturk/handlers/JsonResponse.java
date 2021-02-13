@@ -52,7 +52,7 @@ public class JsonResponse implements ResponseType {
 
 
     public void validate(HttpRequest req) {
-        // FIXME: Note for future documentation: request headers are stored in lowercase and trimmed
+        // * Note for future documentation: request headers are stored in lowercase and trimmed
         Pair<Boolean, String> pair = req.getHeader("Accept".toLowerCase());
         String accept = pair.getSecond();
         if (!pair.getFirst()) {
