@@ -197,9 +197,7 @@ public class HttpHandler implements Handler {
                     outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
                 }
             }
-            // TODO: Handle absolute paths
         } else if (req.getMethod().equals(MethodEnum.POST.str)) {
-            // TODO: handle post
         } else { // if request is neither GET nor POST
             this.status = StatusEnum._501_NOT_IMPLEMENTED.MESSAGE;
             outputFile = new File(this._strWebRoot, _NOT_IMPLEMENTED);
