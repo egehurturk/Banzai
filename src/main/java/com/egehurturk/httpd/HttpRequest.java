@@ -127,7 +127,6 @@ public class HttpRequest {
                     " connection that sends the request", 400, "Bad Request");
         }
         if (!checkValidHttpRequest(requestLine)) {
-            // TODO: Close connection with the status code 400
             logger.error("Request does not match HTTP standards. Check the request again" +
                     "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
                     "HTTP scheme (\"HTTP/1.1\"), and path");
@@ -138,7 +137,6 @@ public class HttpRequest {
 
         String[] requestLineArray = requestLine.split(" ");
         if (requestLineArray.length != 3) {
-            // TODO: Close connection with status code 400
             logger.error("Request does not match HTTP standards. Check the request again" +
                     "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
                     "HTTP scheme (\"HTTP/1.1\"), and path");
