@@ -3,15 +3,13 @@ package com.egehurturk.handlers;
 import com.egehurturk.exceptions.FileSizeOverflowException;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
+import com.egehurturk.util.Pair;
 import com.egehurturk.util.StatusEnum;
 import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -31,12 +29,17 @@ public class FileResponse implements ResponseType {
      * Path representing output file path
      * Everything will be based on this
      */
-    private final String path;
+    private String path;
     /**
      * {@link PrintWriter} necessary for {@link #toHttpResponse()}
      * method
      */
     private final PrintWriter writer;
+
+    /**
+     * Required for JAR file
+     */
+    private InputStream filestream;
     /**
      * Status necessary for {@link #toHttpResponse()}
      * method
@@ -46,6 +49,7 @@ public class FileResponse implements ResponseType {
     public final String INDEX = "index.html";
     public final String _404_NOT_FOUND = "404.html";
     public final String _NOT_IMPLEMENTED = "501.html";
+    public String webroot = "www";
 
 
     /**
@@ -58,7 +62,18 @@ public class FileResponse implements ResponseType {
         this.writer = writer;
     }
 
+    public FileResponse(InputStream filestream, PrintWriter writer) {
+        this.filestream = filestream;
+        this.writer = writer;
+    }
 
+    public String getWebroot() {
+        return webroot;
+    }
+
+    public void setWebroot(String webroot) {
+        this.webroot = webroot;
+    }
 
     /**
      * Converts File output to {@link HttpResponse} response
@@ -81,8 +96,16 @@ public class FileResponse implements ResponseType {
      * @return Http response object ready to being send in {@link Handler} interfaces
      */
     public HttpResponse toHttpResponse() {
-        File outputFile = prepareOutput();
-        byte[] buffer = memoryAllocateForFile(outputFile);
+
+        byte[] buffer;
+        String mimeType = "text/html";
+        if (this.filestream == null) { // * means that the class is called with a path to file
+            Pair<String, byte[]> pair = prepareOutput();
+            buffer = pair.getSecond();
+            mimeType = pair.getFirst();
+        } else {
+            buffer = inputStreamToBuffer(filestream);
+        }
 
         ZonedDateTime now = ZonedDateTime.now();
         String dateHeader = now.format(DateTimeFormatter.ofPattern(
@@ -90,13 +113,7 @@ public class FileResponse implements ResponseType {
                 ZoneId.of("GMT")
                 )
         );
-        String contentLang = "en_US", mimeType = null;
-        try {
-            mimeType = Files.probeContentType(outputFile.toPath());
-        } catch (IOException e) {
-            this.logger.error("Cannot determine the MIME type of file");
-            e.printStackTrace();
-        }
+        String contentLang = "en_US";
 
         return new HttpResponseBuilder().factory("HTTP/1.1", this.status.STATUS_CODE, this.status.MESSAGE, buffer, this.writer,
                 mimeType, dateHeader, "Banzai", contentLang, buffer.length
@@ -104,8 +121,16 @@ public class FileResponse implements ResponseType {
     }
 
     public HttpResponse toHttpResponse(StatusEnum status, PrintWriter writer) {
-        File outputFile = prepareOutput();
-        byte[] buffer = memoryAllocateForFile(outputFile);
+
+        byte[] buffer;
+        String mimeType = "text/html";
+        if (this.filestream == null) {
+            Pair<String, byte[]> pair = prepareOutput();
+            buffer = pair.getSecond();
+            mimeType = pair.getFirst();
+        } else {
+            buffer = inputStreamToBuffer(filestream);
+        }
 
         ZonedDateTime now = ZonedDateTime.now();
         String dateHeader = now.format(DateTimeFormatter.ofPattern(
@@ -113,13 +138,7 @@ public class FileResponse implements ResponseType {
                 ZoneId.of("GMT")
                 )
         );
-        String contentLang = "en_US", mimeType = null;
-        try {
-            mimeType = Files.probeContentType(outputFile.toPath());
-        } catch (IOException e) {
-            this.logger.error("Cannot determine the MIME type of file");
-            e.printStackTrace();
-        }
+        String contentLang = "en_US";
 
         return new HttpResponseBuilder().factory("HTTP/1.1", status.STATUS_CODE, status.MESSAGE, buffer, writer,
                 mimeType, dateHeader, "Banzai", contentLang, buffer.length
@@ -127,31 +146,35 @@ public class FileResponse implements ResponseType {
     }
 
     /**
-     * Prepare the HTML file given GET request
+     * Prepare the HTML file given path to file
      * @return                      - {@link File} output file
      */
-    private File prepareOutput() {
+    private Pair<String, byte[]> prepareOutput() {
         File outputFile;
-        String resolvedFilePathUrl;
-        // resolve the file and get the file that is stored in www/${resolvedFilePathUrl}
+        String mime = "text/html";
+        byte[] buffer;
         outputFile = new File(this.path);
-        // if the file does not exists throw 404
         if (!outputFile.exists()) {
             this.status = StatusEnum._404_NOT_FOUND;
-            outputFile = new File("www", _404_NOT_FOUND);
+            buffer = inputStreamToBuffer(ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND));
         } else {
             if (outputFile.isDirectory()) {
-                // /file -> index.html
                 outputFile = new File(outputFile, INDEX);
             }
             if (outputFile.exists()) {
                 this.status = StatusEnum._200_OK;
+                try {
+                    mime = Files.probeContentType(outputFile.toPath());
+                } catch (IOException e) {
+                    logger.error("Cannot determine mime type. Using text/html as default");
+                }
+                buffer = memoryAllocateForFile(outputFile);
             } else {
                 this.status = StatusEnum._404_NOT_FOUND;
-                outputFile = new File("www", _404_NOT_FOUND);
+                buffer = inputStreamToBuffer(ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND));
             }
         }
-        return outputFile;
+        return new Pair<>(mime, buffer);
     }
 
     private byte[] memoryAllocateForFile(File file) {
@@ -163,6 +186,21 @@ public class FileResponse implements ResponseType {
             return null;
         }
         return bodyByte;
+    }
+
+    private byte[] inputStreamToBuffer(InputStream is) {
+        ByteArrayOutputStream _buf = new ByteArrayOutputStream();
+        byte[] data = new byte[16384];
+        int nRead;
+        try {
+            while ((nRead = is.read(data, 0, data.length)) != -1) {
+                _buf.write(data,0,nRead);
+            }
+        } catch (IOException err) {
+            logger.error("Cannot convert input stream to buffer (byte array). ");
+        }
+
+        return _buf.toByteArray();
     }
 
 }
