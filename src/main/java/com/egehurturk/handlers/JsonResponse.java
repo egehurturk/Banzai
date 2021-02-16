@@ -9,7 +9,6 @@ import com.egehurturk.util.StatusEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -115,11 +114,8 @@ public class JsonResponse implements ResponseType {
 
         if (!this.valid) {
             status = StatusEnum._406_NOT_ACCEPTABLE;
-            try {
-                FileResponse file = new FileResponse("www/406.html", this.writer);
-                return file.toHttpResponse(status, this.writer);
-            } catch (FileNotFoundException ignored) {
-            }
+            FileResponse file = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("406.html"), this.writer);
+            return file.toHttpResponse(status, this.writer);
         }
         if (this.body == null) {
             logger.error("Body of JSON request is empty. Server automatically created JSON body.");
