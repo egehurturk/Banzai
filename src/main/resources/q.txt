@@ -80,3 +80,15 @@ This server should be run from CLI, by using a bash file:
 
  TODO: close the stream of client whenever the request is received and the response is sent. Otherwise
         it will cost too much
+
+
+
+LINKS:
+- Logger XML file not found: main ERROR Unable to access file:/Users/egehurturk/Development/BanzaiTestingUser/src/main/resources/log4j2.xml
+    - solve by: class based configuration (check if log4j2.xml path is null, if it is, use CBV to configure logging)
+- Property file error: System Configuration Error: Are you sure that a properties file is located under resources folder as stated in standard Maven directory template?
+- FileResponse -> www/404.html olmuyor cunku www/404.html diye bi dosya olmuyor client directorysinde
+-
+
+FIXME:
+- response can be null in HttpController->res.send() !!!
