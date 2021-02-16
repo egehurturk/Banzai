@@ -6,13 +6,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import java.io.*;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Properties;
 
 // consider adding the pool field for baseservice for threading
@@ -159,7 +157,11 @@ public abstract class BaseServer {
 
     // set default log4j2 config location to the ../resources/log4j2.xml
     static  {
-        context.setConfigLocation( new File("src/main/resources/log4j2.xml").toURI()) ;
+        try {
+            context.setConfigLocation( Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("log4j2.xml")).toURI() ) ;
+        } catch (URISyntaxException e) {
+            System.err.println("Log4j2.xml (logging configuration file) is not found");
+        }
     }
 
 
@@ -461,8 +463,7 @@ public abstract class BaseServer {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
             this.name = this.config.getProperty(NAME_PROP); // already a string
-
-            if (!isDirectory(webRoot)) {
+            if (!isDirectory(this.config.getProperty(WEBROOT_PROP))) {
                 throw new IllegalArgumentException(
                         "Web root directory not found. It should be placed in \"root/www\" where root" +
                                 "is the top parent directory."
