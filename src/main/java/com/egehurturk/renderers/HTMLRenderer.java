@@ -3,11 +3,10 @@ package com.egehurturk.renderers;
 import com.egehurturk.handlers.ResponseType;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
+import com.egehurturk.util.Pair;
 import com.egehurturk.util.StatusEnum;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,26 +49,35 @@ public class HTMLRenderer implements ResponseType {
         this.writer = writer;
     }
 
-    private File prepareOutput() {
-        File outputFile;
-        outputFile = new File(this.htmlPath);
-        // if the file does not exists throw 404
+    private Pair<File, InputStream> prepareOutput() {
+        File outputFile = new File(this.htmlPath);
+        InputStream stream = null;
         if (!outputFile.exists()) {
             this.status = StatusEnum._404_NOT_FOUND;
-            outputFile = new File("www", _404_NOT_FOUND);
+            stream = ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND);
         } else {
             this.status = StatusEnum._200_OK;
         }
-        return outputFile;
+        return new Pair<>(outputFile, stream);
     }
 
     public String render() {
-        Path outputPath = prepareOutput().toPath();
-        String html = read(outputPath);
+        File outputfile;
+        InputStream stream;
+        String html;
+        Pair<File, InputStream> pair = prepareOutput();
+        if (pair.getSecond() != null) {
+            stream = pair.getSecond();
+            html = new String(inputStreamToBuffer(stream));
+        } else {
+            outputfile = pair.getFirst();
+            Path outputPath = outputfile.toPath();
+            html = read(outputPath);
 
-        for (Map.Entry<String, String> entry : this.vars.entrySet()) {
-            String tagToReplace = "[@" + entry.getKey() + "]";
-            html = html.replace(tagToReplace, entry.getValue());
+            for (Map.Entry<String, String> entry : this.vars.entrySet()) {
+                String tagToReplace = "[@" + entry.getKey() + "]";
+                html = html.replace(tagToReplace, entry.getValue());
+            }
         }
         return html;
     }
@@ -112,20 +120,19 @@ public class HTMLRenderer implements ResponseType {
         this.vars.put(varArgInHtml, varArg);
     }
 
+    private byte[] inputStreamToBuffer(InputStream is) {
+        ByteArrayOutputStream _buf = new ByteArrayOutputStream();
+        byte[] data = new byte[16384];
+        int nRead;
+        try {
+            while ((nRead = is.read(data, 0, data.length)) != -1) {
+                _buf.write(data,0,nRead);
+            }
+        } catch (IOException err) {
+            System.err.println("Cannot convert input stream to buffer (byte array). ");
+        }
+
+        return _buf.toByteArray();
+    }
+
 }
-
-
-/*
-
-<!DOCTYPE html>
-<html>
-<body>
-<h1>My First Heading</h1>
-
-<p>My first paragraph.</p>
-
-</body>
-</html>
-
-
- */
