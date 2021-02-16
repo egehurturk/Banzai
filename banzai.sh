@@ -32,9 +32,6 @@ while [[ "$#" -gt 0 ]]; do
 done
 echo "========================= SERVER STARTING ========================="
 
-if [ "$port" = " " ]; then
-  echo "PORT IS EQUAL TO BLANK"
-fi
 
 if [ "$config" = "noconfig" ]; then
   java -jar target/BanzaiServer-1.0-SNAPSHOT-jar-with-dependencies.jar --port $port --host $host --webroot $webroot --name $name --backlog $backlog
