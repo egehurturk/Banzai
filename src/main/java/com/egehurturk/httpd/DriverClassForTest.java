@@ -1,20 +1,20 @@
 package com.egehurturk.httpd;
 
 
-import com.egehurturk.exceptions.ConfigurationException;
 import com.egehurturk.handlers.FileResponse;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.HttpHandler;
 import com.egehurturk.handlers.JsonResponse;
 import com.egehurturk.renderers.HTMLRenderer;
+import com.egehurturk.util.ArgumentParser;
 import com.egehurturk.util.HeaderEnum;
 import com.egehurturk.util.MethodEnum;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 
 
 
@@ -27,40 +27,10 @@ public class DriverClassForTest {
 
 
     public static void main(String[] args) throws IOException {
-        Options options = generateOptions();
-        CommandLineParser parser = new DefaultParser();
-        CommandLine cmd = null;
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException err) {
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("banzai", options);
-            return;
-        }
-        HttpServer httpServer = new HttpServer();
-        HttpHandler handler = null;
+        ArgumentParser parser = new ArgumentParser(args);
+        HttpServer httpServer = parser.getHttpServer();
+        HttpHandler handler = parser.getHandler();
 
-        if (cmd.hasOption("config")) {
-            httpServer.setConfigPropFile(cmd.getOptionValue("config"));
-            System.out.println(httpServer.getConfigPropFile());
-            try {
-                httpServer.configureServer();
-            } catch (ConfigurationException e) {
-                System.err.println("Configuration exception: Check configuraton property file path");
-                return;
-            }
-            handler = new HttpHandler(httpServer.getConfig());
-        } else if (cmd.hasOption("port") && cmd.hasOption("host") && cmd.hasOption("name") && cmd.hasOption("webroot") && cmd.hasOption("backlog")) {
-            httpServer = new HttpServer(Integer.parseInt(cmd.getOptionValue("port")), InetAddress.getByName(cmd.getOptionValue("host")), Integer.parseInt(cmd.getOptionValue("backlog")), cmd.getOptionValue("name"), cmd.getOptionValue("webroot"));
-            handler = new HttpHandler(httpServer.getWebRoot(), httpServer.getName());
-        } else if (cmd.hasOption("port") && cmd.getArgs().length == 1) {
-            httpServer = new HttpServer(Integer.parseInt(cmd.getOptionValue("port")));
-            handler = new HttpHandler(httpServer.getWebRoot(), httpServer.getName());
-        } else {
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("banzai", options);
-            return;
-        }
         httpServer.allowCustomUrlMapping(true);
         httpServer.addHandler(MethodEnum.GET, "/*", handler);
         httpServer.addHandler(MethodEnum.GET, "/hello", new MyHandler());
@@ -72,7 +42,6 @@ public class DriverClassForTest {
         httpServer.addHandler(MethodEnum.GET, "/paramtest", new Parameterized());
         httpServer.addHandler(MethodEnum.GET, "/template", new TemplateTest());
         httpServer.addHandler(MethodEnum.GET, "/soph", new Sophisticated());
-        httpServer.addHandler(MethodEnum.GET, "/dashboard", new Dashboard());
 
         httpServer.start();
     }
@@ -98,20 +67,6 @@ public class DriverClassForTest {
             HttpResponse res = null;
             try {
                 FileResponse fil = new FileResponse("www/custom.html", response.getStream());
-                res = fil.toHttpResponse();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            return res;
-        }
-    }
-
-    static class Dashboard implements com.egehurturk.handlers.Handler {
-        @Override
-        public HttpResponse handle(HttpRequest request, HttpResponse response) {
-            HttpResponse res = null;
-            try {
-                FileResponse fil = new FileResponse("www/dashboard/index.html", response.getStream());
                 res = fil.toHttpResponse();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
