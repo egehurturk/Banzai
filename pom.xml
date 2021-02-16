@@ -92,6 +92,23 @@
   </dependencies>
 
   <build>
+
+<!--      Resource (www/) -->
+      <resources>
+<!--          www/ -->
+          <resource>
+              <directory>www</directory>
+              <includes>
+                  <include>**/400.html</include>
+                  <include>**/404.html</include>
+                  <include>**/403.html</include>
+                  <include>**/406.html</include>
+                  <include>**/500.html</include>
+                  <include>**/501.html</include>
+              </includes>
+          </resource>
+      </resources>
+
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
