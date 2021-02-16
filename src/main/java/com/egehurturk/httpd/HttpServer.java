@@ -8,7 +8,6 @@ import com.egehurturk.handlers.HttpController;
 import com.egehurturk.util.MethodEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -57,15 +56,6 @@ public class HttpServer extends BaseServer implements Closeable {
      * @link org.apache.logging.log4j.Logger} interface for logging messages.
      */
     protected static Logger logger = LogManager.getLogger(HttpServer.class);
-    /**
-     * Required for configuring {@link #logger} field with the {@code log4j2.xml} file
-     */
-    protected static LoggerContext context =  ( org.apache.logging.log4j.core.LoggerContext ) LogManager
-                                                                        .getContext(false);
-    static  {
-        // configure from file (XML)
-        context.setConfigLocation( new File("src/main/resources/log4j2.xml").toURI()) ;
-    }
 
     /**
      * Property configuration file name.
