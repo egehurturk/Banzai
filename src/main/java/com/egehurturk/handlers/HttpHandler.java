@@ -4,17 +4,11 @@ import com.egehurturk.exceptions.FileSizeOverflowException;
 import com.egehurturk.httpd.HttpRequest;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
-import com.egehurturk.util.HeaderEnum;
-import com.egehurturk.util.MethodEnum;
-import com.egehurturk.util.StatusEnum;
-import com.egehurturk.util.Utility;
+import com.egehurturk.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.MappedByteBuffer;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -174,17 +168,21 @@ public class HttpHandler implements Handler {
      * @param req                   - {@link HttpRequest} object storing path
      * @return                      - {@link File} output file
      */
-    private File prepareOutputWithMethod(HttpRequest req) {
+    private Pair<File, InputStream> prepareOutputWithMethod(HttpRequest req) {
         File outputFile = null;
-        String resolvedFilePathUrl;
+        InputStream stream = null;
         if (req.getMethod().equals(MethodEnum.GET.str)) {
             // resolve the file and get the file that is stored in www/${resolvedFilePathUrl}
-            resolvedFilePathUrl = resolvePath(req.getPath());
+            String resolvedFilePathUrl = resolvePath(req.getPath());
             outputFile = new File(this._strWebRoot, resolvedFilePathUrl);
             // if the file does not exists throw 404
+            logger.debug("Outputfile.exists? " + outputFile.exists());
             if (!outputFile.exists()) {
+                logger.debug("Status: 404");
                 this.status = StatusEnum._404_NOT_FOUND.MESSAGE;
-                outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
+                stream = ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND);
+                logger.debug("Stream: " + stream);
+                logger.debug("Stream: " + ((stream == null ) ? "null" : "nonnull"));
             } else {
                 if (outputFile.isDirectory()) {
                     // /file -> index.html
@@ -194,15 +192,19 @@ public class HttpHandler implements Handler {
                     this.status = StatusEnum._200_OK.MESSAGE;
                 } else {
                     this.status = StatusEnum._404_NOT_FOUND.MESSAGE;
-                    outputFile = new File(this._strWebRoot, _404_NOT_FOUND);
+                    stream = ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND);
                 }
             }
         } else if (req.getMethod().equals(MethodEnum.POST.str)) {
         } else { // if request is neither GET nor POST
             this.status = StatusEnum._501_NOT_IMPLEMENTED.MESSAGE;
-            outputFile = new File(this._strWebRoot, _NOT_IMPLEMENTED);
+            stream = ClassLoader.getSystemClassLoader().getResourceAsStream(_NOT_IMPLEMENTED);
         }
-        return outputFile;
+        logger.debug("Outputfile: " + outputFile);
+        logger.debug("Stream: " + stream);
+        logger.debug("Outputfile: " + ((outputFile == null ) ? "null" : "nonnull"));
+        logger.debug("Stream: " + ((stream == null ) ? "null" : "nonnull"));
+        return new Pair<File, InputStream>(outputFile, stream);
 
     }
 
@@ -212,15 +214,16 @@ public class HttpHandler implements Handler {
      * @return              - {@link HttpResponse} response
      */
     public HttpResponse handle_GET(HttpRequest req, HttpResponse res) {
-        String resolvedFilePathUrl;
         File outputFile = null;
+        InputStream stream = null;
         boolean statusReturned = false;
         // Host is a must for HTTP/1.1 servers
         if (!req.headers.containsKey(
                 Utility.removeLastChars(HeaderEnum.HOST.NAME.trim().toLowerCase(), 1))
         ) {
             this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
-            outputFile = new File(this._strWebRoot, BAD_REQ);
+            stream = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
+            logger.debug("Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"));
             statusReturned = true;
         }
 
@@ -228,71 +231,97 @@ public class HttpHandler implements Handler {
         if (!statusReturned) {
             if (req.getPath().contains("./") || req.getPath().contains("../")) {
                 this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
-                outputFile = new File(this._strWebRoot, BAD_REQ);
+                stream = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
+                logger.debug("Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"));
                 statusReturned = true;
             }
 
             else if (req.getPath().equals("/")) {
-                outputFile = prepareOutputWithMethod(req);
+                Pair<File, InputStream> pair = prepareOutputWithMethod(req);
+                logger.debug("Prepare output with method . getfirst -> " + pair.getFirst());
+                logger.debug("Prepare output with method . getsecond -> " + pair.getSecond());
+                if (pair.getSecond() != null) {
+                    stream = pair.getSecond();
+                } else {
+                    outputFile = pair.getFirst();
+                }
+                logger.debug("Outputfile set: " + outputFile);
+                logger.debug("Stream set: " + stream);
             }
-            else if (Utility.isDirectory(req.getPath())){
+            else if (Utility.isDirectory(req.getPath())) {
                 this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
-                outputFile = new File(this._strWebRoot, BAD_REQ);
+                stream = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
+                logger.debug("Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"));
                 statusReturned = true;
             }
             else {
-                outputFile = prepareOutputWithMethod(req);
+                Pair<File, InputStream> pair = prepareOutputWithMethod(req);
+                logger.debug("Prepare output with method . getfirst -> " + pair.getFirst());
+                logger.debug("Prepare output with method . getsecond -> " + pair.getSecond());
+                if (pair.getSecond() != null) {
+                    stream = pair.getSecond();
+                } else {
+                    outputFile = pair.getFirst();
+                }
+                logger.debug("Outputfile set: " + outputFile);
+                logger.debug("Stream set: " + stream);
             }
         }
 
         byte[] bodyByte = null;
-        // handle_GET, handle_POST functions
-        switch (FASTEST_IO) {
-            case "readFile_IO":
-                try {
-                    bodyByte = Utility.readFile_IO(outputFile);
-                } catch (IOException  | FileSizeOverflowException e) {
-                    this.logger.error("File size is too large");
-                    e.printStackTrace();
-                }
-                break;
-            case "readFile_NIO":
-                try {
-                    bodyByte = Utility.readFile_NIO(outputFile);
-                } catch (IOException e) {
-                    this.logger.error("Could not read the file");
-                    e.printStackTrace();
-                }
-                break;
-            case "readFile_NIO_DIRECT":
-                try {
-                    bodyByte = Utility.readFile_NIO_DIRECT(outputFile);
-                } catch (IOException e) {
-                    this.logger.error("Could not read the file");
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                MappedByteBuffer _mappedBuffer = null;
-                try {
-                    _mappedBuffer = Utility.read_NIO_MAP(outputFile);
-                } catch (IOException e) {
-                    this.logger.error("Could not read the file");
-                    e.printStackTrace();
-                }
-                if (_mappedBuffer != null) {
-                    bodyByte = new byte[_mappedBuffer.remaining()];
-                    _mappedBuffer.get(bodyByte);
-                } else {
-                    this.logger.error("Cannot read file and store in memory");
-                }
-                break;
-        }
-        if (!statusReturned) {
-            if (bodyByte == null) {
-                this.logger.error("Could not read file contents in memory");
-                this.status = StatusEnum._500_INTERNAL_ERROR.MESSAGE;
-                statusReturned = true;
+
+        logger.debug("Stream: " + stream);
+        logger.debug("Output file: " + outputFile);
+
+        if (stream != null) {
+            bodyByte = inputStreamToBuffer(stream);
+            logger.debug("Body byte is this null? " + ((bodyByte == null) ? "null" : "nonnull"));
+            logger.debug("Body byte: " + new String(bodyByte));
+
+        } else if (outputFile != null) {
+            // handle_GET, handle_POST functions
+            switch (FASTEST_IO) {
+                case "readFile_IO":
+                    try {
+                        logger.debug("Reading outpoutfile to memory...");
+                        bodyByte = Utility.readFile_IO(outputFile);
+                        logger.debug("Body byte now: " + new String(bodyByte));
+                    } catch (IOException  | FileSizeOverflowException e) {
+                        this.logger.error("File size is too large");
+                        e.printStackTrace();
+                    }
+                    break;
+                case "readFile_NIO":
+                    try {
+                        bodyByte = Utility.readFile_NIO(outputFile);
+                    } catch (IOException e) {
+                        this.logger.error("Could not read the file");
+                        e.printStackTrace();
+                    }
+                    break;
+                case "readFile_NIO_DIRECT":
+                    try {
+                        bodyByte = Utility.readFile_NIO_DIRECT(outputFile);
+                    } catch (IOException e) {
+                        this.logger.error("Could not read the file");
+                        e.printStackTrace();
+                    }
+                    break;
+                default:
+                    MappedByteBuffer _mappedBuffer = null;
+                    try {
+                        _mappedBuffer = Utility.read_NIO_MAP(outputFile);
+                    } catch (IOException e) {
+                        this.logger.error("Could not read the file");
+                        e.printStackTrace();
+                    }
+                    if (_mappedBuffer != null) {
+                        bodyByte = new byte[_mappedBuffer.remaining()];
+                        _mappedBuffer.get(bodyByte);
+                    } else {
+                        this.logger.error("Cannot read file and store in memory");
+                    }
+                    break;
             }
         }
 
@@ -304,13 +333,25 @@ public class HttpHandler implements Handler {
         );
         String contentLang = "en_US", mimeType = null;
         try {
-            mimeType = Files.probeContentType(outputFile.toPath());
+            mimeType = (outputFile != null) ? Files.probeContentType(outputFile.toPath())  : "text/html";
+            logger.debug("Mimetype: " + mimeType);
         } catch (IOException e) {
             this.logger.error("Cannot determine the MIME type of file");
             e.printStackTrace();
         }
 
         String nameHeader = (this.configuration == null) ? this.name : this.configuration.getProperty(NAME_PROP);
+
+        if (!statusReturned) {
+            if (bodyByte == null) {
+                this.logger.error("Could not read file contents in memory");
+                this.status = StatusEnum._500_INTERNAL_ERROR.MESSAGE;
+                statusReturned = true;
+                bodyByte = inputStreamToBuffer(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"));
+            }
+        }
+
+
         HttpResponseBuilder builder = new HttpResponseBuilder();
         HttpResponse response = builder
                 .scheme("HTTP/1.1")
@@ -334,4 +375,20 @@ public class HttpHandler implements Handler {
     public HttpResponse handle_NOT_IMPLEMENTED(HttpRequest req, HttpResponse res) {
         return new HttpResponse();
     }
+
+    private byte[] inputStreamToBuffer(InputStream is) {
+        ByteArrayOutputStream _buf = new ByteArrayOutputStream();
+        byte[] data = new byte[16384];
+        int nRead;
+        try {
+            while ((nRead = is.read(data, 0, data.length)) != -1) {
+                _buf.write(data,0,nRead);
+            }
+        } catch (IOException err) {
+            logger.error("Cannot convert input stream to buffer (byte array). ");
+        }
+
+        return _buf.toByteArray();
+    }
+
 }
