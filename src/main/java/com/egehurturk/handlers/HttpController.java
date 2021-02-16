@@ -185,7 +185,7 @@ public class HttpController implements Closeable, Runnable {
 
         } catch (IOException e) {
             try {
-                FileResponse response = new FileResponse("www/500.html", new PrintWriter(client.getOutputStream(), false));
+                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse(StatusEnum.valueOf("Internal Server Error"), this.out));
                 close();
             } catch (IOException ioException) {
@@ -200,12 +200,11 @@ public class HttpController implements Closeable, Runnable {
                     this.client.close();
                 } catch (IOException exception) {
                     logger.error("Could not close client stream");
-                    return;
                 }
             }
         } catch (BadRequest400Exception e) {
             try {
-                FileResponse response = new FileResponse("www/400.html", new PrintWriter(client.getOutputStream(), false));
+                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("400.html"), new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse(StatusEnum.valueOf(Utility.enumStatusToString(e.message)), this.out));
                 close();
             } catch (IOException ioException) {
@@ -224,7 +223,7 @@ public class HttpController implements Closeable, Runnable {
             }
         } catch (MethodNotAllowedException e) {
             try {
-                FileResponse response = new FileResponse("www/403.html", new PrintWriter(client.getOutputStream(), false));
+                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("403.html"), new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse(StatusEnum.valueOf(Utility.enumStatusToString(e.message)), this.out));
                 close();
             } catch (IOException ioException) {
@@ -239,12 +238,11 @@ public class HttpController implements Closeable, Runnable {
                     this.client.close();
                 } catch (IOException exception) {
                     logger.error("Could not close client stream");
-                    return;
                 }
             }
         } catch (NotFound404Exception e) {
             try {
-                FileResponse response = new FileResponse("www/404.html", new PrintWriter(client.getOutputStream(), false));
+                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse(StatusEnum.valueOf(Utility.enumStatusToString(e.message)), this.out));
                 close();
             } catch (IOException  ioException) {
@@ -335,3 +333,11 @@ public class HttpController implements Closeable, Runnable {
 
 
 }
+
+/*
+! https://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven
+! https://stackoverflow.com/questions/19035407/classloader-getresourceasstream-returns-null
+! https://stackoverflow.com/questions/20389255/reading-a-resource-file-from-within-jar
+! https://stackoverflow.com/questions/13482314/maven-how-to-include-src-main-resources
+! https://stackoverflow.com/questions/5171957/access-file-in-jar-file
+ */
