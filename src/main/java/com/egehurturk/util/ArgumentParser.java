@@ -32,6 +32,7 @@ public class ArgumentParser {
         } catch (ParseException | UnknownHostException | FileNotFoundException err) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("banzai", options);
+            System.exit(1);
         }
 
     }

@@ -1,6 +1,9 @@
 package com.egehurturk.handlers;
 
-import com.egehurturk.exceptions.*;
+import com.egehurturk.exceptions.BadRequest400Exception;
+import com.egehurturk.exceptions.HttpRequestException;
+import com.egehurturk.exceptions.MethodNotAllowedException;
+import com.egehurturk.exceptions.NotFound404Exception;
 import com.egehurturk.httpd.HttpRequest;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
@@ -162,7 +165,13 @@ public class HttpController implements Closeable, Runnable {
                     // if exists
                     if (templ.path.equals(req.getPath())) {
                         res = templ.handler.handle(req, res); // let handler to handle the request
-                        res.send();
+                        try {
+                            res.send();
+                        } catch (NullPointerException pointerException) {
+                            FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), new PrintWriter(client.getOutputStream(), false));
+                            respond(fil.toHttpResponse(StatusEnum.valueOf("Internal Server Error"), this.out));
+                        }
+
                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         foundHandler = true; // we found a handler
                         break;
@@ -175,7 +184,12 @@ public class HttpController implements Closeable, Runnable {
                 for (HandlerTemplate template: methodTemplates) {
                     if (template.path.equals("/*")) {
                         res = template.handler.handle(req, res);
-                        res.send();
+                        try {
+                            res.send();
+                        } catch (NullPointerException nullPointerException) {
+                            FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), new PrintWriter(client.getOutputStream(), false));
+                            respond(fil.toHttpResponse(StatusEnum.valueOf("Internal Server Error"), this.out));
+                        }
                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         break;
                     }

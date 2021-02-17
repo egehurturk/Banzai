@@ -5,6 +5,7 @@ import com.egehurturk.exceptions.ConfigurationException;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.HandlerTemplate;
 import com.egehurturk.handlers.HttpController;
+import com.egehurturk.handlers.HttpHandler;
 import com.egehurturk.util.MethodEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -242,6 +243,10 @@ public class HttpServer extends BaseServer implements Closeable {
 
     @Override
     public void start() {
+        try {
+            addHandler(MethodEnum.GET, "/*", new HttpHandler(this.getConfig()));
+        } catch (FileNotFoundException ignored) {
+        }
         ExecutorService pool = Executors.newFixedThreadPool(500);
         try {
             this.server = new ServerSocket(this.serverPort, this.backlog, this.serverHost);

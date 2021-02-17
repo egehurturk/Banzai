@@ -9,8 +9,6 @@ import com.egehurturk.renderers.HTMLRenderer;
 import com.egehurturk.util.ArgumentParser;
 import com.egehurturk.util.HeaderEnum;
 import com.egehurturk.util.MethodEnum;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,7 +30,6 @@ public class DriverClassForTest {
         HttpHandler handler = parser.getHandler();
 
         httpServer.allowCustomUrlMapping(true);
-        httpServer.addHandler(MethodEnum.GET, "/*", handler);
         httpServer.addHandler(MethodEnum.GET, "/hello", new MyHandler());
         httpServer.addHandler(MethodEnum.POST, "/*", handler);
         httpServer.addHandler(MethodEnum.GET, "/thismynewserver", new MyNewHandler());
@@ -182,54 +179,6 @@ public class DriverClassForTest {
             res = json.toHttpResponse();
             return res;
         }
-    }
-
-
-    private static Options generateOptions() {
-        Options options = new Options();
-        Option port = Option.builder()
-                .longOpt("port")
-                .argName("portNumber")
-                .hasArg()
-                .desc("bind server to a port. Default is 9090" )
-                .build();
-        Option name = Option.builder()
-                .longOpt("name")
-                .argName("name" )
-                .hasArg()
-                .desc("Use name for web server" )
-                .build();
-        Option host = Option.builder()
-                .longOpt("host")
-                .argName("host" )
-                .hasArg()
-                .desc("Bind server to host" )
-                .build();
-        Option webroot = Option.builder()
-                .longOpt("webroot")
-                .argName("webroot" )
-                .hasArg()
-                .desc("use given directory to store HTML/source files" )
-                .build();
-        Option backlog = Option.builder()
-                .longOpt("backlog")
-                .argName("backlog" )
-                .hasArg()
-                .desc("backlog for server" )
-                .build();
-        Option config = Option.builder()
-                .longOpt("config")
-                .argName("config" )
-                .hasArg()
-                .desc("Configuration system properties file for server" )
-                .build();
-        options.addOption(port);
-        options.addOption(host);
-        options.addOption(name);
-        options.addOption(webroot);
-        options.addOption(backlog);
-        options.addOption(config);
-        return options;
     }
 
 }

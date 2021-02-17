@@ -92,6 +92,7 @@ public class HttpHandler implements Handler {
      * @throws FileNotFoundException    - file not found
      */
     public HttpHandler(Properties config) throws FileNotFoundException {
+        // FIXME:handle null config
         this.configuration = config;
         this._strWebRoot = config.getProperty(WEBROOT_PROP);
         if (!Utility.isDirectory(this._strWebRoot)) {
