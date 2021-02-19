@@ -205,3 +205,5 @@ public class FileResponse implements ResponseType {
 
 }
 
+
+//FIXME: This class should not throw FileNotFoundException
