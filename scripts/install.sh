@@ -32,10 +32,10 @@ NORMAL=$(tput sgr0)  # escape bold
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # full working directory (e.g. here -> /Users/egehurturk/Development/BanzaiServer/scripts)
 BINARY_PATH="/usr/local/bin" # place to store banazi executable
 BANZAI_SH_L="$BINARY_PATH/banzai" # binary banzai path (/usr/local/bin/banzai)
-#FIXME: there won't be any /target dir if i directly clone from github
 JAR_FILE_NAME="$(ls $(dirname $DIR)/target | grep "jar-with-dependencies.jar")" # jar file name (only the name w/ extension)
 JAR_LOCATION_NM="$(dirname $DIR)/target/$JAR_FILE_NAME" # jar file location normal (in the project directory)
 JAR_LOCATION_SM="/opt/banzai/${JAR_FILE_NAME}"
+JAR_OTHER="/etc/banzai/${JAR_FILE_NAME}"
 
 
 # trap ctrl-c and call ctrl_c()
@@ -81,10 +81,19 @@ if [[ $SYMLINK == "Y" ]] || [[ $SYMLINK == "y" ]] || [[ $SYMLINK == "yes" ]]; th
      printf "  ${ANSI_RED}JAR file already exists!${ANSI_NC}\n"
      exit 1
   else
-    echo "Copying requires sudo (enter machine password) "
-    sudo mkdir "/opt/banzai"
-    sudo cp "$JAR_LOCATION_NM" "$JAR_LOCATION_SM"
-    printf "  ${ANSI_GREEN}Done!${ANSI_NC}\n"
+
+    if [ ! -d "$(dirname $(dirname $JAR_LOCATION_SM))" ]; then
+      printf "  ${ANSI_RED}$(dirname $(dirname $JAR_LOCATION_SM)) does not exists. Using the other default directory $JAR_OTHER ${ANSI_NC}\n"
+       echo "Copying requires sudo (enter machine password) "
+       sudo mkdir "/etc/banzai"
+       sudo cp "$JAR_LOCATION_NM" "$JAR_OTHER"
+       printf "  ${ANSI_GREEN}Done!${ANSI_NC}\n"
+    else
+      echo "Copying requires sudo (enter machine password) "
+      sudo mkdir "/opt/banzai"
+      sudo cp "$JAR_LOCATION_NM" "$JAR_LOCATION_SM"
+      printf "  ${ANSI_GREEN}Done!${ANSI_NC}\n"
+    fi
   fi
 
   printf "  ${ANSI_PURPLE}Creating banzai directory in /var/log/banzai ${ANSI_NC}\n"
@@ -95,16 +104,19 @@ if [[ $SYMLINK == "Y" ]] || [[ $SYMLINK == "y" ]] || [[ $SYMLINK == "yes" ]]; th
   echo "Creating log directory requires sudo (enter machine password) "
   sudo mkdir "/var/log/banzai"
   printf "  ${ANSI_GREEN}Done!${ANSI_NC}\n"
-
-
 fi
 
-echo ""
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-printf "  ${ANSI_CYAN}${ANSI_BOLD}Installation completed.${ANSI_NORMAL}${ANSI_NC}\n"
-printf "  ${ANSI_CYAN}You can run Banzai server with banzai [options].${ANSI_NC}\n"
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-echo ""
+echo -e ""
+echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo -e "  ${ANSI_YELLOW}${ANSI_BOLD}Installation completed.${ANSI_NORMAL}${ANSI_NC}"
+echo -e "  ${ANSI_CYAN}${ANSI_BOLD}Summary: ${ANSI_NORMAL}${ANSI_NC}"
+echo -e "  ${ANSI_CYAN}${ANSI_BOLD}\t\t \u2b95  Moved the banzai executable to /usr/local/bin ${ANSI_NORMAL}${ANSI_NC}"
+echo -e "  ${ANSI_CYAN}${ANSI_BOLD}\t\t \u2b95  Copied application JAR file to /opt/banzai/{jar} or /etc/banzai/{jar} depending on your computer ${ANSI_NORMAL}${ANSI_NC}"
+echo -e "  ${ANSI_CYAN}${ANSI_BOLD}\t\t    If /opt/ does not exists on your machine, the jar file is copied into /etc/banzai ${ANSI_NORMAL}${ANSI_NC}"
+echo -e "  ${ANSI_CYAN}${ANSI_BOLD}\t\t \u2b95  Created a directory under /var/log/banzai for global logs ${ANSI_NORMAL}${ANSI_NC}"
+echo -e "  ${ANSI_PURPLE}You can run Banzai server with banzai [options].${ANSI_NC}"
+echo -e "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo -e ""
 
 # -->> /var/log/banzai: log directory
 # -->> /opt/banzai: banzai jar files
