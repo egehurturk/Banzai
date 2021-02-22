@@ -21,9 +21,26 @@ ANSI_NC="\033[0m" # no color
 config=""
 np=""
 proejctname=""
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # full working directory
+#DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # full working directory
+#echo "$BASH_SOURCE"
 currentDir=`which banzai`
 symbolicDir="/usr/local/bin/banzai"
+JAR_FILE_NAME="$(ls $(dirname $DIR)/target | grep "jar-with-dependencies.jar")" # jar file name (only the name w/ extension)
+JAR_LOCATION_SM="/opt/banzai/${JAR_FILE_NAME}"
+DEP_VERSION="1.0-SNAPSHOT"
+#
+#echo "$DIR"
+#exit
+
+function get_dependency() {
+  depstart="<dependency>"
+  groupid="<groupId>com.egehurturk</groupId>"
+  artifactid="<artifactId>BanzaiServer</artifactId>"
+  version="<version>1.0-SNAPSHOT</version>"
+  depend="</dependency>"
+  ful="\n${depstart}\n\t${groupid}\n\t${artifactid}\n\t${version}\n${depend}\n"
+}
+get_dependency
 
 function autogenerateproperties() {
   if [[ $1 == "Y" ]] || [[ $1 == "y" ]] || [[ $1 == "yes" ]]; then
@@ -59,7 +76,7 @@ while [[ "$#" -gt 0 ]]; do
         -b|--backlog) backlog="$2"; shift ;;
         -n|--name) name="$2"; shift ;;
         -c|--config) config="$2"; shift ;;
-        newproject) np="n";;;
+        newproject) np="n" ;;
         -t|--pname) projectname="$2"; shift ;;
         *) echo "Unknown parameter passed: $1" ;;
     esac
@@ -72,6 +89,7 @@ if [[ "$np" != "" && "$projectname" != "" ]]; then
   printf "  ${ANSI_CYAN}Building maven... ${ANSI_NC}\n"
   mvn archetype:generate -DgroupId="$SUBDOM.$COMNAME" -DartifactId="$projectname" -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
   pwd
+  printf "  ${ANSI_CYAN}Adding Banzai JAR dependency to pom.xml... ${ANSI_NC}\n"
   read AUTO_SERVER_PROP"?  Do you want to generate a server configuration property file automatically (default file)? [Y/N] "
   autogenerateproperties $AUTO_SERVER_PROP $projectname
   printf "  ${ANSI_GREEN}Done!${ANSI_NC}\n"
@@ -93,12 +111,3 @@ else
     fi
   fi
 fi;
-
-
-
-
-
-
-
-# TODO: load local banzai jar file from /opt/banzai to newly created project
-
