@@ -95,6 +95,8 @@ public class HttpController implements Closeable, Runnable {
      */
     protected Logger logger = LogManager.getLogger(HttpController.class);
 
+    private boolean debugMode;
+
     /**
      * List of handlers that are assigned to some method and path
      * Stored as {@link HandlerTemplate}
@@ -110,6 +112,14 @@ public class HttpController implements Closeable, Runnable {
     public HttpController(Socket socket, List<HandlerTemplate> handlers) {
         this.client = socket;
         this.handlers = handlers;
+    }
+
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
+
+    public boolean isDebugMode() {
+        return debugMode;
     }
 
     /**
