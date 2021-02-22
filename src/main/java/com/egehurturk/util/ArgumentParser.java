@@ -49,7 +49,7 @@ public class ArgumentParser {
             }
             handler = new HttpHandler(httpServer.getConfig());
         } else if (cmd.hasOption("port") && cmd.hasOption("host") && cmd.hasOption("name") && cmd.hasOption("webroot") && cmd.hasOption("backlog")) {
-            httpServer = new HttpServer(Integer.parseInt(cmd.getOptionValue("port")), InetAddress.getByName(cmd.getOptionValue("host")), Integer.parseInt(cmd.getOptionValue("backlog")), cmd.getOptionValue("name"), cmd.getOptionValue("webroot"));
+            httpServer = new HttpServer(Integer.parseInt(cmd.getOptionValue("port")), InetAddress.getByName(cmd.getOptionValue("host")), Integer.parseInt(cmd.getOptionValue("backlog")), cmd.getOptionValue("name"), cmd.getOptionValue("webroot"), Boolean.parseBoolean(cmd.getOptionValue("debugMode")));
             handler = new HttpHandler(httpServer.getWebRoot(), httpServer.getName());
         } else if (cmd.hasOption("port") && cmd.getArgs().length == 1) {
             httpServer = new HttpServer(Integer.parseInt(cmd.getOptionValue("port")));
@@ -88,6 +88,12 @@ public class ArgumentParser {
                 .hasArg()
                 .desc("Bind server to host" )
                 .build();
+        Option debugMode = Option.builder()
+                .longOpt("debugMode")
+                .argName("debugMode")
+                .hasArg()
+                .desc("Debugging mode enabled or not" )
+                .build();
         Option webroot = Option.builder()
                 .longOpt("webroot")
                 .argName("webroot" )
@@ -109,6 +115,7 @@ public class ArgumentParser {
         this.options.addOption(port);
         this.options.addOption(host);
         this.options.addOption(name);
+        this.options.addOption(debugMode);
         this.options.addOption(webroot);
         this.options.addOption(backlog);
         this.options.addOption(config);
