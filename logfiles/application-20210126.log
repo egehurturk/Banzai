@@ -1,7 +1,7 @@
 [33m2021-01-26 14:00:15,784[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Configuration exception
 [33m2021-01-26 14:05:06,463[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Configuration exception
-[33m2021-01-26 14:08:07,766[m [main] [31mERROR[m com.egehurturk.httpd.DriverClassForTest - Configuration exception happened. Check configuraton property file path
-[33m2021-01-26 14:09:04,394[m [main] [31mERROR[m com.egehurturk.httpd.DriverClassForTest - Configuration exception happened. Check configuraton property file path
+[33m2021-01-26 14:08:07,766[m [main] [31mERROR[m com.egehurturk.httpd.EntryPoint - Configuration exception happened. Check configuraton property file path
+[33m2021-01-26 14:09:04,394[m [main] [31mERROR[m com.egehurturk.httpd.EntryPoint - Configuration exception happened. Check configuraton property file path
 [33m2021-01-26 14:26:02,769[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict) 
 
 java.net.BindException
