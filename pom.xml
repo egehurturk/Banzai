@@ -170,7 +170,7 @@
               <configuration>
                   <archive>
                       <manifest>
-                          <mainClass>com.egehurturk.httpd.DriverClassForTest</mainClass>
+                          <mainClass>com.egehurturk.httpd.EntryPoint</mainClass>
                       </manifest>
                   </archive>
                   <descriptorRefs>
