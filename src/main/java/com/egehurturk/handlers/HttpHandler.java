@@ -84,6 +84,8 @@ public class HttpHandler implements Handler {
     private Properties configuration = null;
     private String name;
 
+    private boolean debugMode = false;
+
     protected Logger logger = LogManager.getLogger(HttpHandler.class);
 
     /**
@@ -118,7 +120,13 @@ public class HttpHandler implements Handler {
         this.name = name;
     }
 
+    public boolean isDebugMode() {
+        return debugMode;
+    }
 
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
+    }
 
     /**
      * Handle method overriding {@link Handler}
@@ -177,13 +185,13 @@ public class HttpHandler implements Handler {
             String resolvedFilePathUrl = resolvePath(req.getPath());
             outputFile = new File(this._strWebRoot, resolvedFilePathUrl);
             // if the file does not exists throw 404
-            logger.debug("Outputfile.exists? " + outputFile.exists());
+            Utility.debug(this.debugMode, "Outputfile.exists? " + outputFile.exists(), logger);
             if (!outputFile.exists()) {
-                logger.debug("Status: 404");
+                Utility.debug(this.debugMode,"Status: 404", logger);
                 this.status = StatusEnum._404_NOT_FOUND.MESSAGE;
                 stream = ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND);
-                logger.debug("Stream: " + stream);
-                logger.debug("Stream: " + ((stream == null ) ? "null" : "nonnull"));
+                Utility.debug(this.debugMode,"Stream: " + stream, logger);
+                Utility.debug(this.debugMode,"Stream: " + ((stream == null ) ? "null" : "nonnull"), logger);
             } else {
                 if (outputFile.isDirectory()) {
                     // /file -> index.html
@@ -201,10 +209,10 @@ public class HttpHandler implements Handler {
             this.status = StatusEnum._501_NOT_IMPLEMENTED.MESSAGE;
             stream = ClassLoader.getSystemClassLoader().getResourceAsStream(_NOT_IMPLEMENTED);
         }
-        logger.debug("Outputfile: " + outputFile);
-        logger.debug("Stream: " + stream);
-        logger.debug("Outputfile: " + ((outputFile == null ) ? "null" : "nonnull"));
-        logger.debug("Stream: " + ((stream == null ) ? "null" : "nonnull"));
+        Utility.debug(this.debugMode,"Outputfile: " + outputFile, logger);
+        Utility.debug(this.debugMode,"Stream: " + stream, logger);
+        Utility.debug(this.debugMode,"Outputfile: " + ((outputFile == null ) ? "null" : "nonnull"), logger);
+        Utility.debug(this.debugMode,"Stream: " + ((stream == null ) ? "null" : "nonnull"), logger);
         return new Pair<File, InputStream>(outputFile, stream);
 
     }
@@ -224,7 +232,7 @@ public class HttpHandler implements Handler {
         ) {
             this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
             stream = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
-            logger.debug("Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"));
+            Utility.debug(this.debugMode,"Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"), logger);
             statusReturned = true;
         }
 
@@ -233,60 +241,59 @@ public class HttpHandler implements Handler {
             if (req.getPath().contains("./") || req.getPath().contains("../")) {
                 this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
                 stream = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
-                logger.debug("Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"));
+                Utility.debug(this.debugMode,"Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"), logger);
                 statusReturned = true;
             }
 
             else if (req.getPath().equals("/")) {
                 Pair<File, InputStream> pair = prepareOutputWithMethod(req);
-                logger.debug("Prepare output with method . getfirst -> " + pair.getFirst());
-                logger.debug("Prepare output with method . getsecond -> " + pair.getSecond());
+                Utility.debug(this.debugMode,"Prepare output with method . getfirst -> " + pair.getFirst(), logger);
+                Utility.debug(this.debugMode,"Prepare output with method . getsecond -> " + pair.getSecond(), logger);
                 if (pair.getSecond() != null) {
                     stream = pair.getSecond();
                 } else {
                     outputFile = pair.getFirst();
                 }
-                logger.debug("Outputfile set: " + outputFile);
-                logger.debug("Stream set: " + stream);
+                Utility.debug(this.debugMode,"Outputfile set: " + outputFile, logger);
+                Utility.debug(this.debugMode,"Stream set: " + stream, logger);
             }
             else if (Utility.isDirectory(req.getPath())) {
                 this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
                 stream = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
-                logger.debug("Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"));
+                Utility.debug(this.debugMode,"Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"), logger);
                 statusReturned = true;
             }
             else {
                 Pair<File, InputStream> pair = prepareOutputWithMethod(req);
-                logger.debug("Prepare output with method . getfirst -> " + pair.getFirst());
-                logger.debug("Prepare output with method . getsecond -> " + pair.getSecond());
+                Utility.debug(this.debugMode,"Prepare output with method . getfirst -> " + pair.getFirst(), logger);
+                Utility.debug(this.debugMode,"Prepare output with method . getsecond -> " + pair.getSecond(), logger);
                 if (pair.getSecond() != null) {
                     stream = pair.getSecond();
                 } else {
                     outputFile = pair.getFirst();
                 }
-                logger.debug("Outputfile set: " + outputFile);
-                logger.debug("Stream set: " + stream);
+                Utility.debug(this.debugMode,"Outputfile set: " + outputFile, logger);
+                Utility.debug(this.debugMode,"Stream set: " + stream, logger);
             }
         }
 
         byte[] bodyByte = null;
 
-        logger.debug("Stream: " + stream);
-        logger.debug("Output file: " + outputFile);
+        Utility.debug(this.debugMode,"Stream: " + stream, logger);
+        Utility.debug(this.debugMode,"Output file: " + outputFile, logger);
 
         if (stream != null) {
             bodyByte = inputStreamToBuffer(stream);
-            logger.debug("Body byte is this null? " + ((bodyByte == null) ? "null" : "nonnull"));
-            logger.debug("Body byte: " + new String(bodyByte));
-
+            Utility.debug(this.debugMode,"Body byte is this null? " + ((bodyByte == null) ? "null" : "nonnull"), logger);
+            Utility.debug(this.debugMode,"Body byte: " + new String(bodyByte), logger);
         } else if (outputFile != null) {
             // handle_GET, handle_POST functions
             switch (FASTEST_IO) {
                 case "readFile_IO":
                     try {
-                        logger.debug("Reading outpoutfile to memory...");
+                        Utility.debug(this.debugMode,"Reading outpoutfile to memory...", logger);
                         bodyByte = Utility.readFile_IO(outputFile);
-                        logger.debug("Body byte now: " + new String(bodyByte));
+                        Utility.debug(this.debugMode,"Body byte now: " + new String(bodyByte), logger);
                     } catch (IOException  | FileSizeOverflowException e) {
                         this.logger.error("File size is too large");
                         e.printStackTrace();
@@ -335,7 +342,7 @@ public class HttpHandler implements Handler {
         String contentLang = "en_US", mimeType = null;
         try {
             mimeType = (outputFile != null) ? Files.probeContentType(outputFile.toPath())  : "text/html";
-            logger.debug("Mimetype: " + mimeType);
+            Utility.debug(this.debugMode,"Mimetype: " + mimeType, logger);
         } catch (IOException e) {
             this.logger.error("Cannot determine the MIME type of file");
             e.printStackTrace();
