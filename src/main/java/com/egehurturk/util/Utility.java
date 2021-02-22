@@ -1,6 +1,7 @@
 package com.egehurturk.util;
 
 import com.egehurturk.exceptions.FileSizeOverflowException;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -139,6 +140,11 @@ public class Utility {
         return buffer;
     }
 
+    /**
+     * Utility function to convert HTTP status to {@link StatusEnum} instance
+     * @param status HTTP Status
+     * @return {@link StatusEnum} name
+     */
     public static String enumStatusToString(String status) {
         String returnedVal = "";
         switch (status) {
@@ -170,12 +176,36 @@ public class Utility {
         return returnedVal;
     }
 
+    /**
+     * Utility function to check if a file is a directory
+     * @param dirPath directory path
+     * @return true/false
+     */
     public static boolean isDirectory(String dirPath) {
         return Files.isDirectory(Paths.get(dirPath));
     }
 
+    /**
+     * Utility function to remove last character of a string
+     * @param str string
+     * @param chars how many chars will be removed
+     * @return # of chars removed from original string
+     */
     public static String removeLastChars(String str, int chars) {
         return str.substring(0, str.length() - chars);
     }
+
+    /**
+     * Debug utility for debugging mode configuration
+     * @param debugEnabled debug configuration (true / false)
+     * @param message debug statement
+     * @param logger {@link org.apache.logging.log4j.core.Logger} instance
+     */
+    public static void debug(boolean debugEnabled, String message, Logger logger) {
+        if (debugEnabled) {
+            logger.debug(message);
+        }
+    }
+
 
 }
