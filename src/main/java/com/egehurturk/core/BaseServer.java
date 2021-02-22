@@ -114,6 +114,13 @@ public abstract class BaseServer {
     protected String webRoot;
 
     /**
+     * Debug mode to log [debug] level messages to console
+     * If this is enabled (i.e. debug=true) in properties configuration
+     * file, more verbose output will be logged to console.
+     */
+    protected boolean debugMode;
+
+    /**
      * The main reader that reads the client's socket output.
      * Stream is buffered as to provide efficient reading of
      *
@@ -183,6 +190,7 @@ public abstract class BaseServer {
     protected static String HOST_PROP = "server.host";
     protected static String NAME_PROP = "server.name";
     protected static String WEBROOT_PROP = "server.webroot";
+    protected static String DEBUG_PROP = "debug";
 
     /**
      * File location of {@code .properties} file located
@@ -206,7 +214,7 @@ public abstract class BaseServer {
      * @throws  UnknownHostException    - Required for {@code .getLocalHost()}.
      */
     public BaseServer (int serverPort) throws UnknownHostException {
-        this(serverPort, InetAddress.getLocalHost(), 50, "banzai_unnamed", "www");
+        this(serverPort, InetAddress.getLocalHost(), 50, "banzai_unnamed", "www", false);
     }
 
     /**
@@ -231,7 +239,8 @@ public abstract class BaseServer {
      *
      */
     public BaseServer (int serverPort, InetAddress serverHost,
-                       int backlog, String name, String webRoot
+                       int backlog, String name, String webRoot,
+                       boolean debugMode
                        ) {
         if (serverPort < 0 || serverPort > 65535) {
             // Server port should be between 0 and 65535, that is the default
@@ -265,6 +274,7 @@ public abstract class BaseServer {
             e.printStackTrace();
         }
         // Set fields
+        this.debugMode = debugMode;
         this.serverPort = serverPort;
         this.serverHost = serverHost;
         this.backlog = backlog;
@@ -314,6 +324,14 @@ public abstract class BaseServer {
      */
     public String getWebRoot() {
         return webRoot;
+    }
+
+    /**
+     * Getter for debugMode
+     * @return value of debug mode
+     */
+    public boolean isDebugMode() {
+        return debugMode;
     }
 
     /**
@@ -428,7 +446,7 @@ public abstract class BaseServer {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
             this.name = this.config.getProperty(NAME_PROP); // already a string
-
+            this.debugMode = Boolean.parseBoolean(this.config.getProperty(DEBUG_PROP));
             if (!isDirectory(this.config.getProperty(WEBROOT_PROP))) {
                 throw new IllegalArgumentException(
                         "Web root directory not found. It should be placed in \"root/www\" where root" +
@@ -461,6 +479,7 @@ public abstract class BaseServer {
         }
         try {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
+            this.debugMode = Boolean.parseBoolean(this.config.getProperty(DEBUG_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
             this.name = this.config.getProperty(NAME_PROP); // already a string
             if (!isDirectory(this.config.getProperty(WEBROOT_PROP))) {
@@ -517,7 +536,7 @@ public abstract class BaseServer {
      *
      * @param dirPath               - Directory path where static and public
      *                              files live in. Default value is <i>www</i>.
-     *                              See {@link #BaseServer(int, InetAddress, int, String, String)}
+     *                              See {@link #BaseServer(int, InetAddress, int, String, String, boolean)}
      *
      * @return  boolean             - returns true if a direcetory exists
      */
