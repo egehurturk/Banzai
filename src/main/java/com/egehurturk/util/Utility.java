@@ -178,5 +178,4 @@ public class Utility {
         return str.substring(0, str.length() - chars);
     }
 
-
 }
