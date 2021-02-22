@@ -90,7 +90,7 @@ public class HttpServer extends BaseServer implements Closeable {
      * @throws UnknownHostException     - required for {@link InetAddress} to hold the host name (IPv4)
      */
     public HttpServer(int serverPort) throws UnknownHostException {
-        this(serverPort, InetAddress.getLocalHost(), 50, "unnamed", "www");
+        this(serverPort, InetAddress.getLocalHost(), 50, "unnamed", "www", false);
     }
 
     /**
@@ -99,7 +99,7 @@ public class HttpServer extends BaseServer implements Closeable {
      * an external properties file
      */
     public HttpServer() throws UnknownHostException {
-        this(8080, InetAddress.getLocalHost(), 50, "unnamed", "www");
+        this(8080, InetAddress.getLocalHost(), 50, "unnamed", "www", false);
     }
 
     public HttpServer(String fileConfigPath) {
@@ -117,12 +117,13 @@ public class HttpServer extends BaseServer implements Closeable {
      * @param backlog                       - Number of pending requests in the queue
      * @param name                          - Name of the server for running or stopping from CL
      * @param webRoot                       - Web Root of the server for URL processing
+     * @param debugMode                     - Whether the Debugging mode enabled or not
      *
      * @throws IllegalArgumentException     - Throws for value of port that is out of range, described below
      *
      */
-    public HttpServer(int serverPort, InetAddress serverHost, int backlog, String name, String webRoot) {
-        super(serverPort, serverHost, backlog, name, webRoot);
+    public HttpServer(int serverPort, InetAddress serverHost, int backlog, String name, String webRoot, boolean debugMode) {
+        super(serverPort, serverHost, backlog, name, webRoot, debugMode);
     }
 
     /**
@@ -244,7 +245,9 @@ public class HttpServer extends BaseServer implements Closeable {
     @Override
     public void start() {
         try {
-            addHandler(MethodEnum.GET, "/*", new HttpHandler(this.getConfig()));
+            HttpHandler handler = new HttpHandler(this.getConfig());
+            handler.setDebugMode(this.debugMode);
+            addHandler(MethodEnum.GET, "/*", handler);
         } catch (FileNotFoundException ignored) {
         }
         ExecutorService pool = Executors.newFixedThreadPool(500);
