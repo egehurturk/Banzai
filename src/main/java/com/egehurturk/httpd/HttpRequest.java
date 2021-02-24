@@ -144,7 +144,7 @@ public class HttpRequest {
                     "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
                     "HTTP scheme (\"HTTP/1.1\"), and path", 400, "Bad Request");
         }
-        this.method = requestLineArray[0].toUpperCase(); // ensure it is all upper ("GET")
+        this.method   = requestLineArray[0].toUpperCase(); // ensure it is all upper ("GET")
         if (!requestLineArray[1].contains("?")) {
             this.path = requestLineArray[1].toLowerCase(); // ensure it is all lower, i.e ("/index.html")
         } else {
@@ -152,7 +152,7 @@ public class HttpRequest {
             parseQueryParams(requestLineArray[1].substring(                                 // a=3&b=4
                     requestLineArray[1].indexOf("?") + 1));
         }
-        this.scheme = requestLineArray[2]; // by default it is all upper. Case here does not matter
+        this.scheme   = requestLineArray[2]; // by default it is all upper. Case here does not matter
 
         // read headers line by line
         String  headerLine = in.readLine().toLowerCase().trim();
