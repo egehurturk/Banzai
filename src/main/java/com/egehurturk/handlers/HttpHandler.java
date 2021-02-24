@@ -27,15 +27,15 @@ public class HttpHandler implements Handler {
      */
     public final String BAD_REQ = "400.html";
     /**
-     * Index default file
-     */
-    public final String INDEX = "index.html";
+    * Index default file
+    */
+    public final String INDEX   = "index.html";
     /**
-     * 404 file
-     */
-    public final String _404_NOT_FOUND = "404.html";
-    /*
-        501 file
+    * 404 file
+    */
+    public final String _404_NOT_FOUND   = "404.html";
+    /**
+     * 501 file
      */
     public final String _NOT_IMPLEMENTED = "501.html";
     /**
@@ -82,21 +82,32 @@ public class HttpHandler implements Handler {
      * Configuration file
      */
     private Properties configuration = null;
-    private String name;
-
-    private boolean debugMode = false;
-
-    protected Logger logger = LogManager.getLogger(HttpHandler.class);
 
     /**
-     * Base constructor
+     * Server name
+     */
+    private String name;
+
+    /**
+     * Debug Mode
+     */
+    private boolean debugMode        = false;
+
+    protected Logger logger          = LogManager.getLogger(HttpHandler.class);
+
+
+    /**
+     * Constructs an HttpHandler object from the given properties
      * @param config                    - configuration file for accessing server name
      * @throws FileNotFoundException    - file not found
      */
     public HttpHandler(Properties config) throws FileNotFoundException {
-        // FIXME:handle null config
+        if (config == null) {
+            throw new FileNotFoundException("Property config file passed as Properties object is null possibly due to configuration file path is not found");
+        }
+
         this.configuration = config;
-        this._strWebRoot = config.getProperty(WEBROOT_PROP);
+        this._strWebRoot   = config.getProperty(WEBROOT_PROP);
         if (!Utility.isDirectory(this._strWebRoot)) {
             logger.error("Web root is not a directory. Check if there exists a directory" +
                     "at root/www");
@@ -107,6 +118,14 @@ public class HttpHandler implements Handler {
         this.webRoot = new File(this._strWebRoot);
     }
 
+    /**
+     * WARNING: Do not use this constructor. Instead, use {@link #HttpHandler(Properties)} and a
+     * <code>Properties</code> file to configure the server.
+     *
+     * @param _strWebRoot String representation of web root
+     * @param name Server name
+     * @throws FileNotFoundException Throws if webroot does not exists
+     */
     public HttpHandler(String _strWebRoot, String name) throws FileNotFoundException {
         this._strWebRoot = _strWebRoot;
         if (!Utility.isDirectory(this._strWebRoot)) {
@@ -117,13 +136,21 @@ public class HttpHandler implements Handler {
                     "is the top parent directory.");
         }
         this.webRoot = new File(_strWebRoot);
-        this.name = name;
+        this.name    = name;
+
     }
 
+    /**
+     * @return is debug mode enabled
+     */
     public boolean isDebugMode() {
         return debugMode;
     }
 
+    /**
+     * Setter for debugMode
+     * @param debugMode mode
+     */
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;
     }
@@ -157,7 +184,8 @@ public class HttpHandler implements Handler {
      */
     private String resolvePath(String reqPath) {
         Path resolved = FileSystems.getDefault().getPath("");
-        Path other = FileSystems.getDefault().getPath(reqPath);
+        Path other    = FileSystems.getDefault().getPath(reqPath);
+
         for (Path path: other) {
             // security
             if (!path.startsWith(".") && !path.startsWith("..")) {
@@ -178,18 +206,23 @@ public class HttpHandler implements Handler {
      * @return                      - {@link File} output file
      */
     private Pair<File, InputStream> prepareOutputWithMethod(HttpRequest req) {
-        File outputFile = null;
+        File outputFile    = null;
         InputStream stream = null;
+
         if (req.getMethod().equals(MethodEnum.GET.str)) {
+
             // resolve the file and get the file that is stored in www/${resolvedFilePathUrl}
             String resolvedFilePathUrl = resolvePath(req.getPath());
             outputFile = new File(this._strWebRoot, resolvedFilePathUrl);
+
             // if the file does not exists throw 404
             Utility.debug(this.debugMode, "Outputfile.exists? " + outputFile.exists(), logger);
+
             if (!outputFile.exists()) {
                 Utility.debug(this.debugMode,"Status: 404", logger);
                 this.status = StatusEnum._404_NOT_FOUND.MESSAGE;
-                stream = ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND);
+                stream      = ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND);
+
                 Utility.debug(this.debugMode,"Stream: " + stream, logger);
                 Utility.debug(this.debugMode,"Stream: " + ((stream == null ) ? "null" : "nonnull"), logger);
             } else {
@@ -201,7 +234,7 @@ public class HttpHandler implements Handler {
                     this.status = StatusEnum._200_OK.MESSAGE;
                 } else {
                     this.status = StatusEnum._404_NOT_FOUND.MESSAGE;
-                    stream = ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND);
+                    stream      = ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND);
                 }
             }
         } else if (req.getMethod().equals(MethodEnum.POST.str)) {
@@ -218,20 +251,21 @@ public class HttpHandler implements Handler {
     }
 
     /**
-     * Handle get request
+     * Handle get request and return an {@link HttpResponse}
      * @param req           - {@link HttpRequest} request
      * @return              - {@link HttpResponse} response
      */
     public HttpResponse handle_GET(HttpRequest req, HttpResponse res) {
-        File outputFile = null;
-        InputStream stream = null;
+        File outputFile        = null;
+        InputStream stream     = null;
         boolean statusReturned = false;
+
         // Host is a must for HTTP/1.1 servers
         if (!req.headers.containsKey(
                 Utility.removeLastChars(HeaderEnum.HOST.NAME.trim().toLowerCase(), 1))
         ) {
-            this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
-            stream = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
+            this.status    = StatusEnum._400_BAD_REQUEST.MESSAGE;
+            stream         = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
             Utility.debug(this.debugMode,"Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"), logger);
             statusReturned = true;
         }
@@ -240,17 +274,18 @@ public class HttpHandler implements Handler {
         if (!statusReturned) {
             if (req.getPath().contains("./") || req.getPath().contains("../")) {
                 this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
-                stream = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
+                stream      = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
                 Utility.debug(this.debugMode,"Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"), logger);
                 statusReturned = true;
             }
 
             else if (req.getPath().equals("/")) {
                 Pair<File, InputStream> pair = prepareOutputWithMethod(req);
+
                 Utility.debug(this.debugMode,"Prepare output with method . getfirst -> " + pair.getFirst(), logger);
                 Utility.debug(this.debugMode,"Prepare output with method . getsecond -> " + pair.getSecond(), logger);
                 if (pair.getSecond() != null) {
-                    stream = pair.getSecond();
+                    stream     = pair.getSecond();
                 } else {
                     outputFile = pair.getFirst();
                 }
@@ -259,7 +294,8 @@ public class HttpHandler implements Handler {
             }
             else if (Utility.isDirectory(req.getPath())) {
                 this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
-                stream = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
+                stream      = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
+
                 Utility.debug(this.debugMode,"Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"), logger);
                 statusReturned = true;
             }
@@ -268,7 +304,7 @@ public class HttpHandler implements Handler {
                 Utility.debug(this.debugMode,"Prepare output with method . getfirst -> " + pair.getFirst(), logger);
                 Utility.debug(this.debugMode,"Prepare output with method . getsecond -> " + pair.getSecond(), logger);
                 if (pair.getSecond() != null) {
-                    stream = pair.getSecond();
+                    stream     = pair.getSecond();
                 } else {
                     outputFile = pair.getFirst();
                 }
@@ -353,7 +389,7 @@ public class HttpHandler implements Handler {
         if (!statusReturned) {
             if (bodyByte == null) {
                 this.logger.error("Could not read file contents in memory");
-                this.status = StatusEnum._500_INTERNAL_ERROR.MESSAGE;
+                this.status    = StatusEnum._500_INTERNAL_ERROR.MESSAGE;
                 statusReturned = true;
                 bodyByte = inputStreamToBuffer(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"));
             }
@@ -376,10 +412,22 @@ public class HttpHandler implements Handler {
         return response;
     }
 
+    /**
+     * Handle post
+     * @param req incoming request
+     * @param res pending response
+     * @return http response
+     */
     public HttpResponse handle_POST(HttpRequest req, HttpResponse res) {
         return new HttpResponse();
     }
 
+    /**
+     * Handle Not Implemented methods
+     * @param req incoming request
+     * @param res pending response
+     * @return http response
+     */
     public HttpResponse handle_NOT_IMPLEMENTED(HttpRequest req, HttpResponse res) {
         return new HttpResponse();
     }
