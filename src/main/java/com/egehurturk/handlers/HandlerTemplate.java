@@ -22,9 +22,10 @@ public class HandlerTemplate {
      * @param handler               - actual handler
      */
     public HandlerTemplate(MethodEnum method, String path, Handler handler) {
-        this.method = method;
-        this.path = path;
+        this.method  = method;
+        this.path    = path;
         this.handler = handler;
+
     }
 
     public MethodEnum getMethod() {
