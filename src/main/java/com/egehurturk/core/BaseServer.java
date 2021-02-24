@@ -186,11 +186,12 @@ public abstract class BaseServer {
     /**
      * Properties config places
      */
-    protected static String PORT_PROP = "server.port";
-    protected static String HOST_PROP = "server.host";
-    protected static String NAME_PROP = "server.name";
+    protected static String PORT_PROP    = "server.port";
+    protected static String HOST_PROP    = "server.host";
+    protected static String NAME_PROP    = "server.name";
     protected static String WEBROOT_PROP = "server.webroot";
-    protected static String DEBUG_PROP = "debug";
+    protected static String DEBUG_PROP   = "debug";
+
 
     /**
      * File location of {@code .properties} file located
@@ -274,12 +275,13 @@ public abstract class BaseServer {
             e.printStackTrace();
         }
         // Set fields
-        this.debugMode = debugMode;
+        this.debugMode  = debugMode;
         this.serverPort = serverPort;
         this.serverHost = serverHost;
-        this.backlog = backlog;
-        this.name = name;
-        this.webRoot = webRoot;
+        this.backlog    = backlog;
+        this.name       = name;
+        this.webRoot    = webRoot;
+
     }
 
     /**
@@ -436,6 +438,7 @@ public abstract class BaseServer {
     public void configureServer() throws ConfigurationException {
         this.propertiesStream = ClassLoader.getSystemClassLoader()
                 .getResourceAsStream( CONFIG_PROP_FILE );
+
         this.config = serveConfigurations(System.getProperties(), propertiesStream);
         if (this.config == null) {
             throw new ConfigurationException("System Configuration Error: Are you sure that a properties " +
@@ -445,8 +448,9 @@ public abstract class BaseServer {
         try {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
-            this.name = this.config.getProperty(NAME_PROP); // already a string
-            this.debugMode = Boolean.parseBoolean(this.config.getProperty(DEBUG_PROP));
+            this.name       = this.config.getProperty(NAME_PROP); // already a string
+            this.debugMode  = Boolean.parseBoolean(this.config.getProperty(DEBUG_PROP));
+
             if (!isDirectory(this.config.getProperty(WEBROOT_PROP))) {
                 throw new IllegalArgumentException(
                         "Web root directory not found. It should be placed in \"root/www\" where root" +
@@ -479,9 +483,10 @@ public abstract class BaseServer {
         }
         try {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
-            this.debugMode = Boolean.parseBoolean(this.config.getProperty(DEBUG_PROP));
+            this.debugMode  = Boolean.parseBoolean(this.config.getProperty(DEBUG_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
-            this.name = this.config.getProperty(NAME_PROP); // already a string
+            this.name       = this.config.getProperty(NAME_PROP); // already a string
+
             if (!isDirectory(this.config.getProperty(WEBROOT_PROP))) {
                 throw new IllegalArgumentException(
                         "Web root directory not found. It should be placed in \"root/www\" where root" +
