@@ -105,8 +105,9 @@ public class HttpResponse {
             throws HttpResponseException  {
         HttpResponse resp = new HttpResponse();
 
-        Set<Integer> codes = prepareCodes(new HashSet<Integer>());
+        Set<Integer> codes   = prepareCodes(new HashSet<Integer>());
         Set<String> messages = prepareMessages(new HashSet<String>());
+
         if (!codes.contains(code)) {
             logger.info("Status code does not exists, or not implemented");
             throw new NotImplemented501Exception("Status code does not exists, or is not" +
@@ -117,12 +118,12 @@ public class HttpResponse {
             throw new com.egehurturk.exceptions.NotImplemented501Exception("Message does not exists, or is not" +
                     "implemented by me. See future versions for more", 501, "Not Implemented");
         }
-        resp.code = code;
+        resp.code    = code;
         resp.message = message;
-        resp.scheme = scheme;
+        resp.scheme  = scheme;
         resp.headers = map;
-        resp.body = body;
-        resp.stream = stream;
+        resp.body    = body;
+        resp.stream  = stream;
         return resp;
     }
 
