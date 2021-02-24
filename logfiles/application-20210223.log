@@ -44,3 +44,27 @@
 [33m2021-02-23 23:12:21,688[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
 [33m2021-02-23 23:12:21,691[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
 [33m2021-02-23 23:12:21,693[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,834[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request line (e.g. GET /index HTTP/1.1 is not found
+[33m2021-02-23 23:28:59,836[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-23 23:28:59,872[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-23 23:28:59,882[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-23 23:28:59,893[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-23 23:28:59,898[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-23 23:28:59,900[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-23 23:28:59,902[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-23 23:28:59,904[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-02-23 23:28:59,906[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
+[33m2021-02-23 23:28:59,935[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,946[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,955[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,957[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,959[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,970[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,972[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,977[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,982[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,984[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,988[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,992[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:28:59,994[m [main] [31mERROR[m com.egehurturk.handlers.FileResponse - Body of JSON request is empty. Server automatically created JSON body.
+[33m2021-02-23 23:30:31,489[m [pool-2-thread-10] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request does not match HTTP standards. Check the request againand/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path
