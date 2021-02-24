@@ -45,11 +45,12 @@ public class FileResponse implements ResponseType {
      * method
      */
     private StatusEnum status;
-    public final String BAD_REQ = "400.html";
-    public final String INDEX = "index.html";
-    public final String _404_NOT_FOUND = "404.html";
+    public final String BAD_REQ          = "400.html";
+    public final String INDEX            = "index.html";
+    public final String _404_NOT_FOUND   = "404.html";
     public final String _NOT_IMPLEMENTED = "501.html";
-    public String webroot = "www";
+    public String webroot                = "www";
+
 
 
     /**
