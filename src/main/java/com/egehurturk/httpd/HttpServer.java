@@ -63,11 +63,12 @@ public class HttpServer extends BaseServer implements Closeable {
      */
     protected static String CONFIG_PROP_FILE = "server.properties";
     /** Key descriptors for {@code .properties} file */
-    protected static String PORT_PROP = "server.port";
-    protected static String HOST_PROP = "server.host";
-    protected static String NAME_PROP = "server.name";
+    protected static String PORT_PROP    = "server.port";
+    protected static String HOST_PROP    = "server.host";
+    protected static String NAME_PROP    = "server.name";
     protected static String WEBROOT_PROP = "server.webroot";
-    public boolean allowCustomUrlMapping =  false;
+    public boolean allowCustomUrlMapping = false;
+
 
     /**
      * File location of {@code .properties} file located
@@ -81,6 +82,11 @@ public class HttpServer extends BaseServer implements Closeable {
     protected InputStream propertiesStream = ClassLoader.getSystemClassLoader()
             .getResourceAsStream( CONFIG_PROP_FILE );
 
+    /**
+     * Storing handlers in an ArrayList as {@link HandlerTemplate}s.
+     * {@link HttpController} class uses this to manage specific path
+     * routing and serving HTML documents
+     */
     private List<HandlerTemplate> handlers = new ArrayList<>();
 
 
@@ -202,6 +208,10 @@ public class HttpServer extends BaseServer implements Closeable {
         WEBROOT_PROP = webrootProp;
     }
 
+    /**
+     * Set allowance of any custom URL path mapping
+     * @param allow allow custom URL Path routing
+     */
     public void allowCustomUrlMapping(boolean allow) {
         this.allowCustomUrlMapping = allow;
     }
@@ -242,13 +252,21 @@ public class HttpServer extends BaseServer implements Closeable {
                 \___)=(___/
     */
 
+    /**
+     * Starts the Executor service and server socket
+     * Accepts any {@link Socket} client and summons a
+     * {@link HttpController} class for managing clients.
+     *
+     * Default, {@link HttpHandler} class is added to {@link #handlers}
+     */
     @Override
     public void start() {
         try {
             HttpHandler handler = new HttpHandler(this.getConfig());
             handler.setDebugMode(this.debugMode);
             addHandler(MethodEnum.GET, "/*", handler);
-        } catch (FileNotFoundException ignored) {
+        } catch (FileNotFoundException er) {
+            logger.error(er.getMessage());
         }
         ExecutorService pool = Executors.newFixedThreadPool(500);
         try {
@@ -274,14 +292,20 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 
 
+    /**
+     * Stops the server
+     */
     @Override
-    public void stop() throws IOException {
-
+    public void stop() {
+        logger.info("Stopping server...");
+        close();
     }
 
+    /**
+     * Close any open socket connections, streams, etc.
+     */
     @Override
     public void close() {
-
         try {
             this.server.close();
             this.propertiesStream.close();
@@ -291,15 +315,16 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 
     @Override
-    public void restart() {
-
-    }
-
+    public void restart() {}
     @Override
-    public void reload() {
+    public void reload() {}
 
-    }
-
+    /**
+     * Adds a Handler associated with method, path
+     * @param method  HTTP Method (e.g. "GET")
+     * @param path    URL Path    (e.g. "/hello")
+     * @param handler Handler     (any class that implements {@link Handler}
+     */
     public void addHandler(MethodEnum method, String path, Handler handler) {
         HandlerTemplate template = new HandlerTemplate(method, path, handler);
         handlers.add(template);
