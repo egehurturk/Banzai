@@ -37,7 +37,7 @@ public class JsonResponse implements ResponseType {
      */
     public JsonResponse(PrintWriter writer, String body) {
         this.writer = writer;
-        this.body = body;
+        this.body   = body;
     }
 
     public JsonResponse(PrintWriter writer) {
@@ -53,7 +53,7 @@ public class JsonResponse implements ResponseType {
     public void validate(HttpRequest req) {
         // * Note for future documentation: request headers are stored in lowercase and trimmed
         Pair<Boolean, String> pair = req.getHeader("Accept".toLowerCase());
-        String accept = pair.getSecond();
+        String accept              = pair.getSecond();
         if (!pair.getFirst()) {
             this.valid = false;
             return;
@@ -109,8 +109,8 @@ public class JsonResponse implements ResponseType {
                 )
         );
         String contentLang = "en_US";
-        String mimeType = "application/json";
-        StatusEnum status = StatusEnum._200_OK;
+        String mimeType    = "application/json";
+        StatusEnum status  = StatusEnum._200_OK;
 
         if (!this.valid) {
             status = StatusEnum._406_NOT_ACCEPTABLE;
