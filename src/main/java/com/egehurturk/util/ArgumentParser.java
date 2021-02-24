@@ -14,9 +14,9 @@ import java.net.UnknownHostException;
  * Command Line Argument Parser
  */
 public class ArgumentParser {
-    public Options options = new Options();
+    public Options options          = new Options();
     public CommandLineParser parser = new DefaultParser();
-    public CommandLine cmd = null;
+    public CommandLine cmd          = null;
     public String[] args;
     private HttpServer httpServer;
     private HttpHandler handler;
@@ -50,10 +50,11 @@ public class ArgumentParser {
             handler = new HttpHandler(httpServer.getConfig());
         } else if (cmd.hasOption("port") && cmd.hasOption("host") && cmd.hasOption("name") && cmd.hasOption("webroot") && cmd.hasOption("backlog")) {
             httpServer = new HttpServer(Integer.parseInt(cmd.getOptionValue("port")), InetAddress.getByName(cmd.getOptionValue("host")), Integer.parseInt(cmd.getOptionValue("backlog")), cmd.getOptionValue("name"), cmd.getOptionValue("webroot"), Boolean.parseBoolean(cmd.getOptionValue("debugMode")));
-            handler = new HttpHandler(httpServer.getWebRoot(), httpServer.getName());
+            handler    = new HttpHandler(httpServer.getWebRoot(), httpServer.getName());
+
         } else if (cmd.hasOption("port") && cmd.getArgs().length == 1) {
             httpServer = new HttpServer(Integer.parseInt(cmd.getOptionValue("port")));
-            handler = new HttpHandler(httpServer.getWebRoot(), httpServer.getName());
+            handler    = new HttpHandler(httpServer.getWebRoot(), httpServer.getName());
         } else {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("banzai", options);
