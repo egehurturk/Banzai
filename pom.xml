@@ -107,6 +107,13 @@
                   <include>**/501.html</include>
               </includes>
           </resource>
+          <resource>
+              <directory>src/main/resources</directory>
+              <excludes>
+                  <exclude>notes.md</exclude>
+                  <exclude>q.txt</exclude>
+              </excludes>
+          </resource>
       </resources>
 
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
