@@ -27,18 +27,17 @@ public class EntryPoint {
     public static void main(String[] args) throws IOException {
         ArgumentParser parser = new ArgumentParser(args);
         HttpServer httpServer = parser.getHttpServer();
-        HttpHandler handler = parser.getHandler();
+        HttpHandler handler   = parser.getHandler();
 
         httpServer.allowCustomUrlMapping(true);
-        httpServer.addHandler(MethodEnum.GET, "/hello", new MyHandler());
-        httpServer.addHandler(MethodEnum.POST, "/*", handler);
-        httpServer.addHandler(MethodEnum.GET, "/thismynewserver", new MyNewHandler());
-        httpServer.addHandler(MethodEnum.GET, "/cemhurturk", new MyHandler());
-        httpServer.addHandler(MethodEnum.GET, "/filehandling", new MyFileHandler());
-        httpServer.addHandler(MethodEnum.GET, "/jsontest", new Json());
-        httpServer.addHandler(MethodEnum.GET, "/paramtest", new Parameterized());
-        httpServer.addHandler(MethodEnum.GET, "/template", new TemplateTest());
-        httpServer.addHandler(MethodEnum.GET, "/soph", new Sophisticated());
+        httpServer.addHandler(MethodEnum.GET , "/hello"           , new MyHandler());
+        httpServer.addHandler(MethodEnum.GET , "/thismynewserver" , new MyNewHandler());
+        httpServer.addHandler(MethodEnum.GET , "/cemhurturk"      , new MyHandler());
+        httpServer.addHandler(MethodEnum.GET , "/filehandling"    , new MyFileHandler());
+        httpServer.addHandler(MethodEnum.GET , "/jsontest"        , new Json());
+        httpServer.addHandler(MethodEnum.GET , "/paramtest"       , new Parameterized());
+        httpServer.addHandler(MethodEnum.GET , "/template"        , new TemplateTest());
+        httpServer.addHandler(MethodEnum.GET , "/soph"            , new Sophisticated());
 
         httpServer.start();
     }
