@@ -3,7 +3,6 @@ package com.egehurturk.httpd;
 
 import com.egehurturk.handlers.FileResponse;
 import com.egehurturk.handlers.Handler;
-import com.egehurturk.handlers.HttpHandler;
 import com.egehurturk.handlers.JsonResponse;
 import com.egehurturk.renderers.HTMLRenderer;
 import com.egehurturk.util.ArgumentParser;
@@ -27,7 +26,6 @@ public class EntryPoint {
     public static void main(String[] args) throws IOException {
         ArgumentParser parser = new ArgumentParser(args);
         HttpServer httpServer = parser.getHttpServer();
-        HttpHandler handler   = parser.getHandler();
 
         httpServer.allowCustomUrlMapping(true);
         httpServer.addHandler(MethodEnum.GET , "/hello"           , new MyHandler());
