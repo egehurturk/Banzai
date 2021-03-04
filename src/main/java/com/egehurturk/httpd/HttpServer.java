@@ -105,7 +105,7 @@ public class HttpServer extends BaseServer implements Closeable {
      * an external properties file
      */
     public HttpServer() throws UnknownHostException {
-        this(8080, InetAddress.getLocalHost(), 50, "unnamed", "www", false);
+//        this(8080, InetAddress.getLocalHost(), 50, "unnamed", "www", false);
     }
 
     public HttpServer(String fileConfigPath) {
