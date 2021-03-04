@@ -1,4 +1,22 @@
 #!/bin/bash
+
+echo "
+       ▄▄▄▄    ▄▄▄       ███▄    █ ▒███████▒ ▄▄▄       ██▓
+      ▓█████▄ ▒████▄     ██ ▀█   █ ▒ ▒ ▒ ▄▀░▒████▄    ▓██▒
+      ▒██▒ ▄██▒██  ▀█▄  ▓██  ▀█ ██▒░ ▒ ▄▀▒░ ▒██  ▀█▄  ▒██▒
+      ▒██░█▀  ░██▄▄▄▄██ ▓██▒  ▐▌██▒  ▄▀▒   ░░██▄▄▄▄██ ░██░
+      ░▓█  ▀█▓ ▓█   ▓██▒▒██░   ▓██░▒███████▒ ▓█   ▓██▒░██░
+      ░▒▓███▀▒ ▒▒   ▓▒█░░ ▒░   ▒ ▒ ░▒▒ ▓░▒░▒ ▒▒   ▓▒█░░▓
+      ▒░▒   ░   ▒   ▒▒ ░░ ░░   ░ ▒░░░▒ ▒ ░ ▒  ▒   ▒▒ ░ ▒ ░
+       ░    ░   ░   ▒      ░   ░ ░ ░ ░ ░ ░ ░  ░   ▒    ▒ ░
+       ░            ░  ░         ░   ░ ░          ░  ░ ░
+            ░                      ░
+
+      Banzai Server, V1.0 (SNAPSHOT) -
+      Docker Build Tool
+      ~Ege Hurturk~
+"
+
 # ANSI COLORS
 ANSI_RED="\033[0;31m"
 ANSI_GREEN="\033[0;32m"
@@ -21,16 +39,39 @@ NORMAL=$(tput sgr0)  # escape bold
 # Accept an environment file (.env) file as argument (e.g. Users/po/dev/dproject/.env)
 # docker run -v $absolute_path:$(basename $absolte_path)  --env-file=$env_file -p $port:$port -it egeh/banzai:1.0-SNAPSHOT
 
-# Arg:
-#
-#
-
 trap ctrl_c INT
 function ctrl_c() {
   echo ""
   printf "  ${ANSI_RED}The installation process has been cancelled. You may need to run the installation utility again to continue.${ANSI_NC}\n"
   echo ""
   exit 1
+}
+
+function normalfunc() {
+  chmod 755 ./scripts/parser.sh
+  CONFIGFILE="$1/server.properties"
+  printf "  ${ANSI_cyan}Parsing $1/server.properties... ${ANSI_NC}\n"
+  PORT=$(./scripts/parser.sh "server.port" "$CONFIGFILE" )
+  NAME=$(./scripts/parser.sh "server.name" "$CONFIGFILE" )
+  HOST=$(./scripts/parser.sh "server.host" "$CONFIGFILE" )
+  WEBR=$(./scripts/parser.sh "server.webroot" "$CONFIGFILE")
+  DEB=$(./scripts/parser.sh "debug" "$CONFIGFILE" )
+  PORT=${PORT:=9090}
+  HOST=${HOST:=0.0.0.0}
+  DEB=${DEB:=false}
+  WEBR=${WEBR:="$1/www"}
+  NAME=${NAME:="Banzai"}
+  printf "  ${ANSI_CYAN}Creating environment file in $1/.env \n${ANSI_NC}"
+  touch $1/.env
+  {
+    echo "SERVER_NAME=$NAME"
+    echo "SERVER_WEBROOT=$WEBR"
+    echo "SERVER_PORT=$PORT"
+    echo "SERVER_HOST=$HOST"
+    echo "SERVER_DEBUG=$DEBUG"
+    echo "SERVER_CONFIG_PATH=/$(basename $1)/server.properties"
+  } > "$1/.env"
+  printf "  ${ANSI_CYAN}Environment file created in $1/.env \n${ANSI_NC}"
 }
 
 function autogenerateproperties() {
@@ -42,7 +83,7 @@ function autogenerateproperties() {
   PORT=${PORT:=9090}
   HOST=${HOST:=0.0.0.0}
   DEBUG=${DEBUG:=false}
-  WEBROOT=${WEBROOT:=www}
+  WEBROOT=${WEBROOT:="$1/www"}
 
   touch $1/server.properties
   {
@@ -60,9 +101,12 @@ function autogenerateproperties() {
     echo "SERVER_PORT=$PORT"
     echo "SERVER_HOST=$WEBROOT"
     echo "SERVER_DEBUG=$DEBUG"
+    echo "SERVER_CONFIG_PATH=/$(basename $1)/server.properties"
   } > "$1/.env"
   printf "  ${ANSI_CYAN}Environment file created in $1/.env \n${ANSI_NC}"
 }
+
+
 project_dir=""
 while [[ "$#" -gt 0 ]]; do
     case $1 in
@@ -88,15 +132,24 @@ if [[ -f "$env_file" ]]; then
    exit 1
 fi
 
-autogenerateproperties $project_dir
+read -p "Do you want to autogenerate server configuration file [Y/n]: " AUTOGENERATE
+if [[ $AUTOGENERATE == "Y" ]] || [[ $AUTOGENERATE == "y" ]] || [[ $AUTOGENERATE == "yes" ]]; then
+  autogenerateproperties $project_dir
+else
+  normalfunc $project_dir
+fi
 
 
-echo "$PORT"
-echo "$WEBROOT"
-echo "$env_file"
-echo "$project_dir"
+echo "[DEBUG run_docker.sh] Port number: $PORT"
+echo "[DEBUG run_docker.sh] Web root: $WEBROOT"
+echo "[DEBUG run_docker.sh] Environment file: $env_file"
+echo "[DEBUG run_docker.sh] Project directory (local): $project_dir"
 
-
+printf "  ${ANSI_GREEN}Building Dockerfile with the tag egeh/banzai:1.0-SNAPSHOT...${ANSI_NC}\n\n"
+printf "  ${ANSI_GREEN}Building started!${ANSI_NC}\n"
 docker build -t egeh/banzai:1.0-SNAPSHOT --build-arg server_port=$PORT .
-
+printf "  ${ANSI_GREEN}Building ended!${ANSI_NC}\n\n"
+printf "  ${ANSI_GREEN}Starting up the docker container with the volume to ${project_dir} in local machine [$PORT:$PORT] ${ANSI_NC}\n"
 docker run -v $project_dir:"/$(basename $project_dir)" --env-file=$env_file -p $PORT:$PORT -it egeh/banzai:1.0-SNAPSHOT
+
+#Todo: optionally you can install this script (/usr/local/bin) on local machine
