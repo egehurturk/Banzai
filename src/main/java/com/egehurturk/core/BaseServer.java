@@ -254,7 +254,7 @@ public abstract class BaseServer {
         if (!isDirectory(webRoot)) {
             throw new IllegalArgumentException(
                 "Web root directory not found. It should be placed in \"root/www\" where root" +
-                        "is the top parent directory."
+                        " is the top parent directory."
             );
         }
         if (name.length() > 20) {
@@ -436,8 +436,15 @@ public abstract class BaseServer {
      * @throws IllegalArgumentException     - where the web root directory is not correct
      */
     public void configureServer() throws ConfigurationException {
-        this.propertiesStream = ClassLoader.getSystemClassLoader()
-                .getResourceAsStream( CONFIG_PROP_FILE );
+//        this.propertiesStream = ClassLoader.getSystemClassLoader()
+//                .getResourceAsStream( CONFIG_PROP_FILE );
+        try {
+            this.propertiesStream = new FileInputStream( CONFIG_PROP_FILE );
+        } catch (FileNotFoundException e) {
+            throw new ConfigurationException("System Configuration Error: Are you sure that a properties " +
+                    "file is located under resources folder as stated in standard Maven " +
+                    "directory template?");
+        }
 
         this.config = serveConfigurations(System.getProperties(), propertiesStream);
         if (this.config == null) {
@@ -474,8 +481,13 @@ public abstract class BaseServer {
      * @param propertiesFilePath        - Property file name (path)
      */
     public void configureServer(String propertiesFilePath) throws ConfigurationException {
-        this.config = serveConfigurations(System.getProperties(), ClassLoader.getSystemClassLoader()
-                                                                    .getResourceAsStream(propertiesFilePath));
+        try {
+            this.config = serveConfigurations(System.getProperties(), new FileInputStream( propertiesFilePath ));
+        } catch (FileNotFoundException e) {
+            throw new ConfigurationException("System Configuration Error: Are you sure that a properties " +
+                    "file is located under resources folder as stated in standard Maven " +
+                    "directory template?");
+        }
         if (this.config == null) {
             throw new ConfigurationException("System Configuration Error: Are you sure that a properties " +
                     "file is located under resources folder as stated in standard Maven " +
