@@ -44,7 +44,7 @@ public class ArgumentParser {
             try {
                 httpServer.configureServer();
             } catch (ConfigurationException e) {
-                System.err.println("Configuration exception: Check configuraton property file path");
+                System.err.println("Configuration exception: Check configuration property file path");
                 return;
             }
             handler = new HttpHandler(httpServer.getConfig());
