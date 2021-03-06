@@ -16,8 +16,9 @@ NORMAL=$(tput sgr0)  # escape bold
 printf "\n"
 printf "  ${ANSI_GREEN}Clean building Banzai...${ANSI_NC}\n"
 
+cd /banzai
 mvn clean package
-
+cd ..
 printf "  ${ANSI_GREEN}Clean build ended!${ANSI_NC}\n"
 
 printf "  ${ANSI_YELLOW}Starting up the server!${ANSI_NC}"
