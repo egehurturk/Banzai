@@ -16,9 +16,14 @@ NORMAL=$(tput sgr0)  # escape bold
 printf "\n"
 printf "  ${ANSI_GREEN}Clean building Banzai...${ANSI_NC}\n"
 
-mvn -f "/banzai/" clean package -Dmaven.test.skip=true
+mvn -f "/banzai/" package -Dmaven.test.skip=true
 printf "  ${ANSI_GREEN}Clean build ended!${ANSI_NC}\n"
 printf "  ${ANSI_YELLOW}Starting up the server!${ANSI_NC}\n"
+
+
+echo "DEBUG: $SERVER_CONFIG_PATH"
+
+read -p "Hey" hey
 
 java -jar "/banzai/target/BanzaiServer-1.0-SNAPSHOT-jar-with-dependencies.jar" --config "$SERVER_CONFIG_PATH"
 
