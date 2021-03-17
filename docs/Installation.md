@@ -69,7 +69,7 @@ $ echo "<h1>This is <a href="www.github.com/egehurturk/HttpServer">Banzai</a> </
 * Run `run_docker.sh` with the absolute path for the volume you created
     * Note that the path must be an absolute path and should point to the directory you want to serve
 ```bash
-$ cd .. && cd HttpServer
+$ cd .. && cd .. && cd HttpServer
 $ ./run_docker.sh -d "/Users/$USER/test_server"
 ``` 
 
