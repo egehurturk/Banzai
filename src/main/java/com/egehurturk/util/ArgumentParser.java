@@ -43,16 +43,13 @@ public class ArgumentParser {
             httpServer.setConfigPropFile(cmd.getOptionValue("config"));
             try {
                 httpServer.configureServer();
-                System.out.println("[DEBUG][DEBUG][DEBUG] Http Server's webroot: " + httpServer.getWebRoot());
             } catch (ConfigurationException e) {
                 System.err.println("Configuration exception: Check configuration property file path");
                 return;
             }
             handler = new HttpHandler(httpServer.getConfig());
         } else if (cmd.hasOption("port") && cmd.hasOption("host") && cmd.hasOption("name") && cmd.hasOption("webroot") && cmd.hasOption("backlog")) {
-            System.out.println("[DEBUG][DEBUG][DEBUG] Webroot from CMD: " + cmd.getOptionValue("webroot"));
             httpServer = new HttpServer(Integer.parseInt(cmd.getOptionValue("port")), InetAddress.getByName(cmd.getOptionValue("host")), Integer.parseInt(cmd.getOptionValue("backlog")), cmd.getOptionValue("name"), cmd.getOptionValue("webroot"), Boolean.parseBoolean(cmd.getOptionValue("debugMode")));
-            System.out.println("[DEBUG][DEBUG][DEBUG] Http Server's webroot: " + httpServer.getWebRoot());
             handler    = new HttpHandler(httpServer.getWebRoot(), httpServer.getName());
 
         } else if (cmd.hasOption("port") && cmd.getArgs().length == 1) {
