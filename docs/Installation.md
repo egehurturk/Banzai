@@ -24,6 +24,7 @@ $ chmod 755 run_docker.sh
 
 * Create a directory that is going to be volumed in the Docker container
 ```bash
+$ cd ..
 $ mkdir test_server
 ``` 
 
@@ -42,6 +43,7 @@ $ touch server.properties
 $ vim server.properties
 ```
 * Then add the following configuration into `server.properties`
+    * Note that you should delete the comments, i.e. `server.properties` must only include key-value pairs (key = pair)
 ```properties
 server.port = 9090 # this will be the port that Banzai runs on
 server.host = 0.0.0.0 # this will be the host that Banzai runs on
@@ -57,10 +59,11 @@ $ mkdir www
 
 * Create some `html` files in the directory
 ```bash
+$ cd www
 $ touch index.html
-$ echo "<h1>Hello, World! This is index.html</h1>" > www/index.html
+$ echo "<h1>Hello, World! This is index.html</h1>" > index.html
 $ touch banzai.html
-$ echo "<h1>This is <a href="www.github.com/egehurturk/HttpServer">Banzai</a> </h1>" > www/banzai.html
+$ echo "<h1>This is <a href="www.github.com/egehurturk/HttpServer">Banzai</a> </h1>" > banzai.html
 ```
 * Run `run_docker.sh` with the absolute path for the volume you created
     * Note that the path must be an absolute path and should point to the directory you want to serve
