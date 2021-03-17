@@ -44,11 +44,12 @@ $ vim server.properties
 ```
 * Then add the following configuration into `server.properties`
     * Note that you should delete the comments, i.e. `server.properties` must only include key-value pairs (key = pair)
+    * Also note that the webroot must start with "/" and should include the volume's name, `test_server` in this case
 ```properties
 server.port = 9090 # this will be the port that Banzai runs on
 server.host = 0.0.0.0 # this will be the host that Banzai runs on
 server.name = Test_Software # this will be the name of webserver
-server.webroot = www # this will be the webroot of the server
+server.webroot = /test_server/www # this will be the webroot of the server
 debug = false # controls whether the debug mode is enabled or not. 
 ```
 

@@ -250,7 +250,7 @@ public abstract class BaseServer {
                     "Port value out of range for server"
             );
         }
-
+        System.out.println("[DEBUG][DEBUG] Webroot passed: " + webRoot);
         if (!isDirectory(webRoot)) {
             throw new IllegalArgumentException(
                 "Web root directory not found. It should be placed in \"root/www\" where root" +
