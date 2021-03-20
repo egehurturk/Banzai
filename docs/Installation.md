@@ -246,3 +246,5 @@ $ java -jar target/*-jar-with-dependencies.jar
 
 You should now have a running Http Server listening on the port you specified in `s.setConfigPropFile()` method
 For more details on configuration, look at [Configuration](Configuration.md)
+
+If you had trouble with adding Banzai as a dependency in Maven, I'd suggest you to look at this Medium article that explains including external JAR files to Maven through repositories: [Article](https://medium.com/@jakubtutko/maven-repository-inside-your-project-4c55b4d73be8)
