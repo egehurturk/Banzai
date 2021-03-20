@@ -1,0 +1,12 @@
+What needs to be done?
+[] Remove all debug codes
+[] Resolve all TODOs
+[] Write a user manuel
+[] Test server on GCP and on another machine
+    [] Using docker installation
+    [] Using local installation
+    [] Using Maven and Java source file
+
+TODO: When ConfigurationException is raised, the server does not stops...
+TODO: In HttpServer.start() method, check if fields are not null or 0
+TODO: In FileResponse, prepareOutput method should use new File(webroot, this.path) on line 157

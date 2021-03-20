@@ -250,7 +250,6 @@ public abstract class BaseServer {
                     "Port value out of range for server"
             );
         }
-        System.out.println("[DEBUG][DEBUG] Webroot passed: " + webRoot);
         if (!isDirectory(webRoot)) {
             throw new IllegalArgumentException(
                 "Web root directory not found. It should be placed in \"root/www\" where root" +
@@ -439,6 +438,7 @@ public abstract class BaseServer {
 //        this.propertiesStream = ClassLoader.getSystemClassLoader()
 //                .getResourceAsStream( CONFIG_PROP_FILE );
         try {
+            System.out.println("[DEBUG][DEBUG] PWD: " + System.getProperty("user.dir"));
             this.propertiesStream = new FileInputStream( CONFIG_PROP_FILE );
         } catch (FileNotFoundException e) {
             throw new ConfigurationException("System Configuration Error: Are you sure that a properties " +
