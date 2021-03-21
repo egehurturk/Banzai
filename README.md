@@ -31,26 +31,7 @@
 
 
 <!-- PROJECT LOGO
-<br>
-<p align="center">
 
-   <a href="https://github.com/egehurturk/HttpServer">
-    <img src="external/banzai.jpg" alt="Banzai Logo" width="200" height="200">
-  </a>
-  
-  <h2 align="center">Banzai Server (A HTTP Server)</h3>
-
-  <p align="center">
-    A non-blocking, event-driven Http server from scratch, using plain Java. No additional dependencies (Take a look at  Built-with section) is needed. 
-    <br />
-    <a href="https://github.com/egehurturk/HttpServer"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/egehurturk/HttpServer/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/egehurturk/HttpServer/issues">Request Feature</a>
-  </p>
-</p>
 -->
 
 
@@ -79,25 +60,23 @@
 -->
 
 <!-- PROJECT LOGO -->
-<br />
+<br>
 <p align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
 
-  <h3 align="center">Best-README-Template</h3>
+   <a href="https://github.com/egehurturk/HttpServer">
+    <img src="external/banzai.jpg" alt="Banzai Logo" width="200" height="200">
+  </a>
+  <h2 align="center">Banzai Server (A HTTP Server)</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    A non-blocking, event-driven Http server from scratch, using plain Java. No additional dependencies (Take a look at  Built-with section) is needed. 
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/egehurturk/HttpServer"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://github.com/egehurturk/HttpServer/issues">Report Bug</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
+    <a href="https://github.com/egehurturk/HttpServer/issues">Request Feature</a>
   </p>
 </p>
 
