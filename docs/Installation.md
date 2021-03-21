@@ -2,7 +2,8 @@
 
 - [Installing Banzai](#installing-banzai)
   * [Banzai on Docker](#banzai-on-docker)
-  * [Banzai on Maven with Local Jar](#banzai-on-maven-with-local-jar)
+  * [Banzai on Maven with Local Jar - Option 1] (#banzai-on-maven-with-local-jar-option-1)
+  * [Banzai on Maven with Local Jar - Option 2 (Deprecated, DO NOT USE)](#banzai-on-maven-with-local-jar-option-2)
 
 
 
@@ -82,7 +83,11 @@ These steps will create a Docker container and run the server inside the docker 
 
 You can skip the "clean build" for the project with inputting "N" for the prompt. 
 
-## Banzai on Maven with Local Jar
+## Banzai on Maven with Local Jar Option 1
+
+
+
+## Banzai on Maven with Local Jar Option 2
 * Clone this repository
 
 ```bash
