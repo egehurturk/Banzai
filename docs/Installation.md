@@ -245,7 +245,7 @@ $ java -jar target/*-jar-with-dependencies.jar
 
 ## Banzai on Maven with Local Jar Option 2
 
-|  :warning: **Do not prefer installing Banzai with this option, always use [Banzai on Maven with Local Jar - Option 1](#banzai-on-maven-with-local-jar-option-1) to install Banzai with local JARs |
+|  :warning: *Do not prefer installing Banzai with this option, always use [Banzai on Maven with Local Jar - Option 1](#banzai-on-maven-with-local-jar-option-1) to install Banzai with local JARs* |
 | --- |
 
 * Clone this repository
