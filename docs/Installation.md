@@ -1,5 +1,12 @@
 # Installing Banzai
 
+- [Installing Banzai](#installing-banzai)
+  * [Banzai on Docker](#banzai-on-docker)
+    + [Steps:](#steps-)
+  * [Banzai on Maven with Local Jar](#banzai-on-maven-with-local-jar)
+
+
+
 ## Banzai on Docker
 ### Steps:
 * Clone this repository 
