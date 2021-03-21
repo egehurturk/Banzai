@@ -110,14 +110,13 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-Understanding HTTP in web development is essential. To strengthen my Java and web skills (also a school project), I decided to create my own http server
-which is capable of parsing, writing, logging, etc. 
+Banzai is a light-weight, blazingly fast (when working on local instead of Docker), extendible web server. The server is capable of understanding & responding to HTTP/1.1 (not HTTP/2.0). 
+
 
 ### Built With
 
 * [Apache Maven](https://github.com/apache/maven)
-* [Apache Logging-Log4J2](https://github.com/apache/logging-log4j2)
-* [JUnit](https://github.com/junit-team/junit4)
+* Java
 
 
 <!-- GETTING STARTED -->
@@ -129,10 +128,11 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-[Apache Maven](https://github.com/apache/maven) should be installed on your system and the `JAVA_HOME` environment variable should point to JDK home. Look at [this](https://maven.apache.org/install.html) to install maven
+[Apache Maven](https://github.com/apache/maven) should be installed on your system and the `JAVA_HOME` environment variable should point to JDK home. Look at [this](https://maven.apache.org/install.html) to install maven. You can ignore this if you want to use Banzai on Docker. 
 
 
 ### Installation
+For more detailed instructions, see [Installation](https://github.com/egehurturk/Banzai/blob/main/docs/Installation.md)
 
 1. Clone the repo
    ```sh
