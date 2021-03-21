@@ -2,7 +2,7 @@
 
 - [Installing Banzai](#installing-banzai)
   * [Banzai on Docker](#banzai-on-docker)
-  * [Banzai on Maven with Local Jar - Option 1] (#banzai-on-maven-with-local-jar-option-1)
+  * [Banzai on Maven with Local Jar - Option 1](#banzai-on-maven-with-local-jar-option-1)
   * [Banzai on Maven with Local Jar - Option 2 (Deprecated, DO NOT USE)](#banzai-on-maven-with-local-jar-option-2)
 
 
