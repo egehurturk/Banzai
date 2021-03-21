@@ -169,7 +169,7 @@ $ cd <artifactId> # your artifactId here
     * Add the following lines
 
 ```java
-package org.example;
+package <groupId> // enter your groupId
 
 import com.egehurturk.httpd.HttpServer;
 import com.egehurturk.exceptions.*;
@@ -198,25 +198,31 @@ public class App
     public static void main( String[] args ) throws UnknownHostException
     {
     	HttpServer s = new HttpServer(); 
-	try {
+	try
+	{
 		s.setConfigPropFile("YOUR_CONFIGURATION_PROPERTIES_FILE_HERE"); // enter a property configuration file
 		s.configureServer();
-	} catch (ConfigurationException err) {
+	} catch (ConfigurationException err)
+	{
 		err.printStackTrace();
 	}
 	s.allowCustomUrlMapping(true);
 	s.addHandler(MethodEnum.GET, "/helloworld", new MyHandler());
 	s.start();
-	}
+    }
 
-	static class MyHandler implements Handler {
+	static class MyHandler implements Handler 
+	{
 		HttpResponse res = null;
 		@Override
-		public HttpResponse handle(HttpRequest req, HttpResponse res) {
-			try {
+		public HttpResponse handle(HttpRequest req, HttpResponse res) 
+		{
+			try 
+			{
 				FileResponse fil = new FileResponse("HTML_FILE_HERE", res.getStream()); // enter a HTML file 
 				res = fil.toHttpResponse();
-			} catch (FileNotFoundException e) {
+			} catch (FileNotFoundException e)
+			{
 				e.printStackTrace();
 			}
 			return res;
@@ -238,6 +244,10 @@ $ java -jar target/*-jar-with-dependencies.jar
 ```
 
 ## Banzai on Maven with Local Jar Option 2
+
+|  :warning: **Do not prefer installing Banzai with this option, always use [Banzai on Maven with Local Jar - Option 1](#banzai-on-maven-with-local-jar-option-1) to install Banzai with local JARs |
+| --- |
+
 * Clone this repository
 
 ```bash
