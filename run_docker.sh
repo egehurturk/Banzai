@@ -125,13 +125,6 @@ if [[ -z $project_dir ]]; then
 fi
 
 
-if [[ -f "$env_file" ]]; then
-   printf "  ${ANSI_RED}Banzai has been already installed!${ANSI_NC}\n"
-   printf "  ${ANSI_RED}Please delete $env_file to start again.${ANSI_NC}\n"
-   echo ""
-   exit 1
-fi
-
 read -p "Do you want to autogenerate server configuration file [Y/n]: " AUTOGENERATE
 if [[ $AUTOGENERATE == "Y" ]] || [[ $AUTOGENERATE == "y" ]] || [[ $AUTOGENERATE == "yes" ]]; then
   autogenerateproperties $project_dir
