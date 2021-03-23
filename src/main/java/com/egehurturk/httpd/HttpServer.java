@@ -264,7 +264,12 @@ public class HttpServer extends BaseServer implements Closeable {
         if (checkFields()) {
             logger.error("Server is not properly initialized"); logger.error("Configuration error");
             logger.error("Stopping execution");
-            close();
+            // uhh, tons of try/catches
+            try {
+                this.propertiesStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return;
         }
         try {
@@ -381,7 +386,8 @@ public class HttpServer extends BaseServer implements Closeable {
      * Helper method to check fields of this class
      */
     private boolean checkFields() {
-        return this.serverHost == null || this.serverPort == 0 || this.webRoot == null || this.name == null || this.backlog <= 0;
+        System.out.println("Debug: server.webroot: " + this.webRoot);
+        return this.serverHost == null || this.serverPort == 0 || this.webRoot == null || this.name == null;
     }
 
 }
