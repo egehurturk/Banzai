@@ -3,8 +3,8 @@ package com.egehurturk.httpd;
 import com.egehurturk.core.BaseServer;
 import com.egehurturk.exceptions.HttpResponseException;
 import com.egehurturk.exceptions.NotImplemented501Exception;
-import com.egehurturk.util.HeaderEnum;
-import com.egehurturk.util.StatusEnum;
+import com.egehurturk.util.Headers;
+import com.egehurturk.util.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -130,11 +130,11 @@ public class HttpResponse {
     public void send() throws IOException {
         String body = new String(this.body);
         this.stream.println(this.scheme + " " + this.code + " " + this.message);
-        this.stream.println(HeaderEnum.SERVER.NAME + this.headers.get(HeaderEnum.SERVER.NAME));
-        this.stream.println(HeaderEnum.DATE.NAME + this.headers.get(HeaderEnum.DATE.NAME));
-        this.stream.println(HeaderEnum.CONTENT_TYPE.NAME + this.headers.get(HeaderEnum.CONTENT_TYPE.NAME) + ";charset=\"utf-8\"");
-        this.stream.println(HeaderEnum.CONTENT_LENGTH.NAME + this.headers.get(HeaderEnum.CONTENT_LENGTH.NAME));
-        this.stream.println(HeaderEnum.CONNECTION.NAME + "close");
+        this.stream.println(Headers.SERVER.NAME + this.headers.get(Headers.SERVER.NAME));
+        this.stream.println(Headers.DATE.NAME + this.headers.get(Headers.DATE.NAME));
+        this.stream.println(Headers.CONTENT_TYPE.NAME + this.headers.get(Headers.CONTENT_TYPE.NAME) + ";charset=\"utf-8\"");
+        this.stream.println(Headers.CONTENT_LENGTH.NAME + this.headers.get(Headers.CONTENT_LENGTH.NAME));
+        this.stream.println(Headers.CONNECTION.NAME + "close");
         this.stream.println();
         this.stream.println(body);
         this.stream.println();
@@ -146,27 +146,27 @@ public class HttpResponse {
     }
 
     private static Set<Integer> prepareCodes(Set<Integer> code) {
-        code.add(StatusEnum._400_BAD_REQUEST.STATUS_CODE);
-        code.add(StatusEnum._403_FORBIDDEN.STATUS_CODE);
-        code.add(StatusEnum._500_INTERNAL_ERROR.STATUS_CODE);
-        code.add(StatusEnum._405_METHOD_NOT_ALLOWED.STATUS_CODE);
-        code.add(StatusEnum._404_NOT_FOUND.STATUS_CODE);
-        code.add(StatusEnum._501_NOT_IMPLEMENTED.STATUS_CODE);
-        code.add(StatusEnum._200_OK.STATUS_CODE);
-        code.add(StatusEnum._406_NOT_ACCEPTABLE.STATUS_CODE);
+        code.add(Status._400_BAD_REQUEST.STATUS_CODE);
+        code.add(Status._403_FORBIDDEN.STATUS_CODE);
+        code.add(Status._500_INTERNAL_ERROR.STATUS_CODE);
+        code.add(Status._405_METHOD_NOT_ALLOWED.STATUS_CODE);
+        code.add(Status._404_NOT_FOUND.STATUS_CODE);
+        code.add(Status._501_NOT_IMPLEMENTED.STATUS_CODE);
+        code.add(Status._200_OK.STATUS_CODE);
+        code.add(Status._406_NOT_ACCEPTABLE.STATUS_CODE);
 
         return code;
     }
 
     private static Set<String> prepareMessages(Set<String> msg) {
-        msg.add(StatusEnum._400_BAD_REQUEST.MESSAGE);
-        msg.add(StatusEnum._403_FORBIDDEN.MESSAGE);
-        msg.add(StatusEnum._500_INTERNAL_ERROR.MESSAGE);
-        msg.add(StatusEnum._405_METHOD_NOT_ALLOWED.MESSAGE);
-        msg.add(StatusEnum._404_NOT_FOUND.MESSAGE);
-        msg.add(StatusEnum._501_NOT_IMPLEMENTED.MESSAGE);
-        msg.add(StatusEnum._200_OK.MESSAGE);
-        msg.add(StatusEnum._406_NOT_ACCEPTABLE.MESSAGE);
+        msg.add(Status._400_BAD_REQUEST.MESSAGE);
+        msg.add(Status._403_FORBIDDEN.MESSAGE);
+        msg.add(Status._500_INTERNAL_ERROR.MESSAGE);
+        msg.add(Status._405_METHOD_NOT_ALLOWED.MESSAGE);
+        msg.add(Status._404_NOT_FOUND.MESSAGE);
+        msg.add(Status._501_NOT_IMPLEMENTED.MESSAGE);
+        msg.add(Status._200_OK.MESSAGE);
+        msg.add(Status._406_NOT_ACCEPTABLE.MESSAGE);
 
         return msg;
     }

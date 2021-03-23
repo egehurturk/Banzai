@@ -5,7 +5,7 @@ import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
 import com.egehurturk.util.Json;
 import com.egehurturk.util.Pair;
-import com.egehurturk.util.StatusEnum;
+import com.egehurturk.util.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -110,10 +110,10 @@ public class JsonResponse implements ResponseType {
         );
         String contentLang = "en_US";
         String mimeType    = "application/json";
-        StatusEnum status  = StatusEnum._200_OK;
+        Status status  = Status._200_OK;
 
         if (!this.valid) {
-            status = StatusEnum._406_NOT_ACCEPTABLE;
+            status = Status._406_NOT_ACCEPTABLE;
             FileResponse file = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("406.html"), this.writer);
             return file.toHttpResponse(status, this.writer);
         }

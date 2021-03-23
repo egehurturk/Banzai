@@ -180,19 +180,12 @@ package <groupId> // enter your groupId
 
 import com.egehurturk.httpd.HttpServer;
 import com.egehurturk.exceptions.*;
-import com.egehurturk.handlers.*;
 import com.egehurturk.handlers.FileResponse;
 import com.egehurturk.handlers.Handler;
-import com.egehurturk.handlers.JsonResponse;
-import com.egehurturk.renderers.HTMLRenderer;
-import com.egehurturk.util.ArgumentParser;
-import com.egehurturk.util.HeaderEnum;
-import com.egehurturk.util.MethodEnum;
+import com.egehurturk.util.Methods;
 import com.egehurturk.httpd.*;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 import java.net.*;
 
@@ -214,7 +207,7 @@ public class App
 		err.printStackTrace();
 	}
 	s.allowCustomUrlMapping(true);
-	s.addHandler(MethodEnum.GET, "/helloworld", new MyHandler());
+	s.addHandler(Methods.GET, "/helloworld", new MyHandler());
 	s.start();
     }
 
@@ -357,19 +350,12 @@ package org.example;
 
 import com.egehurturk.httpd.HttpServer;
 import com.egehurturk.exceptions.*;
-import com.egehurturk.handlers.*;
 import com.egehurturk.handlers.FileResponse;
 import com.egehurturk.handlers.Handler;
-import com.egehurturk.handlers.JsonResponse;
-import com.egehurturk.renderers.HTMLRenderer;
-import com.egehurturk.util.ArgumentParser;
-import com.egehurturk.util.HeaderEnum;
-import com.egehurturk.util.MethodEnum;
+import com.egehurturk.util.Methods;
 import com.egehurturk.httpd.*;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 import java.net.*;
 
@@ -389,7 +375,7 @@ public class App
 			err.printStackTrace();
 		}
 		s.allowCustomUrlMapping(true);
-		s.addHandler(MethodEnum.GET, "/bypass", new MyHandler());
+		s.addHandler(Methods.GET, "/bypass", new MyHandler());
 		s.start();
 	}
 

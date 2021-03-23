@@ -6,8 +6,8 @@ import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.JsonResponse;
 import com.egehurturk.renderers.HTMLRenderer;
 import com.egehurturk.util.ArgumentParser;
-import com.egehurturk.util.HeaderEnum;
-import com.egehurturk.util.MethodEnum;
+import com.egehurturk.util.Headers;
+import com.egehurturk.util.Methods;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,14 +28,14 @@ public class EntryPoint {
         HttpServer httpServer = parser.getHttpServer();
 
         httpServer.allowCustomUrlMapping(true);
-        httpServer.addHandler(MethodEnum.GET , "/hello"           , new MyHandler());
-        httpServer.addHandler(MethodEnum.GET , "/thismynewserver" , new MyNewHandler());
-        httpServer.addHandler(MethodEnum.GET , "/cemhurturk"      , new MyHandler());
-        httpServer.addHandler(MethodEnum.GET , "/filehandling"    , new MyFileHandler());
-        httpServer.addHandler(MethodEnum.GET , "/jsontest"        , new Json());
-        httpServer.addHandler(MethodEnum.GET , "/paramtest"       , new Parameterized());
-        httpServer.addHandler(MethodEnum.GET , "/template"        , new TemplateTest());
-        httpServer.addHandler(MethodEnum.GET , "/soph"            , new Sophisticated());
+        httpServer.addHandler(Methods.GET , "/hello"           , new MyHandler());
+        httpServer.addHandler(Methods.GET , "/thismynewserver" , new MyNewHandler());
+        httpServer.addHandler(Methods.GET , "/cemhurturk"      , new MyHandler());
+        httpServer.addHandler(Methods.GET , "/filehandling"    , new MyFileHandler());
+        httpServer.addHandler(Methods.GET , "/jsontest"        , new Json());
+        httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
+        httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
+        httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
 
         httpServer.start();
     }
@@ -48,8 +48,8 @@ public class EntryPoint {
                     .message("OK")
                     .body("<h1>Hello</h1>".getBytes())
                     .setStream(new PrintWriter(response.getStream(), false))
-                    .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+("<h1>Hello</h1>".length()))
-                    .setHeader(HeaderEnum.CONTENT_TYPE.NAME, "text/html")
+                    .setHeader(Headers.CONTENT_LENGTH.NAME, ""+("<h1>Hello</h1>".length()))
+                    .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
                     .build();
             return res;
         }
@@ -83,8 +83,8 @@ public class EntryPoint {
                     .message("OK")
                     .body(body.getBytes())
                     .setStream(new PrintWriter(response.getStream(), false))
-                    .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(body.getBytes().length))
-                    .setHeader(HeaderEnum.CONTENT_TYPE.NAME, "text/html")
+                    .setHeader(Headers.CONTENT_LENGTH.NAME, ""+(body.getBytes().length))
+                    .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
                     .build();
             return res;
         }
@@ -138,8 +138,8 @@ public class EntryPoint {
                     .message("Not Found")
                     .body("<h1>Not Found 404 err</h1>".getBytes())
                     .setStream(new PrintWriter(response.getStream(), false))
-                    .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+"<h1>Not Found 404 err</h1>".length())
-                    .setHeader(HeaderEnum.CONTENT_TYPE.NAME, "text/html")
+                    .setHeader(Headers.CONTENT_LENGTH.NAME, ""+"<h1>Not Found 404 err</h1>".length())
+                    .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
                     .build();
             return res;
         }

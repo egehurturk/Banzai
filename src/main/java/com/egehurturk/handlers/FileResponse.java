@@ -4,7 +4,7 @@ import com.egehurturk.exceptions.FileSizeOverflowException;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
 import com.egehurturk.util.Pair;
-import com.egehurturk.util.StatusEnum;
+import com.egehurturk.util.Status;
 import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,7 +44,7 @@ public class FileResponse implements ResponseType {
      * Status necessary for {@link #toHttpResponse()}
      * method
      */
-    private StatusEnum status;
+    private Status status;
     public final String BAD_REQ          = "400.html";
     public final String INDEX            = "index.html";
     public final String _404_NOT_FOUND   = "404.html";
@@ -121,7 +121,7 @@ public class FileResponse implements ResponseType {
         );
     }
 
-    public HttpResponse toHttpResponse(StatusEnum status, PrintWriter writer) {
+    public HttpResponse toHttpResponse(Status status, PrintWriter writer) {
 
         byte[] buffer;
         String mimeType = "text/html";
@@ -156,14 +156,14 @@ public class FileResponse implements ResponseType {
         byte[] buffer;
         outputFile = new File(this.path);
         if (!outputFile.exists()) {
-            this.status = StatusEnum._404_NOT_FOUND;
+            this.status = Status._404_NOT_FOUND;
             buffer = inputStreamToBuffer(ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND));
         } else {
             if (outputFile.isDirectory()) {
                 outputFile = new File(outputFile, INDEX);
             }
             if (outputFile.exists()) {
-                this.status = StatusEnum._200_OK;
+                this.status = Status._200_OK;
                 try {
                     mime = Files.probeContentType(outputFile.toPath());
                 } catch (IOException e) {
@@ -171,7 +171,7 @@ public class FileResponse implements ResponseType {
                 }
                 buffer = memoryAllocateForFile(outputFile);
             } else {
-                this.status = StatusEnum._404_NOT_FOUND;
+                this.status = Status._404_NOT_FOUND;
                 buffer = inputStreamToBuffer(ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND));
             }
         }

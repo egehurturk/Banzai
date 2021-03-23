@@ -1,6 +1,6 @@
 package com.egehurturk.util;
 
-public enum HeaderStatusEnum {
+public enum HeaderStatus {
     General,
     Request,
     Response

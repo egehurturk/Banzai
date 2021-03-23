@@ -5,7 +5,7 @@ import com.egehurturk.handlers.FileResponse;
 import com.egehurturk.handlers.JsonResponse;
 import com.egehurturk.httpd.HttpRequest;
 import com.egehurturk.httpd.HttpResponse;
-import com.egehurturk.util.HeaderEnum;
+import com.egehurturk.util.Headers;
 import com.egehurturk.util.Json;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -117,7 +117,7 @@ public class JsonResponseTest {
                 )
         );
         Assertions.assertTrue(json.isValid());
-        Assertions.assertEquals(dateHeader, response.headers.get(HeaderEnum.DATE.NAME));
+        Assertions.assertEquals(dateHeader, response.headers.get(Headers.DATE.NAME));
     }
 
     @ParameterizedTest
@@ -129,7 +129,7 @@ public class JsonResponseTest {
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
-        Assertions.assertEquals("en_US", response.headers.get(HeaderEnum.CONTENT_LANGUAGE.NAME));
+        Assertions.assertEquals("en_US", response.headers.get(Headers.CONTENT_LANGUAGE.NAME));
     }
 
     @ParameterizedTest
@@ -142,7 +142,7 @@ public class JsonResponseTest {
         HttpResponse response = json.toHttpResponse();
         System.out.println(new String(response.getBody()));
         Assertions.assertTrue(json.isValid());
-        Assertions.assertEquals("application/json", response.headers.get(HeaderEnum.CONTENT_TYPE.NAME));
+        Assertions.assertEquals("application/json", response.headers.get(Headers.CONTENT_TYPE.NAME));
     }
 
     @ParameterizedTest
@@ -216,7 +216,7 @@ public class JsonResponseTest {
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertFalse(json.isValid());
-        Assertions.assertEquals("text/html", response.headers.get(HeaderEnum.CONTENT_TYPE.NAME));
+        Assertions.assertEquals("text/html", response.headers.get(Headers.CONTENT_TYPE.NAME));
     }
 
     @ParameterizedTest
@@ -290,7 +290,7 @@ public class JsonResponseTest {
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
-        Assertions.assertEquals("application/json", response.headers.get(HeaderEnum.CONTENT_TYPE.NAME));
+        Assertions.assertEquals("application/json", response.headers.get(Headers.CONTENT_TYPE.NAME));
     }
 
     @ParameterizedTest
@@ -302,7 +302,7 @@ public class JsonResponseTest {
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
-        Assertions.assertEquals("Banzai", response.headers.get(HeaderEnum.SERVER.NAME));
+        Assertions.assertEquals("Banzai", response.headers.get(Headers.SERVER.NAME));
     }
 
     @ParameterizedTest
@@ -314,7 +314,7 @@ public class JsonResponseTest {
         json.validate(request);
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
-        Assertions.assertEquals("en_US", response.headers.get(HeaderEnum.CONTENT_LANGUAGE.NAME));
+        Assertions.assertEquals("en_US", response.headers.get(Headers.CONTENT_LANGUAGE.NAME));
     }
 
     @ParameterizedTest
@@ -327,7 +327,7 @@ public class JsonResponseTest {
         json.setBody("{Hello: Hi}");
         HttpResponse response = json.toHttpResponse();
         Assertions.assertTrue(json.isValid());
-        Assertions.assertEquals(""+json.getBody().getBytes().length, response.headers.get(HeaderEnum.CONTENT_LENGTH.NAME));
+        Assertions.assertEquals(""+json.getBody().getBytes().length, response.headers.get(Headers.CONTENT_LENGTH.NAME));
     }
 
     @Test

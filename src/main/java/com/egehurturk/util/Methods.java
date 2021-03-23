@@ -1,12 +1,12 @@
 package com.egehurturk.util;
 
-public enum MethodEnum {
+public enum Methods {
     GET(Constants.CGET),
     POST(Constants.CPOST);
 
     public final String str;
 
-    MethodEnum(String str) {
+    Methods(String str) {
         this.str = str;
     }
 

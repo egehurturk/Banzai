@@ -214,7 +214,7 @@ public class HttpRequest {
             logger.info("HTTP Version not supported");
             return false;
         }
-//        for (MethodEnum methodE: MethodEnum.values()) {
+//        for (Methods methodE: Methods.values()) {
 //            if (method.equals(methodE.str)) {
 //                return false;
 //            }

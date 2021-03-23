@@ -1,6 +1,6 @@
 package com.egehurturk.util;
 
-public enum StatusEnum {
+public enum Status {
     _100_CONTINUE(Constants.C100, Constants.CM100),
     _200_OK(Constants.C200, Constants.CM200),
     _400_BAD_REQUEST(Constants.C400, Constants.CM400),
@@ -16,7 +16,7 @@ public enum StatusEnum {
     public final int STATUS_CODE;
     public final String MESSAGE;
 
-    StatusEnum(int StatCode, String Message) {
+    Status(int StatCode, String Message) {
         this.STATUS_CODE = StatCode;
         this.MESSAGE = Message;
     }

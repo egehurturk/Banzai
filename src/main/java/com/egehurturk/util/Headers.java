@@ -1,25 +1,25 @@
 package com.egehurturk.util;
 
-public enum HeaderEnum {
+public enum Headers {
 
-    CONNECTION(Constants.CCONNECTION, HeaderStatusEnum.General),
-    ACCEPT(Constants.CACCEPT, HeaderStatusEnum.Request),
-    ACCEPT_ENCODING(Constants.CACCEPT_ENCODING, HeaderStatusEnum.Request),
-    ACCEPT_LANGUAGE(Constants.CACCEPT_LANGUAGE, HeaderStatusEnum.Request),
-    HOST(Constants.CHOST, HeaderStatusEnum.Request),
-    SERVER(Constants.CSERVER, HeaderStatusEnum.Response),
-    USER_AGENT(Constants.CUSER_AGENT, HeaderStatusEnum.Request),
-    DATE(Constants.CDATE, HeaderStatusEnum.Response),
-    CONTENT_TYPE(Constants.CCONTENT_TYPE, HeaderStatusEnum.General),
-    CONTENT_LENGTH(Constants.CCONTENT_LENGTH, HeaderStatusEnum.General),
-    CONTENT_ENCODING(Constants.CCONTENT_ENCODING, HeaderStatusEnum.General),
-    CONTENT_LANGUAGE(Constants.CCONTENT_LANGUAGE, HeaderStatusEnum.General)
+    CONNECTION(Constants.CCONNECTION, HeaderStatus.General),
+    ACCEPT(Constants.CACCEPT, HeaderStatus.Request),
+    ACCEPT_ENCODING(Constants.CACCEPT_ENCODING, HeaderStatus.Request),
+    ACCEPT_LANGUAGE(Constants.CACCEPT_LANGUAGE, HeaderStatus.Request),
+    HOST(Constants.CHOST, HeaderStatus.Request),
+    SERVER(Constants.CSERVER, HeaderStatus.Response),
+    USER_AGENT(Constants.CUSER_AGENT, HeaderStatus.Request),
+    DATE(Constants.CDATE, HeaderStatus.Response),
+    CONTENT_TYPE(Constants.CCONTENT_TYPE, HeaderStatus.General),
+    CONTENT_LENGTH(Constants.CCONTENT_LENGTH, HeaderStatus.General),
+    CONTENT_ENCODING(Constants.CCONTENT_ENCODING, HeaderStatus.General),
+    CONTENT_LANGUAGE(Constants.CCONTENT_LANGUAGE, HeaderStatus.General)
     ;
 
     public final String NAME;
-    public final HeaderStatusEnum PLACE;
+    public final HeaderStatus PLACE;
 
-    HeaderEnum(String NAME, HeaderStatusEnum PLACE) {
+    Headers(String NAME, HeaderStatus PLACE) {
         this.NAME = NAME;
         this.PLACE = PLACE;
     }

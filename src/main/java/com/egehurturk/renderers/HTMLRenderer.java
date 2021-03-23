@@ -4,7 +4,7 @@ import com.egehurturk.handlers.ResponseType;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
 import com.egehurturk.util.Pair;
-import com.egehurturk.util.StatusEnum;
+import com.egehurturk.util.Status;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 public class HTMLRenderer implements ResponseType {
     // HTML file
     private final String htmlPath;
-    private StatusEnum status;
+    private Status status;
     private final PrintWriter writer;
     public final String BAD_REQ = "400.html";
     public final String INDEX = "index.html";
@@ -53,10 +53,10 @@ public class HTMLRenderer implements ResponseType {
         File outputFile = new File(this.htmlPath);
         InputStream stream = null;
         if (!outputFile.exists()) {
-            this.status = StatusEnum._404_NOT_FOUND;
+            this.status = Status._404_NOT_FOUND;
             stream = ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND);
         } else {
-            this.status = StatusEnum._200_OK;
+            this.status = Status._200_OK;
         }
         return new Pair<>(outputFile, stream);
     }

@@ -1,17 +1,17 @@
 package com.egehurturk.handlers;
 
 import com.egehurturk.resolvers.URLPath;
-import com.egehurturk.util.MethodEnum;
+import com.egehurturk.util.Methods;
 
 import java.util.Objects;
 
 /**
  * Mapping class that maps a handler to a specific
- * method {@link MethodEnum} and to a path {@link URLPath}.
+ * method {@link Methods} and to a path {@link URLPath}.
  * This is useful when adding handlers to URLs.
  */
 public class HandlerTemplate {
-    public MethodEnum method;
+    public Methods method;
     public String path;
     public Handler handler;
 
@@ -21,18 +21,18 @@ public class HandlerTemplate {
      * @param path                  - URL that the handler is mapped to
      * @param handler               - actual handler
      */
-    public HandlerTemplate(MethodEnum method, String path, Handler handler) {
+    public HandlerTemplate(Methods method, String path, Handler handler) {
         this.method  = method;
         this.path    = path;
         this.handler = handler;
 
     }
 
-    public MethodEnum getMethod() {
+    public Methods getMethod() {
         return method;
     }
 
-    public void setMethod(MethodEnum method) {
+    public void setMethod(Methods method) {
         this.method = method;
     }
 

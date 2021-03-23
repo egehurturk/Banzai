@@ -141,9 +141,9 @@ public class Utility {
     }
 
     /**
-     * Utility function to convert HTTP status to {@link StatusEnum} instance
+     * Utility function to convert HTTP status to {@link Status} instance
      * @param status HTTP Status
-     * @return {@link StatusEnum} name
+     * @return {@link Status} name
      */
     public static String enumStatusToString(String status) {
         String returnedVal = "";

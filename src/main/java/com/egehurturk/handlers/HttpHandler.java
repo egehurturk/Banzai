@@ -163,7 +163,7 @@ public class HttpHandler implements Handler {
     @Override
     public HttpResponse handle(HttpRequest request, HttpResponse response) {
         HttpResponse res;
-        switch (MethodEnum.valueOf(request.getMethod())) {
+        switch (Methods.valueOf(request.getMethod())) {
             case GET:
                 res = handle_GET(request, response);
                 break;
@@ -209,7 +209,7 @@ public class HttpHandler implements Handler {
         File outputFile    = null;
         InputStream stream = null;
 
-        if (req.getMethod().equals(MethodEnum.GET.str)) {
+        if (req.getMethod().equals(Methods.GET.str)) {
 
             // resolve the file and get the file that is stored in www/${resolvedFilePathUrl}
             String resolvedFilePathUrl = resolvePath(req.getPath());
@@ -220,7 +220,7 @@ public class HttpHandler implements Handler {
 
             if (!outputFile.exists()) {
                 Utility.debug(this.debugMode,"Status: 404", logger);
-                this.status = StatusEnum._404_NOT_FOUND.MESSAGE;
+                this.status = Status._404_NOT_FOUND.MESSAGE;
                 stream      = ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND);
 
                 Utility.debug(this.debugMode,"Stream: " + stream, logger);
@@ -231,15 +231,15 @@ public class HttpHandler implements Handler {
                     outputFile = new File(outputFile, INDEX);
                 }
                 if (outputFile.exists()) {
-                    this.status = StatusEnum._200_OK.MESSAGE;
+                    this.status = Status._200_OK.MESSAGE;
                 } else {
-                    this.status = StatusEnum._404_NOT_FOUND.MESSAGE;
+                    this.status = Status._404_NOT_FOUND.MESSAGE;
                     stream      = ClassLoader.getSystemClassLoader().getResourceAsStream(_404_NOT_FOUND);
                 }
             }
-        } else if (req.getMethod().equals(MethodEnum.POST.str)) {
+        } else if (req.getMethod().equals(Methods.POST.str)) {
         } else { // if request is neither GET nor POST
-            this.status = StatusEnum._501_NOT_IMPLEMENTED.MESSAGE;
+            this.status = Status._501_NOT_IMPLEMENTED.MESSAGE;
             stream = ClassLoader.getSystemClassLoader().getResourceAsStream(_NOT_IMPLEMENTED);
         }
         Utility.debug(this.debugMode,"Outputfile: " + outputFile, logger);
@@ -262,9 +262,9 @@ public class HttpHandler implements Handler {
 
         // Host is a must for HTTP/1.1 servers
         if (!req.headers.containsKey(
-                Utility.removeLastChars(HeaderEnum.HOST.NAME.trim().toLowerCase(), 1))
+                Utility.removeLastChars(Headers.HOST.NAME.trim().toLowerCase(), 1))
         ) {
-            this.status    = StatusEnum._400_BAD_REQUEST.MESSAGE;
+            this.status    = Status._400_BAD_REQUEST.MESSAGE;
             stream         = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
             Utility.debug(this.debugMode,"Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"), logger);
             statusReturned = true;
@@ -273,7 +273,7 @@ public class HttpHandler implements Handler {
         // bad request if path contains directory format
         if (!statusReturned) {
             if (req.getPath().contains("./") || req.getPath().contains("../")) {
-                this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
+                this.status = Status._400_BAD_REQUEST.MESSAGE;
                 stream      = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
                 Utility.debug(this.debugMode,"Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"), logger);
                 statusReturned = true;
@@ -293,7 +293,7 @@ public class HttpHandler implements Handler {
                 Utility.debug(this.debugMode,"Stream set: " + stream, logger);
             }
             else if (Utility.isDirectory(req.getPath())) {
-                this.status = StatusEnum._400_BAD_REQUEST.MESSAGE;
+                this.status = Status._400_BAD_REQUEST.MESSAGE;
                 stream      = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
 
                 Utility.debug(this.debugMode,"Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"), logger);
@@ -389,7 +389,7 @@ public class HttpHandler implements Handler {
         if (!statusReturned) {
             if (bodyByte == null) {
                 this.logger.error("Could not read file contents in memory");
-                this.status    = StatusEnum._500_INTERNAL_ERROR.MESSAGE;
+                this.status    = Status._500_INTERNAL_ERROR.MESSAGE;
                 statusReturned = true;
                 bodyByte = inputStreamToBuffer(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"));
             }
@@ -399,15 +399,15 @@ public class HttpHandler implements Handler {
         HttpResponseBuilder builder = new HttpResponseBuilder();
         HttpResponse response = builder
                 .scheme("HTTP/1.1")
-                .code(StatusEnum.valueOf(Utility.enumStatusToString(status)).STATUS_CODE)
-                .message(StatusEnum.valueOf(Utility.enumStatusToString(status)).MESSAGE)
+                .code(Status.valueOf(Utility.enumStatusToString(status)).STATUS_CODE)
+                .message(Status.valueOf(Utility.enumStatusToString(status)).MESSAGE)
                 .body(bodyByte)
                 .setStream(new PrintWriter(res.getStream(), false))
-                .setHeader(HeaderEnum.DATE.NAME, dateHeader)
-                .setHeader(HeaderEnum.SERVER.NAME, nameHeader)
-                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, contentLang)
-                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(bodyByte.length))
-                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, mimeType)
+                .setHeader(Headers.DATE.NAME, dateHeader)
+                .setHeader(Headers.SERVER.NAME, nameHeader)
+                .setHeader(Headers.CONTENT_LANGUAGE.NAME, contentLang)
+                .setHeader(Headers.CONTENT_LENGTH.NAME, ""+(bodyByte.length))
+                .setHeader(Headers.CONTENT_TYPE.NAME, mimeType)
                 .build();
         return response;
     }

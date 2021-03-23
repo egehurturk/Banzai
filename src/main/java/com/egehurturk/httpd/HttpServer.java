@@ -6,7 +6,7 @@ import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.HandlerTemplate;
 import com.egehurturk.handlers.HttpController;
 import com.egehurturk.handlers.HttpHandler;
-import com.egehurturk.util.MethodEnum;
+import com.egehurturk.util.Methods;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -261,12 +261,19 @@ public class HttpServer extends BaseServer implements Closeable {
      */
     @Override
     public void start() {
+        if (checkFields()) {
+            logger.error("Server is not properly initialized"); logger.error("Configuration error");
+            logger.error("Stopping execution");
+            close();
+            return;
+        }
         try {
             HttpHandler handler = new HttpHandler(this.getConfig());
             handler.setDebugMode(this.debugMode);
-            addHandler(MethodEnum.GET, "/*", handler);
+            addHandler(Methods.GET, "/*", handler);
         } catch (FileNotFoundException er) {
             logger.error(er.getMessage());
+            // TODO: What to do here?
         }
         ExecutorService pool = Executors.newFixedThreadPool(500);
         try {
@@ -283,6 +290,7 @@ public class HttpServer extends BaseServer implements Closeable {
                 cli = this.server.accept();
                 logger.info("Connection established with { " + cli.getPort() + "/" + cli.getInetAddress() + " }");
             } catch (IOException e) {
+                // Todo: what to do here?
                 e.printStackTrace();
             }
             HttpController controller = new HttpController(cli, handlers);
@@ -325,7 +333,7 @@ public class HttpServer extends BaseServer implements Closeable {
      * @param path    URL Path    (e.g. "/hello")
      * @param handler Handler     (any class that implements {@link Handler}
      */
-    public void addHandler(MethodEnum method, String path, Handler handler) {
+    public void addHandler(Methods method, String path, Handler handler) {
         HandlerTemplate template = new HandlerTemplate(method, path, handler);
         handlers.add(template);
     }
@@ -367,6 +375,13 @@ public class HttpServer extends BaseServer implements Closeable {
     @Override
     public boolean isDirectory(String dirPath) {
         return super.isDirectory(dirPath);
+    }
+
+    /*
+     * Helper method to check fields of this class
+     */
+    private boolean checkFields() {
+        return this.serverHost == null || this.serverPort == 0 || this.webRoot == null || this.name == null || this.backlog <= 0;
     }
 
 }

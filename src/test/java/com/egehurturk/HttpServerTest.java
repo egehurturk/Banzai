@@ -3,7 +3,7 @@ package com.egehurturk;
 import com.egehurturk.handlers.HandlerTemplate;
 import com.egehurturk.handlers.HttpController;
 import com.egehurturk.handlers.HttpHandler;
-import com.egehurturk.util.MethodEnum;
+import com.egehurturk.util.Methods;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -43,7 +43,7 @@ public class HttpServerTest {
         props.put("server.webroot", "www");
         handler = new HttpHandler(props);
         List<HandlerTemplate> handlers = new ArrayList<>();
-        HandlerTemplate temp = new HandlerTemplate(MethodEnum.GET, new String("/*"), handler);
+        HandlerTemplate temp = new HandlerTemplate(Methods.GET, new String("/*"), handler);
         handlers.add(temp);
         manager = new HttpController(client, handlers);
     }

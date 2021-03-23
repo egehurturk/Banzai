@@ -8,8 +8,8 @@ import com.egehurturk.httpd.HttpRequest;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
 import com.egehurturk.httpd.HttpServer;
-import com.egehurturk.util.HeaderEnum;
-import com.egehurturk.util.StatusEnum;
+import com.egehurturk.util.Headers;
+import com.egehurturk.util.Status;
 import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -179,7 +179,7 @@ public class HttpController implements Closeable, Runnable {
                             res.send();
                         } catch (NullPointerException pointerException) {
                             FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), new PrintWriter(client.getOutputStream(), false));
-                            respond(fil.toHttpResponse(StatusEnum.valueOf("Internal Server Error"), this.out));
+                            respond(fil.toHttpResponse(Status.valueOf("Internal Server Error"), this.out));
                         }
 
                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
@@ -198,7 +198,7 @@ public class HttpController implements Closeable, Runnable {
                             res.send();
                         } catch (NullPointerException nullPointerException) {
                             FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), new PrintWriter(client.getOutputStream(), false));
-                            respond(fil.toHttpResponse(StatusEnum.valueOf("Internal Server Error"), this.out));
+                            respond(fil.toHttpResponse(Status.valueOf("Internal Server Error"), this.out));
                         }
                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         break;
@@ -210,7 +210,7 @@ public class HttpController implements Closeable, Runnable {
         } catch (IOException e) {
             try {
                 FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), new PrintWriter(client.getOutputStream(), false));
-                respond(response.toHttpResponse(StatusEnum.valueOf("Internal Server Error"), this.out));
+                respond(response.toHttpResponse(Status.valueOf("Internal Server Error"), this.out));
                 close();
             } catch (IOException ioException) {
                 try {
@@ -229,7 +229,7 @@ public class HttpController implements Closeable, Runnable {
         } catch (BadRequest400Exception e) {
             try {
                 FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("400.html"), new PrintWriter(client.getOutputStream(), false));
-                respond(response.toHttpResponse(StatusEnum.valueOf(Utility.enumStatusToString(e.message)), this.out));
+                respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
                 close();
             } catch (IOException ioException) {
                 try {
@@ -248,7 +248,7 @@ public class HttpController implements Closeable, Runnable {
         } catch (MethodNotAllowedException e) {
             try {
                 FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("403.html"), new PrintWriter(client.getOutputStream(), false));
-                respond(response.toHttpResponse(StatusEnum.valueOf(Utility.enumStatusToString(e.message)), this.out));
+                respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
                 close();
             } catch (IOException ioException) {
                 try {
@@ -267,7 +267,7 @@ public class HttpController implements Closeable, Runnable {
         } catch (NotFound404Exception e) {
             try {
                 FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
-                respond(response.toHttpResponse(StatusEnum.valueOf(Utility.enumStatusToString(e.message)), this.out));
+                respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
                 close();
             } catch (IOException  ioException) {
                 try {
@@ -321,19 +321,19 @@ public class HttpController implements Closeable, Runnable {
         HttpResponseBuilder builder = new HttpResponseBuilder();
         HttpResponse res = builder
                 .scheme(scheme)
-                .code(StatusEnum.valueOf(Utility.enumStatusToString(status)).STATUS_CODE)
-                .message(StatusEnum.valueOf(Utility.enumStatusToString(status)).MESSAGE)
+                .code(Status.valueOf(Utility.enumStatusToString(status)).STATUS_CODE)
+                .message(Status.valueOf(Utility.enumStatusToString(status)).MESSAGE)
                 .body(body)
                 .setStream(stream)
-                .setHeader(HeaderEnum.DATE.NAME, ZonedDateTime.now().format(DateTimeFormatter.ofPattern(
+                .setHeader(Headers.DATE.NAME, ZonedDateTime.now().format(DateTimeFormatter.ofPattern(
                         "EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH).withZone(
                         ZoneId.of("GMT")
                         )
                 ))
-                .setHeader(HeaderEnum.SERVER.NAME, name)
-                .setHeader(HeaderEnum.CONTENT_LANGUAGE.NAME, "en_US")
-                .setHeader(HeaderEnum.CONTENT_LENGTH.NAME, ""+(body.length))
-                .setHeader(HeaderEnum.CONTENT_TYPE.NAME, "text/html")
+                .setHeader(Headers.SERVER.NAME, name)
+                .setHeader(Headers.CONTENT_LANGUAGE.NAME, "en_US")
+                .setHeader(Headers.CONTENT_LENGTH.NAME, ""+(body.length))
+                .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
                 .build();
         try {
             res.send();
