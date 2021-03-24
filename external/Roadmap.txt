@@ -8,3 +8,4 @@ What needs to be done?
     [] Using Maven and Java source file
 
 TODO: When ConfigurationException is raised, the server does not stops...
+TODO: Remove all routes from EntryPoint [docker users can access those]

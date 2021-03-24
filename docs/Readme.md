@@ -4,7 +4,7 @@ This is the documentation for the Banzai Software
 ## Contents
 *  [Quickstart](Quickstart.md)
     * Getting started with Banzai, including what you need and how to get it run on your machine
-* [Installation](Installation.md)
+* [Installation](Installation%20and%20Quickstart.md)
     * Installing Banzai on your local machine
 * [User Guide](User-Guide.md)
     * Explore how to serve static files through Banzai and discover all the features of the software
