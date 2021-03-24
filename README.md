@@ -63,7 +63,7 @@
 <br>
 <p align="center">
 
-   <a href="https://github.com/egehurturk/HttpServer">
+   <a href="https://github.com/egehurturk/Banzai">
     <img src="external/banzai.jpg" alt="Banzai Logo" width="200" height="200">
   </a>
   <h2 align="center">Banzai Server (A HTTP Server)</h3>
@@ -71,12 +71,12 @@
   <p align="center">
     A non-blocking, event-driven Http server from scratch, using plain Java. No additional dependencies (Take a look at  Built-with section) is needed. 
     <br />
-    <a href="https://github.com/egehurturk/HttpServer"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/egehurturk/Banzai/docs"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/egehurturk/HttpServer/issues">Report Bug</a>
+    <a href="https://github.com/egehurturk/Banzai/issues">Report Bug</a>
     ·
-    <a href="https://github.com/egehurturk/HttpServer/issues">Request Feature</a>
+    <a href="https://github.com/egehurturk/Banzai/issues">Request Feature</a>
   </p>
 </p>
 
