@@ -58,7 +58,7 @@ public class FileResponse implements ResponseType {
      * @param path:                     request path, e.g. "/hello"
      * @param writer:                   Response writer
      */
-    public FileResponse(String path, PrintWriter writer) throws FileNotFoundException {
+    public FileResponse(String path, PrintWriter writer) {
         this.path = path;
         this.writer = writer;
     }
