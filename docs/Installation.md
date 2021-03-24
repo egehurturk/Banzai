@@ -1,4 +1,4 @@
-# Installing Banzai
+# Installing Banzai & Quickstart
 
 - [Prerequisits](#prerequisits)
 - [Installing Banzai](#installing-banzai)
