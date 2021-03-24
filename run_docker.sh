@@ -132,11 +132,15 @@ else
   normalfunc $project_dir
 fi
 
+PRODUCTION=1
 
-echo "[DEBUG run_docker.sh] Port number: $PORT"
-echo "[DEBUG run_docker.sh] Web root: $WEBROOT"
-echo "[DEBUG run_docker.sh] Environment file: $env_file"
-echo "[DEBUG run_docker.sh] Project directory (local): $project_dir"
+
+if [[ $PRODUCTION -ne 1 ]]; then
+  echo "[DEBUG run_docker.sh] Port number: $PORT"
+  echo "[DEBUG run_docker.sh] Web root: $WEBROOT"
+  echo "[DEBUG run_docker.sh] Environment file: $env_file"
+  echo "[DEBUG run_docker.sh] Project directory (local): $project_dir"
+fi
 
 printf "  ${ANSI_GREEN}Building Dockerfile with the tag egeh/banzai:1.0-SNAPSHOT...${ANSI_NC}\n\n"
 printf "  ${ANSI_GREEN}Building started!${ANSI_NC}\n"
@@ -144,5 +148,3 @@ docker build -t egeh/banzai:1.0-SNAPSHOT --build-arg server_port=$PORT .
 printf "  ${ANSI_GREEN}Building ended!${ANSI_NC}\n\n"
 printf "  ${ANSI_GREEN}Starting up the docker container with the volume to ${project_dir} in local machine [$PORT:$PORT] ${ANSI_NC}\n"
 docker run -v $project_dir:"/$(basename $project_dir)" --env-file=$env_file -p $PORT:$PORT -it egeh/banzai:1.0-SNAPSHOT
-
-#Todo: optionally you can install this script (/usr/local/bin) on local machine

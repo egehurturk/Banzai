@@ -162,7 +162,7 @@ public abstract class BaseServer {
     protected static LoggerContext context = ( org.apache.logging.log4j.core.LoggerContext ) LogManager
                                                                         .getContext(false);
 
-    // set default log4j2 config location to the ../resources/log4j2.xml
+    // set default log4j2 config location
     static  {
         try {
             context.setConfigLocation( Objects.requireNonNull(ClassLoader.getSystemClassLoader().getResource("log4j2.xml")).toURI() ) ;
@@ -219,7 +219,7 @@ public abstract class BaseServer {
     }
 
     /**
-     * Empty constructor for BaseServer
+     * Default constructor for BaseServer
      * Does nothing. Used for configuring from
      * an external properties file
      */
@@ -285,7 +285,7 @@ public abstract class BaseServer {
 
     /**
      * Getter for serverPort.
-     * @return serverPort - port number
+     * @return  port number
      */
     public int getServerPort() {
         return serverPort;
@@ -293,7 +293,7 @@ public abstract class BaseServer {
 
     /**
      * Getter for serverHost.
-     * @return serverPort - server host
+     * @return server host
      */
     public InetAddress getServerHost() {
         return serverHost;
@@ -301,19 +301,23 @@ public abstract class BaseServer {
 
     /**
      * Getter for backlog.
-     * @return backlog - maximum number of pending connections in queue
+     * @return maximum number of pending connections in queue
      */
     public int getBacklog() {
         return backlog;
     }
 
+    /**
+     * Getter for configuration as Property
+     * @return property object
+     */
     public Properties getConfig() {
         return this.config;
     }
 
     /**
      * Getter for name
-     * @return  name - name of the server
+     * @return name of the server
      */
     public String getName() {
         return name;
@@ -321,7 +325,7 @@ public abstract class BaseServer {
 
     /**
      * Getter for webRoot
-     * @return  webroot - web root of the server
+     * @return web root of the server
      */
     public String getWebRoot() {
         return webRoot;
@@ -337,7 +341,7 @@ public abstract class BaseServer {
 
     /**
      * Getter for input
-     * @return in - BufferedReader object for input of {@code ServerSocket}
+     * @return BufferedReader object for input of {@code ServerSocket}
      */
     public BufferedReader getIn() {
         return in;
@@ -345,7 +349,7 @@ public abstract class BaseServer {
 
     /**
      * Getter for output
-     * @return out - PrintWriter object for printing to client
+     * @return PrintWriter object for printing to client
      */
     public PrintWriter getOut() {
         return out;
@@ -353,7 +357,7 @@ public abstract class BaseServer {
 
     /**
      * Getter for config prop file
-     * @return out - PrintWriter object for printing to client
+     * @return PrintWriter object for printing to client
      */
     public String getConfigPropFile() {
         return CONFIG_PROP_FILE;
@@ -361,7 +365,7 @@ public abstract class BaseServer {
 
     /**
      * Setter for {@link #CONFIG_PROP_FILE}
-     * @param configPropFile        - name of file
+     * @param configPropFile name of file
      */
     public void setConfigPropFile(String configPropFile) {
         CONFIG_PROP_FILE = configPropFile;
@@ -371,7 +375,7 @@ public abstract class BaseServer {
 
     /**
      * Setter for {@link #logger} field
-     * @param logger                - {@link org.apache.logging.log4j.Logger} instance
+     * @param logger {@link org.apache.logging.log4j.Logger} instance
      */
     public static void setLogger(Logger logger) {
         BaseServer.logger = logger;
@@ -391,7 +395,6 @@ public abstract class BaseServer {
      *
      * @throws IOException          - IOException due to client acceptance
      * @see ConnectionManager
-     * @see
      */
     public abstract void start() throws IOException;
 
@@ -435,10 +438,7 @@ public abstract class BaseServer {
      * @throws IllegalArgumentException     - where the web root directory is not correct
      */
     public void configureServer() throws ConfigurationException {
-//        this.propertiesStream = ClassLoader.getSystemClassLoader()
-//                .getResourceAsStream( CONFIG_PROP_FILE );
         try {
-            System.out.println("[DEBUG][DEBUG] PWD: " + System.getProperty("user.dir"));
             this.propertiesStream = new FileInputStream( CONFIG_PROP_FILE );
         } catch (FileNotFoundException e) {
             throw new ConfigurationException("System Configuration Error: Are you sure that a properties " +
