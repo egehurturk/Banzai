@@ -268,7 +268,7 @@ public class HttpServer extends BaseServer implements Closeable {
             try {
                 this.propertiesStream.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             return;
         }
@@ -278,7 +278,12 @@ public class HttpServer extends BaseServer implements Closeable {
             addHandler(Methods.GET, "/*", handler);
         } catch (FileNotFoundException er) {
             logger.error(er.getMessage());
-            // TODO: What to do here?
+            try {
+                this.propertiesStream.close();
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
+            return;
         }
         ExecutorService pool = Executors.newFixedThreadPool(500);
         try {
@@ -295,8 +300,7 @@ public class HttpServer extends BaseServer implements Closeable {
                 cli = this.server.accept();
                 logger.info("Connection established with { " + cli.getPort() + "/" + cli.getInetAddress() + " }");
             } catch (IOException e) {
-                // Todo: what to do here?
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
             HttpController controller = new HttpController(cli, handlers);
             controller.setAllowForCustomMapping(this.allowCustomUrlMapping);
