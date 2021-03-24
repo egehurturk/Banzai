@@ -9,7 +9,6 @@ import com.egehurturk.util.ArgumentParser;
 import com.egehurturk.util.Headers;
 import com.egehurturk.util.Methods;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -17,6 +16,8 @@ import java.io.PrintWriter;
 
 
 public class EntryPoint {
+
+    public static final boolean PRODUCTION_ENV = true;
 
     /**
      * Note that configuration should not be as path, it only needs to be the name of the properties file
@@ -27,16 +28,17 @@ public class EntryPoint {
         ArgumentParser parser = new ArgumentParser(args);
         HttpServer httpServer = parser.getHttpServer();
 
-        httpServer.allowCustomUrlMapping(true);
-        httpServer.addHandler(Methods.GET , "/hello"           , new MyHandler());
-        httpServer.addHandler(Methods.GET , "/thismynewserver" , new MyNewHandler());
-        httpServer.addHandler(Methods.GET , "/cemhurturk"      , new MyHandler());
-        httpServer.addHandler(Methods.GET , "/filehandling"    , new MyFileHandler());
-        httpServer.addHandler(Methods.GET , "/jsontest"        , new Json());
-        httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
-        httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
-        httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
-
+        if (!PRODUCTION_ENV) {
+            httpServer.allowCustomUrlMapping(true);
+            httpServer.addHandler(Methods.GET , "/hello"           , new MyHandler());
+            httpServer.addHandler(Methods.GET , "/thismynewserver" , new MyNewHandler());
+            httpServer.addHandler(Methods.GET , "/cemhurturk"      , new MyHandler());
+            httpServer.addHandler(Methods.GET , "/filehandling"    , new MyFileHandler());
+            httpServer.addHandler(Methods.GET , "/jsontest"        , new Json());
+            httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
+            httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
+            httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
+        }
         httpServer.start();
     }
 
@@ -58,14 +60,8 @@ public class EntryPoint {
     static class MyFileHandler implements com.egehurturk.handlers.Handler {
         @Override
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
-            HttpResponse res = null;
-            try {
-                FileResponse fil = new FileResponse("www/custom.html", response.getStream());
-                res = fil.toHttpResponse();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            return res;
+            FileResponse fil = new FileResponse("www/custom.html", response.getStream());
+            return fil.toHttpResponse();
         }
     }
 
@@ -179,9 +175,4 @@ public class EntryPoint {
     }
 
 }
-
-
-
-/* FIXME: When `--congig <>` is passed as CLA, the server works. However, when all arguments are passed in as seperate
-    fields, then the server closes because of `Port is already in use` */
 
