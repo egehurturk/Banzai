@@ -18,7 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
-/**
+/* Example HTML file
  * E.g.
  * <code>
  *     <h1>[@username] profile</h1>
@@ -27,6 +27,14 @@ import java.util.stream.Stream;
  *      <b>Age:</b> [@age]<br />
  *      <b>Location:</b> [@location]<br />
  *      </code>
+ */
+
+/**
+ * This class parses HTML containing tags and replaces tags ([@ ... ]) with
+ * values taken from user
+ *
+ * @author egehurturk
+ * @version 1.0
  */
 public class HTMLRenderer implements ResponseType {
     // HTML file
@@ -41,7 +49,7 @@ public class HTMLRenderer implements ResponseType {
     private HashMap<String, String> vars = new HashMap<String, String>();
 
     /**
-     * Basic Constructor
+     * All args Constructor
      * @param htmlPath: html file path to be rendered
      */
     public HTMLRenderer(String htmlPath, PrintWriter writer) {
@@ -49,6 +57,12 @@ public class HTMLRenderer implements ResponseType {
         this.writer = writer;
     }
 
+    /**
+     * Return a {@link Pair} with input stream and a file
+     * Either file or input stream (first, second) is going to be null
+     *
+     * @return pair of input stream and file
+     */
     private Pair<File, InputStream> prepareOutput() {
         File outputFile = new File(this.htmlPath);
         InputStream stream = null;
@@ -61,6 +75,12 @@ public class HTMLRenderer implements ResponseType {
         return new Pair<>(outputFile, stream);
     }
 
+    /**
+     * Renders HTML document, replacing tags ([@ ... ])
+     * with variables set by user
+     *
+     * @return string html
+     */
     public String render() {
         File outputfile;
         InputStream stream;
@@ -82,6 +102,11 @@ public class HTMLRenderer implements ResponseType {
         return html;
     }
 
+    /**
+     * Read a path, return it as string
+     * @param path path of file
+     * @return path stored in string
+     */
     private static String read(Path path) {
         StringBuilder contentBuilder = new StringBuilder();
 
@@ -95,7 +120,12 @@ public class HTMLRenderer implements ResponseType {
         return contentBuilder.toString();
     }
 
-
+    /**
+     * Converts this to {@link HttpResponse}
+     *
+     * @return response object
+     */
+    @Override
     public HttpResponse toHttpResponse() {
         ZonedDateTime now = ZonedDateTime.now();
         String dateHeader = now.format(DateTimeFormatter.ofPattern(
@@ -109,17 +139,24 @@ public class HTMLRenderer implements ResponseType {
         );
     }
 
-
+    // Mutators
     public String getHtmlPath() {
         return htmlPath;
     }
     public String getVar(String varArg) {
         return vars.get(varArg);
     }
+
+    // Accessors
     public void setVar(String varArgInHtml, String varArg) {
         this.vars.put(varArgInHtml, varArg);
     }
 
+    /**
+     * Read input stream and store in memory
+     * @param is input stream
+     * @return input stream stored in memory
+     */
     private byte[] inputStreamToBuffer(InputStream is) {
         ByteArrayOutputStream _buf = new ByteArrayOutputStream();
         byte[] data = new byte[16384];
