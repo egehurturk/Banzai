@@ -96,6 +96,7 @@ public class FileResponse implements ResponseType {
      *
      * @return Http response object ready to being send in {@link Handler} interfaces
      */
+    @Override
     public HttpResponse toHttpResponse() {
 
         byte[] buffer;
