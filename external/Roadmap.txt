@@ -7,3 +7,10 @@ What needs to be done?
     [] Using local installation
     [] Using Maven and Java source file
     [] Using VM
+
+TODO items (w/ date)
+===================
+26 March Fri - _TODO: Do not render any variable that is not setted through `render.setVar()` method in HTMLRenderer class
+    ~ Resolved ? [X]
+
+
