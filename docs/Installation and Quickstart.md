@@ -1,11 +1,11 @@
 # Installing Banzai & Quickstart
 
-- [Prerequisits](#prerequisits)
-- [Installing and Using Banzai](#installing-banzai)
-  * [Banzai on Docker](#banzai-on-docker)
-    * [Banzai on Virtual Machine with Docker](#banzai-on-virtual-machine-with-docker)
-  * [Banzai on Maven with Local Jar - Option 1](#banzai-on-maven-with-local-jar-option-1)
-  * [Banzai on Maven with Local Jar - Option 2 (Deprecated, DO NOT USE)](#banzai-on-maven-with-local-jar-option-2)
+- [Installing Banzai & Quickstart](#installing-banzai--quickstart)
+  - [Prerequisits](#prerequisits)
+  - [Banzai on Docker](#banzai-on-docker)
+    - [Banzai on Virtual Machine with Docker](#banzai-on-virtual-machine-with-docker)
+  - [Banzai on Maven with Local Jar Option 1](#banzai-on-maven-with-local-jar-option-1)
+  - [Banzai on Maven with Local Jar Option 2](#banzai-on-maven-with-local-jar-option-2)
   
 
 ## Prerequisits
