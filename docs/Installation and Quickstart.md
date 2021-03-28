@@ -1,14 +1,14 @@
 # Installing Banzai & Quickstart
 
 - [Installing Banzai & Quickstart](#installing-banzai--quickstart)
-  - [Prerequisits](#prerequisits)
+  - [Prerequisites](#prerequisites)
   - [Banzai on Docker](#banzai-on-docker)
     - [Banzai on Virtual Machine with Docker](#banzai-on-virtual-machine-with-docker)
   - [Banzai on Maven with Local Jar Option 1](#banzai-on-maven-with-local-jar-option-1)
   - [Banzai on Maven with Local Jar Option 2](#banzai-on-maven-with-local-jar-option-2)
   
 
-## Prerequisits
+## Prerequisites
 You'll need:
 * Java 
 * Maven 
@@ -82,7 +82,7 @@ $ touch banzai.html
 $ echo "<h1>This is <a href="www.github.com/egehurturk/HttpServer">Banzai</a> </h1>" > banzai.html
 ```
 * Run `run_docker.sh` with the absolute path for the volume you created
-    * Note that the path must be an absolute path and should point to the directory you want to serve
+    * Note that the path must be absolute path and should point to the directory you want to serve
 ```bash
 $ cd .. && cd .. && cd Banzai
 $ ./run_docker.sh -d "/Users/$USER/test_server"
@@ -90,19 +90,19 @@ $ ./run_docker.sh -d "/Users/$USER/test_server"
 
 These steps will create a Docker container and run the server inside the docker container. Any changes you made to the directory you want to serve, `test_server` in this case, will be updated on the container.
 
-You can skip the "clean build" for the project with inputting "N" for the prompt. 
+You can skip the "clean build" for the project by inputting "N" for the prompt. 
 
 ### Banzai on Virtual Machine with Docker
-The installation steps are the same. However, you can not directly access to the `localhost` of Virtual Machine.
-You should forward the port you started `Banzai` on the guest machine, and forward that port to another port in the host machine
+The installation steps are the same. However, you can not directly access the `localhost` of Virtual Machine.
+You should forward the port you started `Banzai` on the guest machine, and forward that port to another port in the host machine.
 
 * If you are using `VirtualBox` (highly recommended), then press the Settings icon
-* Go to the network tab
+* Go to the Network tab
 * Click `Advanced`
 * Click "Port Forwarding"
 * Add one (click to the first green button on the margin of the screen)
-* Enter "web" for name, `127.0.0.1` for Host IP, any port for Host Port, IP of your virtual machine to Guest IP, and the port you chosed in `server.properties` to Guest Port
-* Start `Banzai` on virtual machine:
+* Enter "web" for name, `127.0.0.1` for Host IP, any port for Host Port, IP of your virtual machine to Guest IP, and the port you chose in `server.properties` to Guest Port
+* Start `Banzai` on the virtual machine:
 ```bash
 $ ./run_docker.sh -d "<path_to_your_project>"
 ```
@@ -129,7 +129,7 @@ $ mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -Darchet
 $ cd Banzai
 ```
 
-* Install the project to local Maven repository 
+* Install the project to the local Maven repository 
 
 ```bash
 $ mvn install
