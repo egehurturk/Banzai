@@ -181,7 +181,6 @@ public class HttpController implements Closeable, Runnable {
                             FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), new PrintWriter(client.getOutputStream(), false));
                             respond(fil.toHttpResponse(Status.valueOf("Internal Server Error"), this.out));
                         }
-
                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         foundHandler = true; // we found a handler
                         break;

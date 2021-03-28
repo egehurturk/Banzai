@@ -288,7 +288,9 @@ public class HttpServer extends BaseServer implements Closeable {
         ExecutorService pool = Executors.newFixedThreadPool(500);
         try {
             this.server = new ServerSocket(this.serverPort, this.backlog, this.serverHost);
-            logger.info("Server started on port " + this.serverPort);
+            System.out.println("Banzai version 1.0, using configuration " + this.getConfigPropFile());
+            System.out.println("Starting Banzai server at port " + this.serverPort);
+            System.out.println("Quit the server with CONTROL-C (^C)");
         } catch (IOException e) {
             logger.error("Server could not be instantiated (probably due to port conflict) \n\n" +  e.getClass().getCanonicalName() );
             close();
@@ -298,7 +300,7 @@ public class HttpServer extends BaseServer implements Closeable {
             Socket cli = null;
             try {
                 cli = this.server.accept();
-                logger.info("Connection established with { " + cli.getPort() + "/" + cli.getInetAddress() + " }");
+                logger.info("Connection established with  " + cli.getInetAddress() + ":" + cli.getPort());
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }
@@ -390,7 +392,6 @@ public class HttpServer extends BaseServer implements Closeable {
      * Helper method to check fields of this class
      */
     private boolean checkFields() {
-        System.out.println("Debug: server.webroot: " + this.webRoot);
         return this.serverHost == null || this.serverPort == 0 || this.webRoot == null || this.name == null;
     }
 
