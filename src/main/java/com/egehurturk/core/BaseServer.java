@@ -532,7 +532,7 @@ public abstract class BaseServer {
                         " directory template?");
             }
             serverConfig.load(file);
-            System.out.println(serverConfig);
+//            System.out.println(serverConfig);
             userConfig.keySet().
                     forEach(val -> {
                         String key = (String) val;

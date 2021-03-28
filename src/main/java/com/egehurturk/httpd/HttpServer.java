@@ -288,9 +288,11 @@ public class HttpServer extends BaseServer implements Closeable {
         ExecutorService pool = Executors.newFixedThreadPool(500);
         try {
             this.server = new ServerSocket(this.serverPort, this.backlog, this.serverHost);
+            System.out.println();
             System.out.println("Banzai version 1.0, using configuration " + this.getConfigPropFile());
             System.out.println("Starting Banzai server at port " + this.serverPort);
             System.out.println("Quit the server with CONTROL-C (^C)");
+            System.out.println();
         } catch (IOException e) {
             logger.error("Server could not be instantiated (probably due to port conflict) \n\n" +  e.getClass().getCanonicalName() );
             close();
