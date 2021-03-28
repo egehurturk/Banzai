@@ -1,0 +1,10 @@
+[33m2021-03-28 18:20:01,170[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server is not properly initialized
+[33m2021-03-28 18:20:01,171[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Configuration error
+[33m2021-03-28 18:20:01,171[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Stopping execution
+[33m2021-03-28 18:21:26,888[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server is not properly initialized
+[33m2021-03-28 18:21:26,889[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Configuration error
+[33m2021-03-28 18:21:26,889[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Stopping execution
+[33m2021-03-28 18:24:27,663[m [pool-3-thread-2] [31mERROR[m com.egehurturk.httpd.HttpRequest - Input stream of client is null, or empty, Check for client connection
+[33m2021-03-28 18:30:28,832[m [main] [41mFATAL[m com.egehurturk.httpd.HttpServer - This is a test
+[33m2021-03-28 18:35:16,437[m [main] [41mFATAL[m com.egehurturk.httpd.HttpServer - Fatal Check
+[33m2021-03-28 18:35:16,438[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Error check

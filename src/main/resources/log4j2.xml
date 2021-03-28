@@ -5,7 +5,7 @@
 
         <Console name="stdout" target="SYSTEM_OUT">
 
-            <PatternLayout pattern="%style{%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss}}}{blue} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=blue} %logger{36} - %message\n"/>
+            <PatternLayout pattern="%style{%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss}}}{blue} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=bg_red, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=magenta bold, TRACE=blue} %logger{36} - %message\n"/>
 
         </Console>
 
