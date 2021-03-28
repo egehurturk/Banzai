@@ -14,7 +14,7 @@ This is the documentation for the Banzai Software
     * Learn what Banzai logs to console and how to access error logs
 * [Docker](Docker.md)
     * Learn limitations & configuration of Banzai on Docker
-* [Design Guidlines](Design_Guidelines.md)
+* [Design Guidlines](Design Guidelines.md)
     * Learn how this project is designed and developed
 * [HTTP](Http.md)
     * Explore how HTTP is used in Banzai

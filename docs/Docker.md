@@ -5,6 +5,5 @@ Using Banzai on Docker is straightforward. However, with this approach, you cann
 
 The installation step is discussed in  <a href="Installation%20and%20Quickstart.md#banzai-on-docker">Installation and Quickstart | Banzai on Docker</a> 
 
-<!--[Installation and Quickstart](Installation%20and%20Quickstart.md#Banzai) -->
 
 
