@@ -9,7 +9,6 @@ import com.egehurturk.util.ArgumentParser;
 import com.egehurturk.util.Headers;
 import com.egehurturk.util.Methods;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 
 
@@ -24,11 +23,11 @@ public class EntryPoint {
      */
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         ArgumentParser parser = new ArgumentParser(args);
         HttpServer httpServer = parser.getHttpServer();
 
-//        if (!PRODUCTION_ENV) {
+        if (!PRODUCTION_ENV) {
             httpServer.allowCustomUrlMapping(true);
             httpServer.addHandler(Methods.GET , "/hello"           , new MyHandler());
             httpServer.addHandler(Methods.GET , "/thismynewserver" , new MyNewHandler());
@@ -38,7 +37,7 @@ public class EntryPoint {
             httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
             httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
             httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
-//        }
+        }
         httpServer.start();
     }
 
