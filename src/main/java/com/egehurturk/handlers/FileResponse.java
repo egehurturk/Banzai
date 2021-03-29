@@ -45,12 +45,10 @@ public class FileResponse implements ResponseType {
      * method
      */
     private Status status;
-    public final String BAD_REQ          = "400.html";
     public final String INDEX            = "index.html";
     public final String _404_NOT_FOUND   = "404.html";
-    public final String _NOT_IMPLEMENTED = "501.html";
     public String webroot                = "www";
-
+    private byte[] body;
 
 
     /**
@@ -63,15 +61,27 @@ public class FileResponse implements ResponseType {
         this.writer = writer;
     }
 
+    /**
+     * Constructor with input stream and print writer.
+     * Classes that read files from stream, i.e. using {@link ClassLoader#getResourceAsStream(String)}, uses this
+     * constructor and passes the stream as a parameter.
+     *
+     * <p>This class then buffers the stream and converts the contents to HttpResponse
+     *
+     * @param filestream input stream
+     * @param writer HttpResponse print writer
+     */
     public FileResponse(InputStream filestream, PrintWriter writer) {
         this.filestream = filestream;
         this.writer = writer;
     }
 
+    // Getters
     public String getWebroot() {
         return webroot;
     }
 
+    // Setters
     public void setWebroot(String webroot) {
         this.webroot = webroot;
     }
@@ -108,6 +118,8 @@ public class FileResponse implements ResponseType {
         } else {
             buffer = inputStreamToBuffer(filestream);
         }
+        this.body = buffer;
+
 
         ZonedDateTime now = ZonedDateTime.now();
         String dateHeader = now.format(DateTimeFormatter.ofPattern(
@@ -122,6 +134,12 @@ public class FileResponse implements ResponseType {
         );
     }
 
+    /**
+     * Convert this to {@link HttpResponse}.
+     * @param status status to be sent in the response
+     * @param writer writer associated with the response
+     * @return response
+     */
     public HttpResponse toHttpResponse(Status status, PrintWriter writer) {
 
         byte[] buffer;
@@ -145,6 +163,19 @@ public class FileResponse implements ResponseType {
         return new HttpResponseBuilder().factory("HTTP/1.1", status.STATUS_CODE, status.MESSAGE, buffer, writer,
                 mimeType, dateHeader, "Banzai", contentLang, buffer.length
         );
+    }
+
+    /**
+     * Returns file/stream contents as string.
+     *
+     * Body must be set (using {@link #toHttpResponse()} and then this method should be used.
+     * @return String
+     */
+    public String asString() {
+        if (this.body != null)
+            return new String(this.body);
+        logger.warn("Body is null");
+        return null;
     }
 
     /**
@@ -179,6 +210,12 @@ public class FileResponse implements ResponseType {
         return new Pair<>(mime, buffer);
     }
 
+
+    /**
+     * Store the File in memory with byte array
+     * @param file file to be stored in
+     * @return buffered File
+     */
     private byte[] memoryAllocateForFile(File file) {
         byte[] bodyByte = null;
         try {
@@ -190,6 +227,12 @@ public class FileResponse implements ResponseType {
         return bodyByte;
     }
 
+    /**
+     * Convert input stream to byte array
+     *
+     * @param is input stream
+     * @return buffered input stream
+     */
     private byte[] inputStreamToBuffer(InputStream is) {
         ByteArrayOutputStream _buf = new ByteArrayOutputStream();
         byte[] data = new byte[16384];

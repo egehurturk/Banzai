@@ -13,4 +13,11 @@ TODO items (w/ date)
 26 March Fri - _TODO: Do not render any variable that is not setted through `render.setVar()` method in HTMLRenderer class
     ~ Resolved ? [X]
 
+29 March Mon - _TODO: Write a method for FileResponse to convert its file content to String. Note that file may be null
+    ~ Resolved ? [X]
+
+29 March Mon - _TODO: Debug to check if the server closes the client connection AFTER the response has been sent
+    ~ Resolved ? []
+
+
 
