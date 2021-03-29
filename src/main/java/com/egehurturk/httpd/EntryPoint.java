@@ -28,7 +28,7 @@ public class EntryPoint {
         ArgumentParser parser = new ArgumentParser(args);
         HttpServer httpServer = parser.getHttpServer();
 
-        if (!PRODUCTION_ENV) {
+//        if (!PRODUCTION_ENV) {
             httpServer.allowCustomUrlMapping(true);
             httpServer.addHandler(Methods.GET , "/hello"           , new MyHandler());
             httpServer.addHandler(Methods.GET , "/thismynewserver" , new MyNewHandler());
@@ -38,7 +38,7 @@ public class EntryPoint {
             httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
             httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
             httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
-        }
+//        }
         httpServer.start();
     }
 
@@ -61,7 +61,9 @@ public class EntryPoint {
         @Override
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
             FileResponse fil = new FileResponse("www/custom.html", response.getStream());
-            return fil.toHttpResponse();
+            System.out.println("Debug from file response, file response content: " + fil.asString());
+            HttpResponse res = fil.toHttpResponse();
+            return res;
         }
     }
 
