@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"com.egehurturk"},{"l":"com.egehurturk.client"},{"l":"com.egehurturk.core"},{"l":"com.egehurturk.example"},{"l":"com.egehurturk.exceptions"},{"l":"com.egehurturk.handlers"},{"l":"com.egehurturk.httpd"},{"l":"com.egehurturk.renderers"},{"l":"com.egehurturk.resolvers"},{"l":"com.egehurturk.util"}]

@@ -1,0 +1,10 @@
+com.egehurturk
+com.egehurturk.client
+com.egehurturk.core
+com.egehurturk.example
+com.egehurturk.exceptions
+com.egehurturk.handlers
+com.egehurturk.httpd
+com.egehurturk.renderers
+com.egehurturk.resolvers
+com.egehurturk.util
