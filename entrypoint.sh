@@ -24,5 +24,7 @@ fi
 
 printf "  ${ANSI_YELLOW}Starting up the server!${ANSI_NC}\n"
 
+clear
+
 java -jar "/banzai/target/BanzaiServer-1.0-SNAPSHOT-jar-with-dependencies.jar" --config "$SERVER_CONFIG_PATH"
 
