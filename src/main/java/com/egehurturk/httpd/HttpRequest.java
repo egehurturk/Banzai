@@ -214,11 +214,6 @@ public class HttpRequest {
             logger.info("HTTP Version not supported");
             return false;
         }
-//        for (Methods methodE: Methods.values()) {
-//            if (method.equals(methodE.str)) {
-//                return false;
-//            }
-//        }
         return true;
     }
 

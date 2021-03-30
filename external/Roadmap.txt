@@ -26,7 +26,8 @@ TODO items (w/ date)
     ~ Status: Success
 
 30 March Tue - _TODO: Don't allow the `Host` header to be empty string ("")
-    ~ Resolved ? []
+    ~ Resolved ? [X]
+    ~ Log: Done. The server now doesn't allow host header to be something like: `Host:     `
 
 30 March Tue - _TODO: Remove throwing error from HttpRequest for malformed HTTP line. Just log
     ~ Resolved ? []

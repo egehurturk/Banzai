@@ -263,10 +263,11 @@ public class HttpHandler implements Handler {
         // Host is a must for HTTP/1.1 servers
         if (!req.headers.containsKey(
                 Utility.removeLastChars(Headers.HOST.NAME.trim().toLowerCase(), 1))
+         || req.headers.get(Utility.removeLastChars(Headers.HOST.NAME.trim().toLowerCase(), 1)).equals("")
         ) {
             this.status    = Status._400_BAD_REQUEST.MESSAGE;
             stream         = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
-            Utility.debug(this.debugMode,"Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"), logger);
+            Utility.debug(this.debugMode,"Input stream (null?): " + ((stream == null) ? "null" : "nonnull"), logger);
             statusReturned = true;
         }
 
@@ -275,7 +276,7 @@ public class HttpHandler implements Handler {
             if (req.getPath().contains("./") || req.getPath().contains("../")) {
                 this.status = Status._400_BAD_REQUEST.MESSAGE;
                 stream      = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
-                Utility.debug(this.debugMode,"Input stream (nullality): " + ((stream == null) ? "null" : "nonnull"), logger);
+                Utility.debug(this.debugMode,"Input stream (null?): " + ((stream == null) ? "null" : "nonnull"), logger);
                 statusReturned = true;
             }
 
