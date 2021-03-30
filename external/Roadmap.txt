@@ -12,11 +12,23 @@ TODO items (w/ date)
 ===================
 26 March Fri - _TODO: Do not render any variable that is not setted through `render.setVar()` method in HTMLRenderer class
     ~ Resolved ? [X]
+    ~ Log: It does not render.
+    ~ Status: Success
 
 29 March Mon - _TODO: Write a method for FileResponse to convert its file content to String. Note that file may be null
     ~ Resolved ? [X]
+    ~ Log: Done. Checking for null is implemented.
+    ~ Status: Success
 
 29 March Mon - _TODO: Debug to check if the server closes the client connection AFTER the response has been sent
+    ~ Resolved ? [X]
+    ~ Log: Done. HttpController closes the socket in `finally` through the method call: `close()`
+    ~ Status: Success
+
+30 March Tue - _TODO: Don't allow the `Host` header to be empty string ("")
+    ~ Resolved ? []
+
+30 March Tue - _TODO: Remove throwing error from HttpRequest for malformed HTTP line. Just log
     ~ Resolved ? []
 
 

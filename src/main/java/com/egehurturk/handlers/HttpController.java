@@ -353,8 +353,6 @@ public class HttpController implements Closeable, Runnable {
     public void setAllowForCustomMapping(boolean b) {
         this.allowForCustomMapping = b;
     }
-
-
 }
 
 /* Resources
