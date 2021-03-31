@@ -237,14 +237,8 @@ public class App
 		@Override
 		public HttpResponse handle(HttpRequest req, HttpResponse res) 
 		{
-			try 
-			{
-				FileResponse fil = new FileResponse("HTML_FILE_HERE", res.getStream()); // enter a HTML file 
-				res = fil.toHttpResponse();
-			} catch (FileNotFoundException e)
-			{
-				e.printStackTrace();
-			}
+            FileResponse fil = new FileResponse("HTML_FILE_HERE", res.getStream()); // enter a HTML file 
+            res = fil.toHttpResponse();
 			return res;
 		}
 	}
@@ -403,12 +397,8 @@ public class App
 		HttpResponse res = null;
 		@Override
 		public HttpResponse handle(HttpRequest req, HttpResponse res) {
-			try {
-				FileResponse fil = new FileResponse("HTML_FILE_HERE", res.getStream()); // enter a HTML file 
-				res = fil.toHttpResponse();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
+            FileResponse fil = new FileResponse("HTML_FILE_HERE", res.getStream()); // enter a HTML file 
+            res = fil.toHttpResponse();
 			return res;
 		}
 	}

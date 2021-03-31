@@ -3,13 +3,13 @@ What needs to be done?
 [X] Resolve all TODOs
 [] Write a user manuel
 [] Test server on GCP and on another machine
-    [] Using docker installation
-    [] Using local installation
-    [] Using Maven and Java source file
-    [] Using VM
+    [X] Using docker installation
+    [X] Using local installation
+    [X] Using Maven and Java source file
+    [X] Using VM
 
-TODO items (w/ date)
-===================
+TODO items (w/ date) - V1.0
+===========================
 26 March Fri - _TODO: Do not render any variable that is not setted through `render.setVar()` method in HTMLRenderer class
     ~ Resolved ? [X]
     ~ Log: It does not render.
