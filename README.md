@@ -110,12 +110,11 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-Banzai is a light-weight, blazingly fast (when working on local instead of Docker), extendible web server. The server is capable of understanding & responding to HTTP/1.1 (not HTTP/2.0). 
+Banzai is a light-weight, blazingly fast (when working on local instead of Docker), extendible web server. The server is capable of understanding & responding to HTTP/1.1 (not HTTP/2.0 or HTTPS protocols). 
 
 
 ### Built With
 
-* [Apache Maven](https://github.com/apache/maven)
 * Java
 
 
@@ -128,71 +127,56 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-[Apache Maven](https://github.com/apache/maven) should be installed on your system and the `JAVA_HOME` environment variable should point to JDK home. Look at [this](https://maven.apache.org/install.html) to install maven. You can ignore this if you want to use Banzai on Docker. 
+[Apache Maven](https://github.com/apache/maven) should be installed on your system and the `JAVA_HOME` environment variable should point to JDK home. Look at [this](https://maven.apache.org/install.html) to install maven. If you have Docker, you don't need to install Maven or Java.
 
 
-### Installation
+### Installation for Docker
 For more detailed instructions, see [Installation](https://github.com/egehurturk/Banzai/blob/main/docs/Installation.md)
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/egehurturk/HttpServer.git
+   git clone https://github.com/egehurturk/Banzai.git
    ```
 2. Change permissions of starter bash file:
     ```sh
-    chmod +x banzai.sh
+    chmod 755 Banzai/run_docker.sh
     ```
 
-3. Run the server
+3. Run the executable
    ```sh
-   ./banzai --port 9090 --host 0.0.0.0 --backlog 50 --name Banzai --webroot www
+   ./run_docker.sh -d "/path/to/config_file/"
    ```
-   OR
-   ```sh
-   sh banzai.sh --port 9090 --host 0.0.0.0 --backlog 50 --name Banzai --webroot www
-   ```
-   See [#configuration] for details on configuring the server
+   This will build up a Docker image and run the image. 
+   See [Docker](docs/Docker.md) for more details
+   See [Configuration](docs/Configuration.md) for details on configuring the server
    
-4. Optional linking \
-  You can link the executable (see 2nd step) to use `banzai` executable without being in the installed directory
-  Create a symbolic link
+### Installation on Maven
+For more detailed instructions, see [Installation](https://github.com/egehurturk/Banzai/blob/main/docs/Installation.md)
+1. Clone the repo
    ```sh
-   sudo ln -s <banzai.sh_path> /usr/local/bin/banzai
+   git clone https://github.com/egehurturk/Banzai.git
    ```
-   And then use `banzai` as a program:
+2. Change directory to the folder:
+    ```sh
+    cd Banzai
+    ```
+
+3. Install the project to local maven repository:
    ```sh
-   banzai --config server.properties
+   mvn install 
    ```
-   Note: you don't need to be in any path, `banzai.sh` will automatically discover which path you are in and then call the `jar` file and will look for `server.properties` automatically.
-   
-   
-### Configuration
-Configuration can happen in two ways. One is to pass in CLA (Command Line Arguments) while executing or running the server:
-
-1. CLA (Command Line Arguments)
-  ```sh
-  banzai run http -p 9090 -h 127.0.0.1 -b 50 -n AwesomeServer -w www
-  ```
-  This creates a server running on port `9090`, host `127.0.0.1`, a backlog of `50`, a name of `AwesomeServer`, and determines web root as `/www`
-  
-  All command line arguments:
-  
-  1  `--port` | `-p`: port numer that the server is running on\
-  2 `--host` | `-h`: host\
-  3 `--backlog` | `-b`: backlog (maximum number of Http threads in queue)\
-  4 `--name` | `-n`: name of the server\
-  5 `--webroot` | `-w`: web root of server\
-
-  
-2. Using a `properties` file:
-   ```sh
-    ./banzai --config server.properties
+   This will enable to use Banzai as a dependency in your `pom.xml`. 
+4. Add the Banzai dependency:
+   ```xml
+   <dependency>
+      <groupId>com.egehurturk</groupId>
+      <artifactId>BanzaiServer</artifactId>
+      <version>1.0-SNAPSHOT</version>
+   </dependency>
    ```
-  One can also configure the server with using a `properties` file located in `root/src/main/resources/server.properties` directory. Every
-  argument is passed as a key=value pair. Server reads all keys and values from the file and sets values accordingly. Same arguments are present.
-
+5.  Use the API (see [Installation - Quickstart](docs/Installation%20and%20Quickstart.md) and [User Guide](docs/User-Guide.md))
 ### Deployment
-Deployment on docker. 
+Banzai can be deployed in a Docker container. See [Docker](docs/Docker.md) for more information.
 
 <!-- ROADMAP -->
 ## Roadmap
