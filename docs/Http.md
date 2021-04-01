@@ -136,7 +136,7 @@ Priority levels when a path is requested is:
 1. Banzai looks for custom paths
 2. if a `Handler` is not found, then Banzai uses the default `HttpHandler` handler to handle paths. 
 
-For example, when you enter `/hey.html`, Banzai, firstly, looks for a `Handler` that its URL is `/hey.html`. If a `Handler` does not exist, then Banzai looks for a document named `hey.html` under the webroot. If the document is not found, then a `404 Not Found` response is sent. 
+For example, when you enter `/hey.html`, Banzai, firstly, looks for a `Handler` that its URL is `/hey.html`. If a `Handler` does not exist, Banzai looks for a document named `hey.html` under the webroot. If the document is not found, a `404 Not Found` response is sent. 
 
 You can add a custom `Handler` to the server by calling its `addHandler` method:
 
@@ -144,6 +144,8 @@ You can add a custom `Handler` to the server by calling its `addHandler` method:
 httpServer.allowCustomURLMapping(true);
 httpServer.addHandler(Methods.GET , "/hello", new MyHandler());
 ```
+* `Methods.GET` defines that the handler is accessible with a `GET` request.
+  * :warning: Banzai does not support `POST` and other types of request methods as of **v1.0**
 
 and the `MyHandler` handler:
 
