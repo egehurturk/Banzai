@@ -131,7 +131,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 
 ### Installation for Docker
-For more detailed instructions, see [Installation](https://github.com/egehurturk/Banzai/blob/main/docs/Installation.md)
+For more detailed instructions, see [Installation](docs/Installation%20and%20Quickstart.md)
 
 1. Clone the repo
    ```sh
@@ -151,7 +151,7 @@ For more detailed instructions, see [Installation](https://github.com/egehurturk
    See [Configuration](docs/Configuration.md) for details on configuring the server
    
 ### Installation on Maven
-For more detailed instructions, see [Installation](https://github.com/egehurturk/Banzai/blob/main/docs/Installation.md)
+For more detailed instructions, see [Installation](docs/Installation%20and%20Quickstart.md)
 1. Clone the repo
    ```sh
    git clone https://github.com/egehurturk/Banzai.git
