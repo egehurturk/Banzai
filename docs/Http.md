@@ -2,6 +2,8 @@
   - [About](#about)
   - [Headers](#headers)
   - [Life Cycle](#life-cycle)
+    - [Query Parameters](#query-parameters)
+  - [Banzai](#banzai)
 # HTTP
 
 ## About
@@ -38,7 +40,7 @@ For example,
 GET / HTTP/1.1
 ```
 
-If a request does not contain this request line, or is wrongly formatted (not containing PROTOCOL or wrong METHOD), then Banzai responds with a `400 Bad Request`  HTTP response. Here're some examples for malformed requests:
+Suppose a request does not contain this request line or is wrongly formatted (not having PROTOCOL or wrong METHOD). In that case, Banzai responds with a `400 Bad Request`  HTTP response. Here're some examples of malformed requests:
 
 `HEY / HTTP/1.1`
 `GET / SMTP`
@@ -49,14 +51,14 @@ If the request is malformed, then Banzai logs an error to the console:
 
 ![error](../external/errorlogfile.png)
 
-Banzai also requires the `Host` header to be included in a request. Typically, all browsers will include this header. If the `Host` header is not present in a request, then Banzai will respond with a `400 Bad Request` HTTP Response.
+Banzai also requires the `Host` header to be included in a request. Typically, all browsers will include this header. If the `Host` header is not present in a request, Banzai will respond with a `400 Bad Request` HTTP Response.
 
 When using the `JsonResponse` class, a request must contain:
 ```
 Accept: application/json
 ```
 
-If a request lacks this header, then Banzai will respond with a `406 Not Acceptable` HTTP Response.
+If a request lacks this header, Banzai will respond with a `406 Not Acceptable` HTTP Response.
 
 
 
@@ -94,4 +96,75 @@ class MyHandler implements Handler {
 }
 ```
 * Here, the `HttpRequest` is needed for `JsonResponse` to validate the request
+
+### Query Parameters
+Some requests may contain query parameters. These parameters are useful to pass (dynamic) information as request. Banzai supports query parameters and makes it accessible to retrieve them through `HttpRequest` object. A typical request path with query parameters is in the form of:
+
+```
+GET /path?param1=value1&param2=value2&param3=value3 HTTP/1.1
+```
+
+You can access the parameters through `HttpRequest` object:
+
+```java
+String foo = request.getQueryParam("foo").getFirst() ? request.getQueryParam("foo").getSecond() : "null";
+```
+* `request.getQueryParam("<value>")` returns a `com.egehurturk.util.Pair` object. The first value in the pair contains a metadata about the parameter, and is null if the parameter (key) does not exist. To check if the key exists, use a inline ternary statement. `request.getQueryParam("<key>").getSecond()` returns the actual value of the `<key>`. You can directly use the `request.getQueryParam("<key>").getSecond()` without the initial checking; however, the value may be `null`. 
+* If the parameter does not exists, Banzai logs a warning message
+
+
+## Banzai
+As discussed above, every HTTP request contains a path. This path specifies which document has been requested and should be translated to the webroot. For example, if the webroot is `{root}/www`, then a request like `GET /hey.html HTTP/1.1` should request the file `{root}/www/hey/html`. 
+
+Banzai handles the process with the class `com.egehurturk.handlers.HttpHandler`. This class is responsible for translating the path to the local filesystem and retrieving the requested document, then sending the content as a `HttpResponse`.
+
+
+However, Banzai is not limited to requesting documents with the name of the document in the path. You can map certain paths to certain `Handler`s. A handler is a class that implements the `com.egehurturk.handlers.Handler` interface. Every class that implements this interface must override the method `HttpResponse handle(HttpRequest, HttpResponse)`. With this method, you can return any file with the help of `ResponseType` classes: 
+* `FileResponse`
+* `JsonResponse`
+* `HTMLRenderer`
+
+However, you can send anything through `HttpResponseBuilder`. 
+
+To allow the server to use custom paths, call the method:
+
+```java
+server.allowCustomURLMapping(true)
+```
+
+Priority levels when a path is requested is:
+1. Banzai looks for custom paths
+2. if a `Handler` is not found, then Banzai uses the default `HttpHandler` handler to handle paths. 
+
+For example, when you enter `/hey.html`, Banzai, firstly, looks for a `Handler` that its URL is `/hey.html`. If a `Handler` does not exist, then Banzai looks for a document named `hey.html` under the webroot. If the document is not found, then a `404 Not Found` response is sent. 
+
+You can add a custom `Handler` to the server by calling its `addHandler` method:
+
+```java
+httpServer.allowCustomURLMapping(true);
+httpServer.addHandler(Methods.GET , "/hello", new MyHandler());
+```
+
+and the `MyHandler` handler:
+
+```java
+class MyHandler implements Handler {
+        @Override
+        public HttpResponse handle(HttpRequest request, HttpResponse response) {
+            HttpResponse res = new HttpResponseBuilder().scheme("HTTP/1.1")
+                    .code(200)
+                    .message("OK")
+                    .body("<h1>Hello</h1>".getBytes())
+                    .setStream(new PrintWriter(response.getStream(), false))
+                    .setHeader(Headers.CONTENT_LENGTH.NAME, ""+("<h1>Hello</h1>".length()))
+                    .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
+                    .build();
+            return res;
+        }
+    }
+```
+* This is an example of returning a custom `HttpResponse`. However, you can (and should) use `FileResponse` or other `ResponseType`s whenever possible.
+
+When you run the server and open the path `/hello`, you'll see `<h1>Hello</h1>` as HTML. 
+
 
