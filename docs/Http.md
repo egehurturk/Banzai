@@ -146,6 +146,10 @@ httpServer.addHandler(Methods.GET , "/hello", new MyHandler());
 ```
 * `Methods.GET` defines that the handler is accessible with a `GET` request.
   * :warning: Banzai does not support `POST` and other types of request methods as of **v1.0**
+* `"/hello"` is the custom path mapped with `MyHandler`
+  * I.e., when the client requests `/hello`, then `MyHandler` gets called
+  * Note that every path must start with `"/"`
+* `new MyHandler()` is your handler associated with the path `"/hello"`
 
 and the `MyHandler` handler:
 
