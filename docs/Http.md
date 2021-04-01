@@ -124,7 +124,7 @@ However, Banzai is not limited to requesting documents with the name of the docu
 * `JsonResponse`
 * `HTMLRenderer`
 
-However, you can send anything through `HttpResponseBuilder`. 
+You can also build up your own response with `HttpResponseBuilder`. 
 
 To allow the server to use custom paths, call the method:
 
