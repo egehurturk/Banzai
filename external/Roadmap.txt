@@ -34,3 +34,6 @@ TODO items (w/ date) - V1.0
 
 2 April Fri - _TODO: Check the HTTP Documentation for the HttpResponseBuilder class on `setStream`. This should only get `res.getStream()`
 
+2 April Fri - _TODO: Initialize every "object" in the no args constructor of httpserver
+
+2 April Fri - _TODO: Remove the throws ... in the no args constructor of httpserver
