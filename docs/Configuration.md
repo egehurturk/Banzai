@@ -1,3 +1,4 @@
+### Table of Contents
 - [Configuration](#configuration)
   - [Configuration With `Properties` File](#configuration-with-properties-file)
     - [Setting Configuration File through Banzai API](#setting-configuration-file-through-banzai-api)

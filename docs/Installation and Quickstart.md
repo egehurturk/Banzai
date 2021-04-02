@@ -1,4 +1,4 @@
-# Installing Banzai & Quickstart
+### Table of Contents
 
 - [Installing Banzai & Quickstart](#installing-banzai--quickstart)
   - [Prerequisites](#prerequisites)
@@ -7,7 +7,7 @@
   - [Banzai on Maven with Local Jar Option 1](#banzai-on-maven-with-local-jar-option-1)
   - [Banzai on Maven with Local Jar Option 2](#banzai-on-maven-with-local-jar-option-2)
   
-
+# Installing Banzai & Quickstart
 ## Prerequisites
 You'll need:
 * Java 
