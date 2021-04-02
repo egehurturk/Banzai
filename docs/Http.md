@@ -107,7 +107,12 @@ GET /path?param1=value1&param2=value2&param3=value3 HTTP/1.1
 You can access the parameters through `HttpRequest` object:
 
 ```java
-String foo = request.getQueryParam("foo").getFirst() ? request.getQueryParam("foo").getSecond() : "null";
+@Override
+public HttpResponse handle(HttpRequest request, HttpResponse response) {
+          String foo = request.getQueryParam("foo").getFirst() ? request.getQueryParam("foo").getSecond() : "null";
+          // ...
+}
+
 ```
 * `request.getQueryParam("<value>")` returns a `com.egehurturk.util.Pair` object. The first value in the pair contains a metadata about the parameter, and is null if the parameter (key) does not exist. To check if the key exists, use a inline ternary statement. `request.getQueryParam("<key>").getSecond()` returns the actual value of the `<key>`. You can directly use the `request.getQueryParam("<key>").getSecond()` without the initial checking; however, the value may be `null`. 
 * If the parameter does not exists, Banzai logs a warning message
@@ -132,7 +137,7 @@ To allow the server to use custom paths, call the method:
 server.allowCustomURLMapping(true)
 ```
 
-Priority levels when a path is requested is:
+Priority levels when a path is requested are:
 1. Banzai looks for custom paths
 2. if a `Handler` is not found, then Banzai uses the default `HttpHandler` handler to handle paths. 
 

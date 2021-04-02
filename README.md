@@ -147,8 +147,7 @@ For more detailed instructions, see [Installation](docs/Installation%20and%20Qui
    ./run_docker.sh -d "/path/to/config_file/"
    ```
    This will build up a Docker image and run the image. 
-   See [Docker](docs/Docker.md) for more details
-   See [Configuration](docs/Configuration.md) for details on configuring the server
+   See [Docker](docs/Docker.md) for more details, or [Configuration](docs/Configuration.md) for details on configuring the server
    
 ### Installation on Maven
 For more detailed instructions, see [Installation](docs/Installation%20and%20Quickstart.md)

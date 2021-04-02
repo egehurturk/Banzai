@@ -32,5 +32,5 @@ TODO items (w/ date) - V1.0
 30 March Tue - _TODO: Remove throwing error from HttpRequest for malformed HTTP line. Just log
     ~ Resolved ? []
 
-
+2 April Fri - _TODO: Check the HTTP Documentation for the HttpResponseBuilder class on `setStream`. This should only get `res.getStream()`
 
