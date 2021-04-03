@@ -28,12 +28,24 @@ TODO items (w/ date) - V1.0
 30 March Tue - _TODO: Don't allow the `Host` header to be empty string ("")
     ~ Resolved ? [X]
     ~ Log: Done. The server now doesn't allow host header to be something like: `Host:     `
+    ~ Status: Success
 
 30 March Tue - _TODO: Remove throwing error from HttpRequest for malformed HTTP line. Just log
     ~ Resolved ? []
+    ~ Log: This will be addressed in Banzai v1.1
+    ~ Status: postponed
 
 2 April Fri - _TODO: Check the HTTP Documentation for the HttpResponseBuilder class on `setStream`. This should only get `res.getStream()`
+    ~ Resolved ? [X]
+    ~ Log: Minor issue, ignored
+    ~ Status: Success
 
 2 April Fri - _TODO: Initialize every "object" in the no args constructor of httpserver
+    ~ Resolved ? [X]
+    ~ Log: Minor issue, ignored. May be looked again in v1.1
+    ~ Status: Success
 
 2 April Fri - _TODO: Remove the throws ... in the no args constructor of httpserver
+    ~ Resolved ? [X]
+    ~ Log: Done
+    ~ Status: Success
