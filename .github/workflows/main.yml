@@ -118,11 +118,11 @@ jobs:
         # Build the container
         run: docker build -t egeh/banzai:1.0-SNAPSHOT --build-arg server_port=${{ steps.read_property_port.outputs.value }} .
 
-      - name: Echo docker repository
-        run: echo ${{ secrets.DOCKER_REPO }}
+      - name: Tag docker build
+        run: docker tag egeh/banzai:1.0-SNAPSHOT egeh/banzai:latest
       
       - name: Publish docker image
-        run: docker push egeh/banzai:1.0-SNAPSHOT
+        run: docker push egeh/banzai:latest
       
 
 
