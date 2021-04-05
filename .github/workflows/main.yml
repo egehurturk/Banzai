@@ -122,7 +122,7 @@ jobs:
         run: echo ${{ secrets.DOCKER_REPO }}
       
       - name: Publish docker image
-        run: docker push egeh/banzai
+        run: docker push egeh/banzai:1.0-SNAPSHOT
       
 
 
