@@ -23,7 +23,7 @@
 &nbsp;&nbsp;&nbsp;
 [![Issues](https://img.shields.io/github/issues/egehurturk/HttpServer)](https://GitHub.com/egehurturk/HttpServer/issues/)
 &nbsp;&nbsp;&nbsp;
-
+![example workflow](https://github.com/egehurturk/banzai/actions/workflows/main.yml/badge.svg)
 
 
 <!-- PROJECT LOGO
