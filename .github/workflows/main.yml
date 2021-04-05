@@ -34,6 +34,17 @@ jobs:
         uses: actions/setup-java@v1
         with: 
           java-version: 1.8
+      
+      # Cache maven packages 
+      - name: Cache the Maven packages to speed up build
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      # Build the source code
+      # TODO: make it clean build
       - name: Build with Maven
         run: mvn -B package
 
@@ -65,6 +76,57 @@ jobs:
           with:
              name: Banzai
              path: staging
+  
+
+  # Publish Dockerfile to docker hub         
+  build-docker-image:
+    name: Publish to Docker hub
+    runs-on: ubuntu-latest
+
+    # Needs build phase
+    needs: [build]
+
+    steps:
+      # Checkout the repository
+      - uses: actions/cache@v2
+
+      # Read port value from properties file
+      - name: Read server.port from Properties file
+        id: read_property_port
+        uses: christian-draeger/read-properties@1.0.1
+        with:
+          path: './docker.properties'
+          property: "server.port"
+
+      - name: Read server.host from Properties file
+        id: read_property_host
+        uses: christian-draeger/read-properties@1.0.1
+        with:
+          path: './docker.properties'
+          property: "server.host"
+
+      - name: echo port
+        run: echo ${{ steps.read_property_port.outputs.value }}
+
+      - name: echo host
+        run: echo ${{ steps.read_property_host.outputs.value }}
+
+
+      - name: Login to Docker hub
+        # login to docker 
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build container image
+        # Build the container
+        run: docker build -t ${{ secrets.DOCKER_REPO }}:1.0-SNAPSHOT --build-arg server_port=$PORT .
+
+      - name: Publish docker image
+        run: docker push ${{ secrets.DOCKER_REPO }}
+      
+
+
+
+
 
 
 
