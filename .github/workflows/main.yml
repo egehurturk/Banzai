@@ -118,6 +118,9 @@ jobs:
         # Build the container
         run: docker build -t ${{ secrets.DOCKER_REPO }}:1.0-SNAPSHOT --build-arg server_port=$PORT .
 
+      - name: Echo docker repository
+        run: echo ${{ secrets.DOCKER_REPO }}
+      
       - name: Publish docker image
         run: docker push ${{ secrets.DOCKER_REPO }}
       
