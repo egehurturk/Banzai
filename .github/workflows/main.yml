@@ -1,5 +1,5 @@
 
-name: Maven Compile
+name: Build
 
 # Controls when the action will run. 
 on:
