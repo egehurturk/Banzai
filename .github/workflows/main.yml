@@ -116,13 +116,13 @@ jobs:
 
       - name: Build container image
         # Build the container
-        run: docker build -t ${{ secrets.DOCKER_REPO }}:1.0-SNAPSHOT --build-arg server_port=${{ steps.read_property_port.outputs.value }} .
+        run: docker build -t egeh/banzai:1.0-SNAPSHOT --build-arg server_port=${{ steps.read_property_port.outputs.value }} .
 
       - name: Echo docker repository
         run: echo ${{ secrets.DOCKER_REPO }}
       
       - name: Publish docker image
-        run: docker push ${{ secrets.DOCKER_REPO }}
+        run: docker push egeh/banzai
       
 
 
