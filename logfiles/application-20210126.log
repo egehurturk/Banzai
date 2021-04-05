@@ -4,7 +4,7 @@
 [33m2021-01-26 14:09:04,394[m [main] [31mERROR[m com.egehurturk.httpd.EntryPoint - Configuration exception happened. Check configuraton property file path
 [33m2021-01-26 14:26:02,769[m [main] [31mERROR[m com.egehurturk.httpd.HttpServer - Server could not be instantiated (probably due to port conflict) 
 
-java.net.BindException
+java.net.BindException jjj
 [33m2021-01-26 14:28:36,022[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request line (e.g. GET /index HTTP/1.1 is not found
 [33m2021-01-26 14:28:36,023[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)
 [33m2021-01-26 14:28:36,062[m [main] [31mERROR[m com.egehurturk.httpd.HttpRequest - Request is not valid (check scheme)

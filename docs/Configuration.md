@@ -7,6 +7,7 @@
 # Configuration
 
 
+
 ## Configuration With `Properties` File
 Banzai can be configured with a `properties` file. The file should have `.properties` extension, containing a *key-value* pair at each line separated by a new line character (\n). Here's an example `properties` file for configuring Banzai:
 
