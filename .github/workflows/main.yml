@@ -87,9 +87,7 @@ jobs:
     needs: [build]
 
     steps:
-      # Checkout the repository
-      - uses: actions/cache@v2
-
+      - uses: actions/checkout@v2
       # Read port value from properties file
       - name: Read server.port from Properties file
         id: read_property_port
