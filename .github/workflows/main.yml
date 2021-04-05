@@ -79,50 +79,50 @@ jobs:
   
 
   # Publish Dockerfile to docker hub         
-  build-docker-image:
-    name: Publish to Docker hub
-    runs-on: ubuntu-latest
+  # build-docker-image:
+  #   name: Publish to Docker hub
+  #   runs-on: ubuntu-latest
 
-    # Needs build phase
-    needs: [build]
+  #   # Needs build phase
+  #   needs: [build]
 
-    steps:
-      - uses: actions/checkout@v2
-      # Read port value from properties file
-      - name: Read server.port from Properties file
-        id: read_property_port
-        uses: christian-draeger/read-properties@1.0.1
-        with:
-          path: './docker.properties'
-          property: "server.port"
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     # Read port value from properties file
+  #     - name: Read server.port from Properties file
+  #       id: read_property_port
+  #       uses: christian-draeger/read-properties@1.0.1
+  #       with:
+  #         path: './docker.properties'
+  #         property: "server.port"
 
-      - name: Read server.host from Properties file
-        id: read_property_host
-        uses: christian-draeger/read-properties@1.0.1
-        with:
-          path: './docker.properties'
-          property: "server.host"
+  #     - name: Read server.host from Properties file
+  #       id: read_property_host
+  #       uses: christian-draeger/read-properties@1.0.1
+  #       with:
+  #         path: './docker.properties'
+  #         property: "server.host"
 
-      - name: echo port
-        run: echo ${{ steps.read_property_port.outputs.value }}
+  #     - name: echo port
+  #       run: echo ${{ steps.read_property_port.outputs.value }}
 
-      - name: echo host
-        run: echo ${{ steps.read_property_host.outputs.value }}
+  #     - name: echo host
+  #       run: echo ${{ steps.read_property_host.outputs.value }}
 
 
-      - name: Login to Docker hub
-        # login to docker 
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+  #     - name: Login to Docker hub
+  #       # login to docker 
+  #       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build container image
-        # Build the container
-        run: docker build -t egeh/banzai:1.0-SNAPSHOT --build-arg server_port=${{ steps.read_property_port.outputs.value }} .
+  #     - name: Build container image
+  #       # Build the container
+  #       run: docker build -t egeh/banzai:1.0-SNAPSHOT --build-arg server_port=${{ steps.read_property_port.outputs.value }} .
 
-      - name: Tag docker build
-        run: docker tag egeh/banzai:1.0-SNAPSHOT egeh/banzai:latest
+  #     - name: Tag docker build
+  #       run: docker tag egeh/banzai:1.0-SNAPSHOT egeh/banzai:latest
       
-      - name: Publish docker image
-        run: docker push egeh/banzai:latest
+  #     - name: Publish docker image
+  #       run: docker push egeh/banzai:latest
       
 
 
