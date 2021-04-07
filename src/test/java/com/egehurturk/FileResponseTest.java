@@ -2,10 +2,11 @@ package com.egehurturk;
 
 import org.junit.jupiter.api.DisplayName;
 
-@DisplayName("File Response Handler class tests")
+
+@DisplayName("FileResponse class tests")
 public class FileResponseTest {
 
-    /* ~ Tests ~ */
+
 }
 
 

@@ -236,8 +236,7 @@ public class HttpOnlyGetRequestTest {
 
 
     public InputStream prepareIncomingRequestStream(String stream) throws IOException {
-        InputStream inputStream = new ByteArrayInputStream(stream.getBytes());
-        return inputStream;
+        return new ByteArrayInputStream(stream.getBytes());
     }
 
 
