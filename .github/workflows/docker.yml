@@ -1,22 +1,22 @@
-#name: Push to Docker
-#
-#on:
-#  release:
-#    types: [ published ]
-#
-#jobs:
-# # Publish Dockerfile to docker hub
-#  push_to_docker_registry:
-#    name: Publish to Docker hub
-#    runs-on: ubuntu-latest
-#
-#    # Needs build phase
-#    needs: [build]
-#
-#    steps:
-#
-#      - name: Check out the repository
-#      - uses: actions/checkout@v2
+name: Push to Docker
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+ # Publish Dockerfile to docker hub
+  push_to_docker_registry:
+    name: Publish to Docker hub
+    runs-on: ubuntu-latest
+
+    # Needs build phase
+    needs: [build]
+
+    steps:
+
+      - name: Check out the repository
+      - uses: actions/checkout@v2
 #
 #      - name: Push to Docker hub
 #        uses: docker/build-push-action@v1
