@@ -121,6 +121,8 @@ public HttpResponse handle(HttpRequest request, HttpResponse response) {
 * `request.getParameter(String)` returns the actual value of the query parameter if it exists in URL, otherwise it returns null. 
 * If the parameter does not exists, Banzai logs a warning message
 
+> The recommended approach to access query parameters is to first check if it is null with the `request.hasParameter(String)` method and then get the parameter's value with `request.getParameter(String)`. Directly using `request.getParameter(String)` may cause `NullPointerException` and the server does not handle that exception. 
+
 
 ## Banzai
 As discussed above, every HTTP request contains a path. This path specifies which document has been requested and should be translated to the webroot. For example, if the webroot is `{root}/www`, then a request like `GET /hey.html HTTP/1.1` should request the file `{root}/www/hey/html`. 
