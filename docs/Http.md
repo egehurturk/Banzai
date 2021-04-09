@@ -110,12 +110,15 @@ You can access the parameters through `HttpRequest` object:
 ```java
 @Override
 public HttpResponse handle(HttpRequest request, HttpResponse response) {
-          String foo = request.getQueryParam("foo").getFirst() ? request.getQueryParam("foo").getSecond() : "null";
+          String fooArg = request.getParameter("foo"); // if foo does not exists as URL argument, then the value of fooArg will be null
+          String barArg = request.hasParameter("bar") ? request.getParameter("bar") : "none";
+          boolean bazArg = request.hasParameter("baz"); 
           // ...
 }
 
 ```
-* `request.getQueryParam("<value>")` returns a `com.egehurturk.util.Pair` object. The first value in the pair contains a metadata about the parameter, and is null if the parameter (key) does not exist. To check if the key exists, use a inline ternary statement. `request.getQueryParam("<key>").getSecond()` returns the actual value of the `<key>`. You can directly use the `request.getQueryParam("<key>").getSecond()` without the initial checking; however, the value may be `null`. 
+* `request.hasParameter(String)` returns a boolean value indicating whether the parameter exists in URL as a query parameter. 
+* `request.getParameter(String)` returns the actual value of the query parameter if it exists in URL, otherwise it returns null. 
 * If the parameter does not exists, Banzai logs a warning message
 
 
