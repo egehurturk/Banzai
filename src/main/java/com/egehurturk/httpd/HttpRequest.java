@@ -258,8 +258,17 @@ public class HttpRequest {
         return pair;
     }
 
+    public boolean hasParameter(String param) {
+        return getQueryParam(param).getFirst();
+    }
 
-    public Pair<Boolean, String> getQueryParam(String param) {
+    public String getParameter(String param) {
+        if (hasParameter(param))
+            return getQueryParam(param).getSecond();
+        return null;
+    }
+
+    private Pair<Boolean, String> getQueryParam(String param) {
         Pair<Boolean, String> pair = null;
         if (queryParams.get(param) == null) {
             logger.warn("Query parameter is null for " + param + " parameter");
