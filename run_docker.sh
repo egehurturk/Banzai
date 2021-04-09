@@ -26,8 +26,8 @@ ANSI_CYAN="\033[0;36m"
 ANSI_WHITE="\033[1;37m"
 ANSI_YELLOW="\033[1;33m"
 ANSI_NC="\033[0m" # no color
-ANSI_BOLD=$(tput bold) # bold
-NORMAL=$(tput sgr0)  # escape bold
+ANSI_BOLD=$(tput bold 2> /dev/null) # bold
+NORMAL=$(tput sgr0 2> /dev/null)  # escape bold
 
 # Build up docker and run
 # docker exec -ti  wizardly_tesla sh
