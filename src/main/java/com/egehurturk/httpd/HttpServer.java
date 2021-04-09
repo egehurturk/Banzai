@@ -262,8 +262,6 @@ public class HttpServer extends BaseServer implements Closeable {
     @Override
     public void start() {
 
-        System.out.println("This is a debug message to test if the build compiles the code");
-
         if (checkFields()) {
             logger.error("Server is not properly initialized"); logger.error("Configuration error");
             logger.error("Stopping execution");
