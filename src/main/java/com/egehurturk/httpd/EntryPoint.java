@@ -70,8 +70,8 @@ public class EntryPoint {
         @Override
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
             String body;
-            if (request.getQueryParam("name").getFirst()) {
-                body = request.getQueryParam("name").getSecond();
+            if (request.hasParameter("name")) {
+                body = request.getParameter("name");
             } else {
                 body = "<h3><i>Check logs (console)</i></h3>";
             }
@@ -109,10 +109,10 @@ public class EntryPoint {
         @Override
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
             HTMLRenderer contentRenderer = new HTMLRenderer("www/dist.html", response.getStream());
-            String username = request.getQueryParam("username").getFirst() ? request.getQueryParam("username").getSecond() : "null";
-            String name = request.getQueryParam("name").getFirst() ? request.getQueryParam("name").getSecond() : "null";
-            String age = request.getQueryParam("age").getFirst() ? request.getQueryParam("age").getSecond() : "null";
-            String location = request.getQueryParam("location").getFirst() ? request.getQueryParam("location").getSecond() : "null";
+            String username = request.getParameter("username");
+            String name = request.getParameter("name");
+            String age = request.getParameter("age");
+            String location = request.getParameter("location");
 
             contentRenderer.setVar("username", username);
             contentRenderer.setVar("name", name);
