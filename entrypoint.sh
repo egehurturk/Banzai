@@ -9,6 +9,7 @@ ANSI_PURPLE="\033[0;35m"
 ANSI_CYAN="\033[0;36m"
 ANSI_WHITE="\033[1;37m"
 ANSI_YELLOW="\033[1;33m"
+BRIGHT_RED="\033[31;1m"
 ANSI_NC="\033[0m" # no color
 ANSI_BOLD=$(tput bold 2> /dev/null) # bold
 NORMAL=$(tput sgr0 2< /dev/null)  # escape bold

@@ -24,6 +24,11 @@ ANSI_BLUE="\033[0;34m"
 ANSI_PURPLE="\033[0;35m"
 ANSI_CYAN="\033[0;36m"
 ANSI_WHITE="\033[1;37m"
+BRIGHT_RED="\033[31;1m"
+BRIGHT_CYAN="\033[36;1m"
+BRIGHT_YELLOW="\033[33;1m"
+BRIGHT_GREEN="\033[32;1m"
+BRIGHT_WHITE="\033[37;1m"
 ANSI_YELLOW="\033[1;33m"
 ANSI_NC="\033[0m" # no color
 ANSI_BOLD=$(tput bold 2> /dev/null) # bold
@@ -42,10 +47,12 @@ NORMAL=$(tput sgr0 2> /dev/null)  # escape bold
 trap ctrl_c INT
 function ctrl_c() {
   echo ""
-  printf "  ${ANSI_RED}The installation process has been cancelled. You may need to run the installation utility again to continue.${ANSI_NC}\n"
+  printf "  ${BRIGHT_RED}The installation process has been cancelled. You may need to run the installation utility again to continue.${ANSI_NC}\n"
   echo ""
   exit 1
 }
+
+./scripts/latest_release.sh ./.deploy 
 
 function normalfunc() {
   chmod 755 ./scripts/parser.sh
@@ -75,11 +82,11 @@ function normalfunc() {
 }
 
 function autogenerateproperties() {
-  read -p "${ANSI_BOLD}Enter port number for the server to run on (e.g. 8091): ${NORMAL}" PORT
-  read -p "${ANSI_BOLD}Enter host for the server to run on (e.g. localhost or 0.0.0.0): ${NORMAL}" HOST
+  read -p "${BRIGHT_WIGHT}Enter port number for the server to run on (e.g. 8091): ${NORMAL}" PORT
+  read -p "${BRIGHT_WIGHT}Enter host for the server to run on (e.g. localhost or 0.0.0.0): ${NORMAL}" HOST
   SERVERNAME="Banzai"
-  read -p "${ANSI_BOLD}Enter webroot for the server to run on (e.g. www): ${NORMAL}" WEBROOT
-  read -p "${ANSI_BOLD}Enter debug mode (true/false): ${NORMAL}" DEBUG
+  read -p "${BRIGHT_WIGHT}Enter webroot for the server to run on (e.g. www): ${NORMAL}" WEBROOT
+  read -p "${BRIGHT_WIGHT}Enter debug mode (true/false): ${NORMAL}" DEBUG
   PORT=${PORT:=9090}
   HOST=${HOST:=0.0.0.0}
   DEBUG=${DEBUG:=false}
@@ -146,5 +153,5 @@ printf "  ${ANSI_GREEN}Building Dockerfile with the tag egeh/banzai:1.0-SNAPSHOT
 printf "  ${ANSI_GREEN}Building started!${ANSI_NC}\n"
 docker build -t egeh/banzai:1.0-SNAPSHOT --build-arg server_port=$PORT .
 printf "  ${ANSI_GREEN}Building ended!${ANSI_NC}\n\n"
-printf "  ${ANSI_GREEN}Starting up the docker container with the volume to ${project_dir} in local machine [$PORT:$PORT] ${ANSI_NC}\n"
+printf "  ${BRIGHT_GREEN}Starting up the docker container with the volume to ${project_dir} in local machine [$PORT:$PORT] ${ANSI_NC}\n"
 docker run -v $project_dir:"/$(basename $project_dir)" --env-file=$env_file -p $PORT:$PORT -it egeh/banzai:1.0-SNAPSHOT
