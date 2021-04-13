@@ -18,7 +18,8 @@
   - [`com.egehurturk.util.ArgumentParser`](#comegehurturkutilargumentparser)
   - [`com.egehurturk.util.HeaderStatus`](#comegehurturkutilheaderstatus)
   - [`com.egehurturk.util.Headers`](#comegehurturkutilheaders)
-  - [`com.egehurturk.util.Json`](#comegehurturkutiljson)
+      - [Constructor Summary](#constructor-summary-1)
+      - [Fields](#fields)
   - [`com.egehurturk.util.Methods`](#comegehurturkutilmethods)
   - [`com.egehurturk.util.Pair`](#comegehurturkutilpair)
   - [`com.egehurturk.util.Status`](#comegehurturkutilstatus)
@@ -112,9 +113,12 @@ File Config Path constructor:
 ## `com.egehurturk.httpd.HttpResponse`
 ## `com.egehurturk.httpd.HttpResponseBuilder`
 ## `com.egehurturk.httpd.EntryPoint`
-
+This class is the entry point for Banzai. The JAR (`BanzaiServer-1.0-SNAPSHOT.jar`) is configured to have the main class as this class. You should not use this class if you are using the API; however, this class contains examples for some handlers and you can take a quick look to the examples. 
 # `com.egehurturk.handlers`
+This package is about how Banzai maps certain `Handler`s to URLs and retrieve/send documents to the client. 
+
 ## `com.egehurturk.handlers.HttpController`
+
 ## `com.egehurturk.handlers.HttpHandler`
 ## `com.egehurturk.handlers.ResponseType`
 ## `com.egehurturk.handlers.FileResponse`
@@ -122,14 +126,47 @@ File Config Path constructor:
 ## `com.egehurturk.handlers.Handler`
 
 # `com.egehurturk.util`
-
+This package is a utility package that provides useful methods & classes. 
 ## `com.egehurturk.util.ArgumentParser`
+This class is a wrapper for Apache Commons CLI. You should not use this class. 
 ## `com.egehurturk.util.HeaderStatus`
+This enum provides fields about status of headers, i.e., where the header is used. The fields are:
+* `General`, indicating that the header can be used in both responses and requests
+* `Request`, indicating that the header is used in requests only
+* `Response`, indicating that the header is used in responses only
+
 ## `com.egehurturk.util.Headers`
-## `com.egehurturk.util.Json`
+This enum provides fields for HTTP headers. These fields are used in [`HttpResponseBuilder`](#comegehurturkhttpdhttpresponsebuilder). 
+
+#### Constructor Summary
+`Headers(String NAME, HeaderStatus place)`
+
+#### Fields
+* `Headers.CONNECTION`
+* `Headers.ACCEPT`
+* `Headers.ACCEPT_LANGUAGE` 
+* `Headers.ACCEPT_ENCODING`:
+* `Headers.HOST` 
+* `Headers.SERVER`
+* `Headers.USER_AGENT`
+* `Headers.DATE`
+* `Headers.CONTENT_TYPE`
+* `Headers.CONTENT_LENGTH`
+* `Headers.CONTENT_ENCODING`
+* `Headers.CONTENT_LANGUAGE`
+
+You can access the names of fields with:
+```java
+Headers.CONNECTION.NAME
+```
+This will give the name of the header, which is `"Connection: "` in this case.
+
 ## `com.egehurturk.util.Methods`
+
 ## `com.egehurturk.util.Pair`
+Represents a pair. 
 ## `com.egehurturk.util.Status`
+
 ## `com.egehurturk.util.Utility`
 
 
