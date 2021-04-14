@@ -33,7 +33,7 @@
 
 
 
-<!-- TABLE OF CONTENTS 
+<!-- TABLE OF CONTENTS
 <details open="open">
   <summary><h2>Table of Contents</h2></summary>
   <ol>
@@ -66,7 +66,7 @@
   <h2 align="center">Banzai Server (A HTTP Server)</h3>
 
   <p align="center">
-    A non-blocking, event-driven Http server from scratch, using plain Java. No additional dependencies (Take a look at  Built-with section) is needed. 
+    A non-blocking, event-driven Http server from scratch, using plain Java. No additional dependencies (Take a look at  Built-with section) is needed.
     <br />
     <a href="https://github.com/egehurturk/Banzai/tree/main/docs"><strong>Explore the docs »</strong></a>
     <br />
@@ -94,7 +94,7 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
-        <li><a href="#configuration">Installation</a></li>
+        <li><a href="#configuration">Configuration</a></li>
         <li><a href="#deployment">Deployment</a></li>
       </ul>
     </li>
@@ -107,7 +107,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-Banzai is a light-weight, blazingly fast (when working on local instead of Docker), extendible web server. The server is capable of understanding & responding to HTTP/1.1 (not HTTP/2.0 or HTTPS protocols). 
+Banzai is a light-weight, blazingly fast (when working on local instead of Docker), extendible web server. The server is capable of understanding & responding to HTTP/1.1 (not HTTP/2.0 or HTTPS protocols).
 
 
 ### Built With
@@ -130,6 +130,8 @@ These instructions will get you a copy of the project up and running on your loc
 ### Installation for Docker
 For more detailed instructions, see [Installation](docs/Installation%20and%20Quickstart.md)
 
+> Note: do NOT use the maven wrapper commans (`mvnw` or `mvnw.cmd`) since there are some problems. I will solve this problem in v1.1.
+
 1. Clone the repo
    ```sh
    $ git clone https://github.com/egehurturk/Banzai.git
@@ -144,9 +146,9 @@ For more detailed instructions, see [Installation](docs/Installation%20and%20Qui
    ```sh
    $ ./run_docker.sh -d "/path/to/config_file/"
    ```
-   This will build up a Docker image and run the image. 
+   This will build up a Docker image and run the image.
    See [Docker](docs/Docker.md) for more details, or [Configuration](docs/Configuration.md) for details on configuring the server
-   
+
 ### Installation on Maven
 For more detailed instructions, see [Installation](docs/Installation%20and%20Quickstart.md)
 1. Clone the repo
@@ -160,9 +162,9 @@ For more detailed instructions, see [Installation](docs/Installation%20and%20Qui
 
 3. Install the project to local maven repository:
    ```sh
-   $ mvn install 
+   $ mvn install
    ```
-   This will enable to use Banzai as a dependency in your `pom.xml`. 
+   This will enable to use Banzai as a dependency in your `pom.xml`.
 4. Add the Banzai dependency:
    ```xml
    <dependency>
