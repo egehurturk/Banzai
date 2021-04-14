@@ -52,12 +52,12 @@ public class JsonResponse implements ResponseType {
 
     public void validate(HttpRequest req) {
         // * Note for future documentation: request headers are stored in lowercase and trimmed
-        Pair<Boolean, String> pair = req.getHeader("Accept".toLowerCase());
-        String accept              = pair.getSecond();
-        if (!pair.getFirst()) {
+        
+        if (!req.hasHeader("Accept".toLowerCase())) {
             this.valid = false;
             return;
         }
+        String accept = req.getHeader("Accept".toLowerCase());
         this.valid = accept.contains("application/json") || accept.contains("*/*");
     }
 
