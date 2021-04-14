@@ -4,6 +4,10 @@
       - [Constructor Summary](#constructor-summary)
       - [Important Methods](#important-methods)
   - [`com.egehurturk.httpd.HttpRequest`](#comegehurturkhttpdhttprequest)
+    - [Anatomy of HTTP Requests](#anatomy-of-http-requests)
+    - [Constructors](#constructors)
+    - [Important Methods](#important-methods-1)
+    - [Example Usage:](#example-usage)
   - [`com.egehurturk.httpd.HttpResponse`](#comegehurturkhttpdhttpresponse)
   - [`com.egehurturk.httpd.HttpResponseBuilder`](#comegehurturkhttpdhttpresponsebuilder)
   - [`com.egehurturk.httpd.EntryPoint`](#comegehurturkhttpdentrypoint)
@@ -110,7 +114,74 @@ File Config Path constructor:
 * If the file is not found, then, [`com.egehurturk.exceptions.ConfigurationException`](#comegehurturkexceptionsconfigurationexeption) is thrown.
 
 ## `com.egehurturk.httpd.HttpRequest`
+This class is a data structure for storing HTTP request messages. 
+
+This class is abstracted from the user of the API. You don't need to create a new HttpRequest. The only place you will have access to a request is in `Handler`s. Look at [`com.egehurturk.handlers`](#comegehurturkhandlers) package for more information.
+
+### Anatomy of HTTP Requests
+An HTTP request is a message in the following format:
+1. Request line
+2. Zero or more headers + CRLF
+3. CRLF (Empty line)
+4. Optional message body
+  
+Here, CRLF is `\r\n` . A request-line begins with a **method**, followed by the request URI, HTTP version, and CRLF.
+```
+GET /hello HTTP/1.1\r\n
+```
+
+Here, `GET` is the HTTP method, `/hello` is the request URI, and `HTTP/1.1` is the HTTP version.
+
+A complete list of request methods can be found [here](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods). Since Banzai currently (as of `v.10` ) only supports `GET` requests, in this documentation, `GET` requests will be discussed. 
+
+A `GET` request requests for a source, then the server returns a `HTML` file as a response. HTTP requests include zero or more headers that stores information about the client. Here is the complete list of header values.
+
+### Constructors
+`HttpResponse(BufferedReader) throws HttpRequestException, IOException`: constructors a HTTP request with the client's `InputStream` wrapped in `BufferedReader`. 
+
+Exceptions:
+* If the `BufferedReader` is null, `HttpRequestException` is thrown. 
+* If the request line of HTTP request( `METHOD + PATH + HTTP` ) does not exists, `HttpRequestException` is thrown.
+* If the request is not valid, `HttpRequestException` is thrown.
+* If there are invalid headers, `HttpRequestException` is thrown.
+
+### Important Methods
+`toMap()`:
+* Constructs a `HashMap` from the class. The map includes every header and the request 
+line
+
+`hasHeader(String)`:
+* If the given key exists in the request, `true` is returned. If not, `false` is returned.
+
+`getHeader(String)`:
+* Retrieve the header value from the given key. 
+  * If the key exists, then the value for the header is returned
+  * If the key does not exist, then `null` is returned. 
+    * It is recommended to use `hasHeader(String)` method before using this method to avoid `null` values
+
+`hasParamater(String)`:
+* This method checks if the given query parameter actually exists in URL. Returns a boolean
+
+`getParameter(String)`:
+* Retrieve the query parameter value from URL. 
+  * If the parameter exists, the value is returned
+  * If not,  `null` is returned.
+    * Again, it is recommended to use `hasParameter(String)` to avoid `null` values.
+
+### Example Usage:
+
+```java
+String body;
+if (request.hasParameter("name")) {
+    body = request.getParameter("name");
+} else {
+    body = "<h3><i>no value</i></h3>";
+}
+```
+
 ## `com.egehurturk.httpd.HttpResponse`
+
+
 ## `com.egehurturk.httpd.HttpResponseBuilder`
 ## `com.egehurturk.httpd.EntryPoint`
 This class is the entry point for Banzai. The JAR (`BanzaiServer-1.0-SNAPSHOT.jar`) is configured to have the main class as this class. You should not use this class if you are using the API; however, this class contains examples for some handlers and you can take a quick look to the examples. 

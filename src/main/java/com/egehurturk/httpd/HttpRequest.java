@@ -246,7 +246,17 @@ public class HttpRequest {
         return method;
     }
 
-    public Pair<Boolean, String> getHeader(String name) {
+    public boolean hasHeader(String headerName) {
+        return getHeaderPair(headerName).getFirst();
+    }
+
+    public String getHeader(String name) {
+        if (hasHeader(name))
+            return getHeaderPair(name).getSecond();
+        return null;
+    }
+
+    private Pair<Boolean, String> getHeaderPair(String name) {
         String ret = this.headers.get(name);
         Pair<Boolean, String> pair;
         if (ret == null) {
