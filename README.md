@@ -132,16 +132,17 @@ For more detailed instructions, see [Installation](docs/Installation%20and%20Qui
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/egehurturk/Banzai.git
+   $ git clone https://github.com/egehurturk/Banzai.git
    ```
 2. Change permissions of starter bash file:
     ```sh
-    chmod 755 Banzai/run_docker.sh
+    $ cd Banzai
+    $ chmod 755 run_docker.sh
     ```
 
 3. Run the executable
    ```sh
-   ./run_docker.sh -d "/path/to/config_file/"
+   $ ./run_docker.sh -d "/path/to/config_file/"
    ```
    This will build up a Docker image and run the image. 
    See [Docker](docs/Docker.md) for more details, or [Configuration](docs/Configuration.md) for details on configuring the server
@@ -150,16 +151,16 @@ For more detailed instructions, see [Installation](docs/Installation%20and%20Qui
 For more detailed instructions, see [Installation](docs/Installation%20and%20Quickstart.md)
 1. Clone the repo
    ```sh
-   git clone https://github.com/egehurturk/Banzai.git
+   $ git clone https://github.com/egehurturk/Banzai.git
    ```
 2. Change directory to the folder:
     ```sh
-    cd Banzai
+    $ cd Banzai
     ```
 
 3. Install the project to local maven repository:
    ```sh
-   mvn install 
+   $ mvn install 
    ```
    This will enable to use Banzai as a dependency in your `pom.xml`. 
 4. Add the Banzai dependency:
