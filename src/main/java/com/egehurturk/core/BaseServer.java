@@ -460,15 +460,15 @@ public abstract class BaseServer {
 
             if (!isDirectory(this.config.getProperty(WEBROOT_PROP))) {
                 throw new IllegalArgumentException(
-                        "Web root directory not found. It should be placed in \"root/www\" where root" +
+                        "Web root directory not found. It should be placed in \"root/www\" where root " +
                                 "is the top parent directory."
                 );
             }
 
             this.webRoot = this.config.getProperty(WEBROOT_PROP);
         } catch (UnknownHostException e) {
-            System.err.println("Server name " + HOST_PROP + "that you passed into the configurations file " +
-                    "(<name>.properties) is not valid. Make sure the host name exists or valid, or change" +
+            System.err.println("Server host " + this.config.getProperty(HOST_PROP) + " that you passed into the configurations file " +
+                    "(server.properties) is not valid. Make sure the host name exists or valid, or change " +
                     "the property. ");
         }
     }
