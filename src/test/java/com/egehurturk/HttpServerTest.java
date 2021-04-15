@@ -43,7 +43,7 @@ public class HttpServerTest {
         props.put("server.webroot", "www");
         handler = new HttpHandler(props);
         List<HandlerTemplate> handlers = new ArrayList<>();
-        HandlerTemplate temp = new HandlerTemplate(Methods.GET, new String("/*"), handler);
+        HandlerTemplate temp = new HandlerTemplate(Methods.GET, "/*", handler);
         handlers.add(temp);
         manager = new HttpController(client, handlers);
     }
@@ -62,6 +62,7 @@ public class HttpServerTest {
         // setup the request
         prepareIncomingRequestStream(generateIncomingGetRequest("GET", "/"));
         Assertions.assertNotNull(manager);
+        System.out.println(manager);
         // test
         manager.run();
 
