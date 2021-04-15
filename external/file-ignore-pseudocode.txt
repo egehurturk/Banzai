@@ -1,0 +1,35 @@
+
+
+httpServer.ignore(Methods.GET, "/index.html"); --> ignore (hide from the user)"index.html" for GET requests
+
+    or
+
+httpServer.ignore(Methods.GET, "/jsontest"); --> ignore the URL mapping of "jsontest"
+
+
+Banzai ~ v1.1 ~ Blocking paths (or documents) from clients
+==========================================================
+Ignore  certain  paths  from  users.  For instance,  if "/index.html"
+is blocked,if a user visits that URL, then a 404 Not Found exception
+should be thrown.
+
+
+
+Method:
+=======
+`public void ignore(Methods, String)`
+
+
+Pseudocode
+==========
+
+IGNORE(METHODS, STRING):
+Store a map of blocked paths --> <Methods, String>
+When ignore is called, add a new entry for that map with the parameters
+
+RUN:
+add:
+    if HandlerTemplate's path is not ignored ...
+
+
+
