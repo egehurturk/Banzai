@@ -70,6 +70,7 @@ public class HttpServer extends BaseServer implements Closeable {
     protected static String WEBROOT_PROP = "server.webroot";
     protected static String IGNORED_PROP = "server.ignore";
     public boolean allowCustomUrlMapping = false;
+    private static int countIgnoredPaths = 0;
 
 
     /**
@@ -90,7 +91,7 @@ public class HttpServer extends BaseServer implements Closeable {
      * routing and serving HTML documents
      */
     private final List<HandlerTemplate> handlers = new ArrayList<>();
-    private final List<Pair<Methods, String>> ignoredTemp = new ArrayList<>();
+    private final List<Pair<Methods, String>> ignoredPaths = new ArrayList<>();
 
     /**
      * Chained constructor for initializing with only port.
@@ -311,9 +312,8 @@ public class HttpServer extends BaseServer implements Closeable {
             }
             HttpController controller = new HttpController(cli, handlers);
             controller.setAllowForCustomMapping(this.allowCustomUrlMapping);
-            for (Pair<Methods, String> pair: ignoredTemp) {
-                controller.ignore(pair.getFirst(), pair.getSecond());
-            }
+            if (countIgnoredPaths >= 1)
+                controller.ignore(ignoredPaths);
             pool.execute(controller);
         }
     }
@@ -358,7 +358,12 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 
     public void ignore(Methods method, String path) {
-        this.ignoredTemp.add(Pair.makePair(method, path));
+        if (path == null || path.equals(""))
+            throw new IllegalArgumentException("Path cannot be empty or null");
+        if (method == null)
+            throw new IllegalArgumentException("Method cannot be null. See com.egehurturk.util.Methods for supported HTTP methods");
+        countIgnoredPaths++;
+        this.ignoredPaths.add(Pair.makePair(method, path));
     }
 
     // <<<<<<<<<<<<< CORE <<<<<<<<<<<<<<
