@@ -91,9 +91,9 @@ public class HttpController implements Closeable, Runnable {
      * Store ignored (blocked) paths with the relevant
      * methods.
      *
-     * @see #ignore
+     * @see #ignore(List)
      */
-    private final List<Pair<Methods, String>> ignored = new ArrayList<>();
+    private List<Pair<Methods, String>> ignored = new ArrayList<>();
 
     /**
      * Logging manager
@@ -181,7 +181,6 @@ public class HttpController implements Closeable, Runnable {
                     if (isPathIgnored(templ.method, templ.path)) {
                         FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
                         respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
-                        close();
                         foundHandler = true;
                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
                         break;
@@ -208,7 +207,6 @@ public class HttpController implements Closeable, Runnable {
                         FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
                         respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
-                        close();
                         break;
                     }
                     if (template.path.equals("/*")) {
@@ -316,34 +314,27 @@ public class HttpController implements Closeable, Runnable {
 
     /**
      * Ignore the given path (for the given method access).
-     * @param method method (e.g. GET, or POST)
-     * @param path path to be ignored
+     * @param list list that contains
      */
-    public void ignore(Methods method, String path) {
-        if (path == null || path.equals(""))
-            throw new IllegalArgumentException("Path cannot be empty or null");
-        if (method == null)
-            throw new IllegalArgumentException("Method cannot be null. See com.egehurturk.util.Methods for supported HTTP methods");
-
-        this.ignored.add( Pair.makePair(method, path));
+    public void ignore(List<Pair<Methods, String>> list) {
+        if (list == null)
+            throw new IllegalArgumentException("Ignored paths list cannot be null");
+        this.ignored = list;
     }
 
 
     /**
      * Precondition: @param method is not null.
-     * @see #ignore(Methods, String)
+     * @see #ignore(List)
      * @see #run()
      */
     private boolean isPathIgnored(Methods method, String path) {
-        for (Pair<Methods, String> pair: this.ignored)
+        for (Pair<Methods, String> pair: ignored)
             if (pair.getFirst() == method && pair.getSecond().equals(path))
                 return true;
         return false;
     }
 
-    private int findHandlerTemplate(HandlerTemplate template) {
-        return this.handlers.indexOf(template);
-    }
 
     private List<HandlerTemplate> findHandlerTemplateListFromMethod(String method) {
         List<HandlerTemplate> returnTemplate = new ArrayList<>();
