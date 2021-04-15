@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 
 public class EntryPoint {
 
+    // SET THIS TO TRUE
     public static final boolean PRODUCTION_ENV = true;
 
     /**
@@ -37,6 +38,8 @@ public class EntryPoint {
             httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
             httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
             httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
+            httpServer.ignore(Methods.GET, "/jsontest");
+            httpServer.ignore(Methods.GET, "/cemhurturk");
         }
         httpServer.start();
     }
