@@ -8,9 +8,7 @@ import com.egehurturk.httpd.HttpRequest;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
 import com.egehurturk.httpd.HttpServer;
-import com.egehurturk.util.Headers;
-import com.egehurturk.util.Status;
-import com.egehurturk.util.Utility;
+import com.egehurturk.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -89,6 +87,13 @@ public class HttpController implements Closeable, Runnable {
      */
     private PrintWriter out;
 
+    /**
+     * Store ignored (blocked) paths with the relevant
+     * methods.
+     *
+     * @see #ignore
+     */
+    private final List<Pair<Methods, String>> ignored = new ArrayList<>();
 
     /**
      * Logging manager
@@ -173,6 +178,14 @@ public class HttpController implements Closeable, Runnable {
                 // iterate over all handlers and find the handler template that is assigned to path
                 for (HandlerTemplate templ: methodTemplates) {
                     // if exists
+                    if (isPathIgnored(templ.method, templ.path)) {
+                        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
+                        respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
+                        close();
+                        foundHandler = true;
+                        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
+                        break;
+                    }
                     if (templ.path.equals(req.getPath())) {
                         res = templ.handler.handle(req, res); // let handler to handle the request
                         try {
@@ -191,6 +204,13 @@ public class HttpController implements Closeable, Runnable {
             if (!foundHandler) {
                 // check for default handler (all paths)
                 for (HandlerTemplate template: methodTemplates) {
+                    if (isPathIgnored(template.method, template.path)) {
+                        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
+                        respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
+                        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
+                        close();
+                        break;
+                    }
                     if (template.path.equals("/*")) {
                         res = template.handler.handle(req, res);
                         try {
@@ -292,6 +312,33 @@ public class HttpController implements Closeable, Runnable {
             }
         }
 
+    }
+
+    /**
+     * Ignore the given path (for the given method access).
+     * @param method method (e.g. GET, or POST)
+     * @param path path to be ignored
+     */
+    public void ignore(Methods method, String path) {
+        if (path == null || path.equals(""))
+            throw new IllegalArgumentException("Path cannot be empty or null");
+        if (method == null)
+            throw new IllegalArgumentException("Method cannot be null. See com.egehurturk.util.Methods for supported HTTP methods");
+
+        this.ignored.add( Pair.makePair(method, path));
+    }
+
+
+    /**
+     * Precondition: @param method is not null.
+     * @see #ignore(Methods, String)
+     * @see #run()
+     */
+    private boolean isPathIgnored(Methods method, String path) {
+        for (Pair<Methods, String> pair: this.ignored)
+            if (pair.getFirst() == method && pair.getSecond().equals(path))
+                return true;
+        return false;
     }
 
     private int findHandlerTemplate(HandlerTemplate template) {
