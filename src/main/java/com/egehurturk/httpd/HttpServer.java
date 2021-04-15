@@ -7,6 +7,7 @@ import com.egehurturk.handlers.HandlerTemplate;
 import com.egehurturk.handlers.HttpController;
 import com.egehurturk.handlers.HttpHandler;
 import com.egehurturk.util.Methods;
+import com.egehurturk.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -67,6 +68,7 @@ public class HttpServer extends BaseServer implements Closeable {
     protected static String HOST_PROP    = "server.host";
     protected static String NAME_PROP    = "server.name";
     protected static String WEBROOT_PROP = "server.webroot";
+    protected static String IGNORED_PROP = "server.ignore";
     public boolean allowCustomUrlMapping = false;
 
 
@@ -87,8 +89,8 @@ public class HttpServer extends BaseServer implements Closeable {
      * {@link HttpController} class uses this to manage specific path
      * routing and serving HTML documents
      */
-    private List<HandlerTemplate> handlers = new ArrayList<>();
-
+    private final List<HandlerTemplate> handlers = new ArrayList<>();
+    private final List<Pair<Methods, String>> ignoredTemp = new ArrayList<>();
 
     /**
      * Chained constructor for initializing with only port.
@@ -309,6 +311,9 @@ public class HttpServer extends BaseServer implements Closeable {
             }
             HttpController controller = new HttpController(cli, handlers);
             controller.setAllowForCustomMapping(this.allowCustomUrlMapping);
+            for (Pair<Methods, String> pair: ignoredTemp) {
+                controller.ignore(pair.getFirst(), pair.getSecond());
+            }
             pool.execute(controller);
         }
     }
@@ -350,6 +355,10 @@ public class HttpServer extends BaseServer implements Closeable {
     public void addHandler(Methods method, String path, Handler handler) {
         HandlerTemplate template = new HandlerTemplate(method, path, handler);
         handlers.add(template);
+    }
+
+    public void ignore(Methods method, String path) {
+        this.ignoredTemp.add(Pair.makePair(method, path));
     }
 
     // <<<<<<<<<<<<< CORE <<<<<<<<<<<<<<
@@ -401,3 +410,4 @@ public class HttpServer extends BaseServer implements Closeable {
 }
 
 
+// todo: add support for properties list ignore
