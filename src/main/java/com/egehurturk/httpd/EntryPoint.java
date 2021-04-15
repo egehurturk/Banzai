@@ -40,6 +40,9 @@ public class EntryPoint {
             httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
             httpServer.ignore(Methods.GET, "/jsontest");
             httpServer.ignore(Methods.GET, "/cemhurturk");
+            httpServer.ignore(Methods.GET, "/asdfjasdlfkjals;kdfjadkls;");
+            httpServer.ignore(Methods.GET, "kdfjadkls;");
+            httpServer.ignore(Methods.GET, "/thismynewserver");
         }
         httpServer.start();
     }
