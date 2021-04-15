@@ -178,14 +178,14 @@ public class HttpController implements Closeable, Runnable {
                 // iterate over all handlers and find the handler template that is assigned to path
                 for (HandlerTemplate templ: methodTemplates) {
                     // if exists
-                    if (isPathIgnored(templ.method, templ.path)) {
-                        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
-                        respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
-                        foundHandler = true;
-                        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
-                        break;
-                    }
                     if (templ.path.equals(req.getPath())) {
+                        if (isPathIgnored(templ.method, templ.path)) {
+                            FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
+                            respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
+                            foundHandler = true;
+                            logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
+                            break;
+                        }
                         res = templ.handler.handle(req, res); // let handler to handle the request
                         try {
                             res.send();
@@ -203,13 +203,14 @@ public class HttpController implements Closeable, Runnable {
             if (!foundHandler) {
                 // check for default handler (all paths)
                 for (HandlerTemplate template: methodTemplates) {
-                    if (isPathIgnored(template.method, template.path)) {
-                        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
-                        respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
-                        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
-                        break;
-                    }
                     if (template.path.equals("/*")) {
+                        if (isPathIgnored(template.method, template.path)) {
+                            FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
+                            respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
+                            logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
+                            break;
+                        }
+
                         res = template.handler.handle(req, res);
                         try {
                             res.send();
