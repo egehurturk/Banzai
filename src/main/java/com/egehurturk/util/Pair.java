@@ -14,6 +14,14 @@ public class Pair<A, B> {
     }
 
     @Override
+    public String toString() {
+        return "Pair{" +
+            "first=" + first +
+            ", second=" + second +
+            '}';
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
