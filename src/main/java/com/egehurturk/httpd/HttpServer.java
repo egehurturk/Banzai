@@ -68,9 +68,7 @@ public class HttpServer extends BaseServer implements Closeable {
     protected static String HOST_PROP    = "server.host";
     protected static String NAME_PROP    = "server.name";
     protected static String WEBROOT_PROP = "server.webroot";
-    protected static String IGNORED_PROP = "server.ignore";
     public boolean allowCustomUrlMapping = false;
-    private static int countIgnoredPaths = 0;
 
 
     /**
@@ -91,7 +89,7 @@ public class HttpServer extends BaseServer implements Closeable {
      * routing and serving HTML documents
      */
     private final List<HandlerTemplate> handlers = new ArrayList<>();
-    private final List<Pair<Methods, String>> ignoredPaths = new ArrayList<>();
+
 
     /**
      * Chained constructor for initializing with only port.
@@ -107,9 +105,7 @@ public class HttpServer extends BaseServer implements Closeable {
      * Does nothing. Used for configuring from
      * an external properties file
      */
-    public HttpServer() {
-//        this(8080, InetAddress.getLocalHost(), 50, "unnamed", "www", false);
-    }
+    public HttpServer() {}
 
     public HttpServer(String fileConfigPath) {
         setConfigPropFile(fileConfigPath);
@@ -312,8 +308,10 @@ public class HttpServer extends BaseServer implements Closeable {
             }
             HttpController controller = new HttpController(cli, handlers);
             controller.setAllowForCustomMapping(this.allowCustomUrlMapping);
-            if (countIgnoredPaths >= 1)
+            if (ignoredPaths.size() >= 1)
                 controller.ignore(ignoredPaths);
+            else
+                System.out.println("No ignored paths");
             pool.execute(controller);
         }
     }
@@ -362,7 +360,6 @@ public class HttpServer extends BaseServer implements Closeable {
             throw new IllegalArgumentException("Path cannot be empty or null");
         if (method == null)
             throw new IllegalArgumentException("Method cannot be null. See com.egehurturk.util.Methods for supported HTTP methods");
-        countIgnoredPaths++;
         this.ignoredPaths.add(Pair.makePair(method, path));
     }
 
