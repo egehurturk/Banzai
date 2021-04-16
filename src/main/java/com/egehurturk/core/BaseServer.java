@@ -2,16 +2,17 @@ package com.egehurturk.core;
 
 import com.egehurturk.exceptions.ConfigurationException;
 import com.egehurturk.httpd.HttpServer;
+import com.egehurturk.util.Methods;
+import com.egehurturk.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
+
 import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 
 // consider adding the pool field for baseservice for threading
 
@@ -191,6 +192,9 @@ public abstract class BaseServer {
     protected static String NAME_PROP    = "server.name";
     protected static String WEBROOT_PROP = "server.webroot";
     protected static String DEBUG_PROP   = "debug";
+    protected static String IGNORED_PROP = "server.blocked_paths";
+
+    protected List<Pair<Methods, String>> ignoredPaths = new ArrayList<>();
 
 
     /**
@@ -453,10 +457,11 @@ public abstract class BaseServer {
                     "directory template?");
         }
         try {
-            this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
-            this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
-            this.name       = this.config.getProperty(NAME_PROP); // already a string
-            this.debugMode  = Boolean.parseBoolean(this.config.getProperty(DEBUG_PROP));
+            this.serverHost   = InetAddress.getByName(this.config.getProperty(HOST_PROP));
+            this.serverPort   = Integer.parseInt(this.config.getProperty(PORT_PROP));
+            this.name         = this.config.getProperty(NAME_PROP); // already a string
+            this.debugMode    = Boolean.parseBoolean(this.config.getProperty(DEBUG_PROP));
+            this.ignoredPaths = parseIgnoredPathList();
 
             if (!isDirectory(this.config.getProperty(WEBROOT_PROP))) {
                 throw new IllegalArgumentException(
@@ -471,6 +476,32 @@ public abstract class BaseServer {
                     "(server.properties) is not valid. Make sure the host name exists or valid, or change " +
                     "the property. ");
         }
+    }
+
+    private List<Pair<Methods, String>> parseIgnoredPathList() {
+        String rawItems = this.config.getProperty(IGNORED_PROP);
+        if (rawItems == null || rawItems.length() == 0) {
+            return new ArrayList<>();
+        }
+        String[] items = rawItems.split("\\s*,\\s*");
+
+        List<Pair<Methods, String>> aux = new ArrayList<>(); final String SPACE = " ";
+
+        for (String item: items) {
+            int indexOfSpace = item.indexOf(SPACE);
+            String methodString = item.substring(0,indexOfSpace);
+            String path = item.substring(indexOfSpace+1);
+            try {
+                Methods method = Methods.valueOf(methodString.toUpperCase());
+                aux.add(Pair.makePair(method, path));
+            } catch (IllegalArgumentException err) {
+                final String RED_UNDERLINED = "\033[4;31m"; final String RESET = "\033[0m";
+                System.out.println();
+                System.err.println(RED_UNDERLINED + "Method for " + methodString + " [" + item + "] in server.blocked_paths is not valid. Skipped current entry." + RESET);
+            }
+        }
+
+        return aux;
     }
 
     /**
