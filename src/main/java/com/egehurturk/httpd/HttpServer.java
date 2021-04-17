@@ -412,4 +412,3 @@ public class HttpServer extends BaseServer implements Closeable {
 }
 
 
-// todo: add support for properties list ignore
