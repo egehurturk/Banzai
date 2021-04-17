@@ -49,12 +49,12 @@ fi
 
 VERSIONLOCAL=$(read_var $VAR $FILE)
  
-if [[ $VERSIONREMOTE ==  $VERSIONLOCAL ]]; then
+if [[ $VERSIONREMOTE ==  $VERSIONLOCAL ]] || [[ $VERSIONREMOTE == "" ]]; then
     printf "  ${BRIGHT_GREEN} Everything is up to date! \n${ANSI_NC}"
-    exit 0
+    exit
 else
     printf "  {Banzai $VERSIONLOCAL is installed on your machine; however, a newer version of Banzai ($VERSIONREMOTE) exists.}  \n\n\n"
-    exit 1
+    exit
 fi
 
 
