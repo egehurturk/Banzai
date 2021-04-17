@@ -38,11 +38,15 @@ public class EntryPoint {
             httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
             httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
             httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
-//            httpServer.ignore(Methods.GET, "/jsontest");
-//            httpServer.ignore(Methods.GET, "/cemhurturk");
-//            httpServer.ignore(Methods.GET, "/asdfjasdlfkjals;kdfjadkls;");
-//            httpServer.ignore(Methods.GET, "kdfjadkls;");
-//            httpServer.ignore(Methods.GET, "/thismynewserver");
+            httpServer.ignore(Methods.GET, "/jsontest");
+            httpServer.ignore(Methods.GET, "/cemhurturk");
+            httpServer.ignore(Methods.GET, "/asdfjasdlfkjals;kdfjadkls;");
+            httpServer.ignore(Methods.GET, "kdfjadkls;");
+            httpServer.ignore(Methods.GET, "/thismynewserver");
+            httpServer.ignore(Methods.POST, "sdfl;kgjsd;lkgjsfl;k");
+            httpServer.ignore(Methods.POST, null);
+            httpServer.ignore(null, null);
+            httpServer.ignore(null, "/adsdassad");
         }
         httpServer.start();
     }
@@ -66,8 +70,9 @@ public class EntryPoint {
         @Override
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
             FileResponse fil = new FileResponse("www/custom.html", response.getStream());
-            System.out.println("Debug from file response, file response content: " + fil.asString());
+            // FIXME: fil is null
             HttpResponse res = fil.toHttpResponse();
+            System.out.println("Debug from file response, file response content: " + fil.asString());
             return res;
         }
     }
