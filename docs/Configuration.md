@@ -1,7 +1,9 @@
 ### Table of Contents
 - [Configuration](#configuration)
   - [Configuration With `Properties` File](#configuration-with-properties-file)
+      - [Hiding documents and paths](#hiding-documents-and-paths)
     - [Setting Configuration File through Banzai API](#setting-configuration-file-through-banzai-api)
+          - [Hiding documents and paths via API](#hiding-documents-and-paths-via-api)
 
 
 # Configuration
@@ -59,15 +61,33 @@ Because the script `/scripts/parser.sh` used to parse the `properties` file incl
 
 </details>
 
+#### Hiding documents and paths
+You can configure Banzai to hide documents or block users from accessing certain paths in `server.properties`. You need to add **`server.blocked_paths`** property and provide a CSV data containing paths and HTTP methods. Here's an example:
+
+```properties
+server.blocked_paths =  GET /hello, GET /hi, GET /salute
+```
+The syntax is defined as: `METHOD path` (with a single space between `METHOD` and `path`). `METHOD` should be one of the following as of `v1.1`: `GET` or `POST`. Lowercase methods will not produce error; however, using all caps method is recommended. 
+
+The above configuration will block users from accessing the `/hello` path (defined with API. See [Setting Configuration File through Banzai API](#setting-configuration-file-through-banzai-api)). In other words, the server will return a  `404 Not Found` response to the user. 
+
+Another example:
+
+```properties
+server.blocked_paths =  GET /index.html, GET /important_folder/important_document.txt
+```
+
+This configuration will block users from accessing `index.html` and `important_folder/important_document.txt` with `GET` request. 
+
 
 ### Setting Configuration File through Banzai API
-If you will use Banzai without docker and running locally, you need to set the `server.properties`'s path as configuration path of the server. In other words, you should use the method `setConfigPropFile(String)` of class `com.egehurturk.httpd.HttpServer`. Here's an example:
+If you use Banzai without docker you need to set the `server.properties`'s path as configuration path of the server. To do so, you should use the method `setConfigPropFile(String)` of class `com.egehurturk.httpd.HttpServer`. Here's an example:
 
 ```java
 HttpServer server = new HttpServer();
 server.setConfigPropFile("/home/egehurturk/test_banzai/server.properties");
 ```
-Then, you should use the `configureServer()` method of class `com.egehurturk.httpd.HttpServer`. Here's an example:
+After setting the location of configuration file, configure the server with the  method `configureServer()` of class `com.egehurturk.httpd.HttpServer`. Here's an example:
 
 ```java
 try {
@@ -81,7 +101,7 @@ You can use Banzai's default behavior, i.e., using Banzai to serve documents ins
 
 Note that the docker way only uses this behavior of Banzai, as stated in [User Guide](User-Guide.md). 
 
-However, if you use Banzai locally, then you can configure whether the server allows custom URLs; in other words certain paths can be mapped to certain documents in local filesystem. You can set this behavior through the `allowCustomUrlMapping(boolean)` method of class `com.egehurturk.httpd.HttpServer`. Here's a demonstration:
+However, if you use Banzai locally, you can configure whether the server allows custom URLs; in other words certain paths can be mapped to certain documents in local filesystem. You can set this behavior through the `allowCustomUrlMapping(boolean)` method of class `com.egehurturk.httpd.HttpServer`. Here's a demonstration:
 
 ```java
 server.allowCustomUrlMapping(true); // this will allow for custom URLs
@@ -108,6 +128,15 @@ server.addHandler(Methods.GET, "/jimi", new MyHandler());
     * This may be viewed as a "bug"; however, absolute path enables serving other documents outside of `webroot`. 
     * Refer to [User Guide](User-Guide.md) for more information about `FileResponse`
 
+###### Hiding documents and paths via API
+You can use Banzai API to hide documents and paths:
 
+```java
+// ...
+httpServer.ignore(Methods.GET, "/index.html");
+httpServer.ignore(Methods.GET, "/jimi_hendrix.html");
+```
+The first argument is the HTTP method to block the users from accessing the path (second argument). In this case, `GET` requests for `index.html` and `jimi_hendrix.html` are blocked. 
 
+If the path or the method is `null` or empty, `IllegalArgumentException` is thrown. 
   
