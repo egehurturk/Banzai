@@ -356,11 +356,20 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 
     public void ignore(Methods method, String path) {
-        if (path == null || path.equals(""))
-            throw new IllegalArgumentException("Path cannot be empty or null");
-        if (method == null)
-            throw new IllegalArgumentException("Method cannot be null. See com.egehurturk.util.Methods for supported HTTP methods");
-        this.ignoredPaths.add(Pair.makePair(method, path));
+        try {
+            if (path == null || path.equals(""))
+                throw new IllegalArgumentException("Path to be blocked cannot be empty or null");
+            if (method == null)
+                throw new IllegalArgumentException("Method to block cannot be null. See com.egehurturk.util.Methods for supported HTTP methods");
+            this.ignoredPaths.add(Pair.makePair(method, path));
+        } catch (IllegalArgumentException err) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            err.printStackTrace(pw);
+            String cause = sw.toString().substring(0, sw.toString().indexOf(err.getMessage()));
+            logger.error(cause + err.getMessage());
+        }
+
     }
 
     // <<<<<<<<<<<<< CORE <<<<<<<<<<<<<<
