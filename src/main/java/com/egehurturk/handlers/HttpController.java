@@ -179,6 +179,7 @@ public class HttpController implements Closeable, Runnable {
                 for (HandlerTemplate templ: methodTemplates) {
                     // if exists
                     if (templ.path.equals(req.getPath())) {
+                        // we can use req.getPath() and templ.path interchangeably in here since they are the same
                         if (isPathIgnored(templ.method, templ.path)) {
                             FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
                             respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
@@ -204,13 +205,14 @@ public class HttpController implements Closeable, Runnable {
                 // check for default handler (all paths)
                 for (HandlerTemplate template: methodTemplates) {
                     if (template.path.equals("/*")) {
-                        if (isPathIgnored(template.method, template.path)) {
+                        // do not use template.path here since it will be /*.
+                        // check if request path is ignored
+                        if (isPathIgnored(template.method, req.getPath())) {
                             FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
                             respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
                             logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
                             break;
                         }
-
                         res = template.handler.handle(req, res);
                         try {
                             res.send();
@@ -244,7 +246,8 @@ public class HttpController implements Closeable, Runnable {
                     logger.error("Could not close client stream");
                 }
             }
-        } catch (BadRequest400Exception e) {
+        }
+        catch (BadRequest400Exception e) {
             try {
                 FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("400.html"), new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
@@ -263,7 +266,8 @@ public class HttpController implements Closeable, Runnable {
                     logger.error("Could not close client stream");
                 }
             }
-        } catch (MethodNotAllowedException e) {
+        }
+        catch (MethodNotAllowedException e) {
             try {
                 FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("403.html"), new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
@@ -282,7 +286,8 @@ public class HttpController implements Closeable, Runnable {
                     logger.error("Could not close client stream");
                 }
             }
-        } catch (NotFound404Exception e) {
+        }
+        catch (NotFound404Exception e) {
             try {
                 FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
@@ -301,9 +306,11 @@ public class HttpController implements Closeable, Runnable {
                     logger.error("Could not close client stream");
                 }
             }
-        } catch (HttpRequestException e) {
+        }
+        catch (HttpRequestException e) {
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             try {
                 close();
             } catch (IOException e) {
