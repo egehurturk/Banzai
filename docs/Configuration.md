@@ -79,6 +79,22 @@ server.blocked_paths =  GET /index.html, GET /important_folder/important_documen
 
 This configuration will block users from accessing `index.html` and `important_folder/important_document.txt` with `GET` request. 
 
+You can also hide an entire directory (files inside the directory and even subdirectories) by entering the name of the directory under webroot you want to hide without "/" suffix:
+
+```properties
+server.blocked_paths = GET /documents
+```
+
+Assuming "documents" folder exists under webroot, every file inside "documents" directory and files under the subdirectories will be hidden from the user
+
+Moreover, you can filter files on extensions:
+
+```properties
+server.blocked_pahts = GET /css/*.scss
+```
+
+This will hide every `scss` file under `$webroot/css`. (Note that `GET /css/*` is equivalent to `GET /css`).
+
 
 ### Setting Configuration File through Banzai API
 If you use Banzai without docker you need to set the `server.properties`'s path as configuration path of the server. To do so, you should use the method `setConfigPropFile(String)` of class `com.egehurturk.httpd.HttpServer`. Here's an example:
@@ -139,4 +155,6 @@ httpServer.ignore(Methods.GET, "/jimi_hendrix.html");
 The first argument is the HTTP method to block the users from accessing the path (second argument). In this case, `GET` requests for `index.html` and `jimi_hendrix.html` are blocked. 
 
 If the path or the method is `null` or empty, `IllegalArgumentException` is thrown. 
-  
+
+Directory and filter syntax discussed above can be used in `ignore` method as well.
+
