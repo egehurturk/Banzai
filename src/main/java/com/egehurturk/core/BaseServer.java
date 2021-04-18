@@ -4,6 +4,7 @@ import com.egehurturk.exceptions.ConfigurationException;
 import com.egehurturk.httpd.HttpServer;
 import com.egehurturk.util.Methods;
 import com.egehurturk.util.Pair;
+import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -230,6 +231,7 @@ public abstract class BaseServer {
     public BaseServer () {}
 
     /**
+     *
      * Base constructor that has all fields as arguments. Is used for manually
      * configuring fields (Port, host, backlog).
      * Checks for valid port, backlog.
@@ -243,6 +245,7 @@ public abstract class BaseServer {
      * @throws IllegalArgumentException     - Throws for value of port that is out of range, described below
      *
      */
+    @Deprecated
     public BaseServer (int serverPort, InetAddress serverHost,
                        int backlog, String name, String webRoot,
                        boolean debugMode
@@ -461,7 +464,6 @@ public abstract class BaseServer {
             this.serverPort   = Integer.parseInt(this.config.getProperty(PORT_PROP));
             this.name         = this.config.getProperty(NAME_PROP); // already a string
             this.debugMode    = Boolean.parseBoolean(this.config.getProperty(DEBUG_PROP));
-            this.ignoredPaths = parseIgnoredPathList();
 
             if (!isDirectory(this.config.getProperty(WEBROOT_PROP))) {
                 throw new IllegalArgumentException(
@@ -469,8 +471,8 @@ public abstract class BaseServer {
                                 "is the top parent directory."
                 );
             }
-
             this.webRoot = this.config.getProperty(WEBROOT_PROP);
+            this.ignoredPaths = parseIgnoredPathList();
         } catch (UnknownHostException e) {
             System.err.println("Server host " + this.config.getProperty(HOST_PROP) + " that you passed into the configurations file " +
                     "(server.properties) is not valid. Make sure the host name exists or valid, or change " +
@@ -478,6 +480,10 @@ public abstract class BaseServer {
         }
     }
 
+    /**
+     * Parse ignored property
+     * @return list of ignored paths
+     */
     private List<Pair<Methods, String>> parseIgnoredPathList() {
         String rawItems = this.config.getProperty(IGNORED_PROP);
         if (rawItems == null || rawItems.length() == 0) {
@@ -486,14 +492,36 @@ public abstract class BaseServer {
         String[] items = rawItems.split("\\s*,\\s*");
 
         List<Pair<Methods, String>> aux = new ArrayList<>(); final String SPACE = " ";
-
         for (String item: items) {
             int indexOfSpace = item.indexOf(SPACE);
             String methodString = item.substring(0,indexOfSpace);
             String path = item.substring(indexOfSpace+1);
             try {
+
                 Methods method = Methods.valueOf(methodString.toUpperCase());
-                aux.add(Pair.makePair(method, path));
+                boolean condition1 = Utility.isDirectory(webRoot + Utility.removeLastChars(path, 1));
+                if (Utility.isDirectory(webRoot + path)) {
+                    List<Pair<Methods, String>> dirWalk = readDirectory(method, webRoot + path, path, new ArrayList<>());
+                    aux.addAll(dirWalk);
+                }
+                else if (path.indexOf("*") == path.length()-1 && condition1) {
+                    List<Pair<Methods, String>> dirWalk = readDirectory(method, webRoot +  Utility.removeLastChars(path, 2),  Utility.removeLastChars(path, 2), new ArrayList<>());
+                    aux.addAll(dirWalk);
+                }
+                else if (path.contains("*.") && Utility.isDirectory(webRoot + path.substring(0,path.indexOf("*")))) {
+                    // example: /test/*.css or /js/*.js
+                    int starIndex = path.indexOf("*");
+                    String extension = path.substring(starIndex + 2);
+                    List<Pair<Methods, String>> filteredWalk = filenameMatches(method, extension, webRoot + path.substring(0,path.indexOf("*")-1), path.substring(0,path.indexOf("*")-1), new ArrayList<>());
+                    aux.addAll(filteredWalk);
+                }
+                else {
+                    aux.add(Pair.makePair(method, path));
+                    if (path.equals("/"))
+                        aux.add(Pair.makePair(method, "/index.html"));
+                    else if (path.equals("/index.html"))
+                        aux.add(Pair.makePair(method, "/"));
+                }
             } catch (IllegalArgumentException err) {
                 final String RED_UNDERLINED = "\033[4;31m"; final String RESET = "\033[0m";
                 System.out.println();
@@ -528,7 +556,7 @@ public abstract class BaseServer {
             this.serverHost = InetAddress.getByName(this.config.getProperty(HOST_PROP));
             this.debugMode  = Boolean.parseBoolean(this.config.getProperty(DEBUG_PROP));
             this.serverPort = Integer.parseInt(this.config.getProperty(PORT_PROP));
-            this.name       = this.config.getProperty(NAME_PROP); // already a string
+            this.name       = this.config.getProperty(NAME_PROP);
 
             if (!isDirectory(this.config.getProperty(WEBROOT_PROP))) {
                 throw new IllegalArgumentException(
@@ -537,6 +565,7 @@ public abstract class BaseServer {
                 );
             }
             this.webRoot = this.config.getProperty(WEBROOT_PROP);
+            this.ignoredPaths = parseIgnoredPathList();
         } catch (UnknownHostException e) {
             System.err.println("Server name " + HOST_PROP + "that you passed into the configurations file " +
                     "(<name>.properties) is not valid. Make sure the host name exists or valid, or change" +
@@ -563,7 +592,6 @@ public abstract class BaseServer {
                         " directory template?");
             }
             serverConfig.load(file);
-//            System.out.println(serverConfig);
             userConfig.keySet().
                     forEach(val -> {
                         String key = (String) val;
@@ -576,6 +604,59 @@ public abstract class BaseServer {
             return null;
         }
         return serverConfig;
+    }
+
+    /**
+     * Read all files from the directory and return them as List.
+     * @param m method to be ignored at every file inside directory
+     * @param path the root path of folder
+     * @param actualPath path of the directory at every recursive call
+     * @param pair List to be returned (needed this since method is recursive...)
+     * @return List of filtered files
+     */
+    protected List<Pair<Methods, String>> readDirectory(Methods m, String path, String actualPath, List<Pair<Methods, String>> pair) {
+        File root = new File(path);
+        File[] list = root.listFiles();
+        if (list == null) return null;
+        for (final File file: list) {
+            if (file.isDirectory())
+                readDirectory(m, file.getAbsolutePath(), actualPath + "/" + file.getName(), pair);
+            else
+                pair.add(Pair.makePair(m, actualPath + "/" + file.getName()));
+        }
+        return pair;
+    }
+
+    /**
+     * Return all files with the given extension inside the path in a List.
+     *
+     * @param path the directory at which files will be checked
+     * @param m method to be ignored at every file inside directory.
+     * @param extension extension to be collected.
+     * @param actualPath path of the directory (or file) at every recursive call.
+     * @param pair List to be returned containing all files with the given extension.
+     * @return List of filtered files.
+     */
+    protected List<Pair<Methods, String>> filenameMatches(Methods m, String extension, String path,
+                                                          String actualPath, List<Pair<Methods, String>> pair) {
+        File root = new File(path);
+        File[] list = root.listFiles();
+        if (list == null) return null;
+        for (final File file: list) {
+            if (file.isDirectory())
+                filenameMatches(m, extension, file.getAbsolutePath(), actualPath + "/" + file.getName(), pair);
+            else {
+                if (getFileExtension(file.getName()).equals(extension))
+                    pair.add(Pair.makePair(m, actualPath + "/" + file.getName()));
+            }
+        }
+        return pair;
+    }
+
+    protected String getFileExtension(String fullName) {
+        String fileName = new File(fullName).getName();
+        int dotIndex = fileName.lastIndexOf('.');
+        return (dotIndex == -1) ? "" : fileName.substring(dotIndex + 1);
     }
 
     /**
