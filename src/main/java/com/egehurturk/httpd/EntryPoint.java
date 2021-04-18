@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 public class EntryPoint {
 
     // SET THIS TO TRUE
-    public static final boolean PRODUCTION_ENV = true;
+    public static final boolean PRODUCTION_ENV = false;
 
     /**
      * Note that configuration should not be as path, it only needs to be the name of the properties file
@@ -38,15 +38,15 @@ public class EntryPoint {
             httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
             httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
             httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
-            httpServer.ignore(Methods.GET, "/jsontest");
-            httpServer.ignore(Methods.GET, "/cemhurturk");
-            httpServer.ignore(Methods.GET, "/asdfjasdlfkjals;kdfjadkls;");
-            httpServer.ignore(Methods.GET, "kdfjadkls;");
-            httpServer.ignore(Methods.GET, "/thismynewserver");
-            httpServer.ignore(Methods.POST, "sdfl;kgjsd;lkgjsfl;k");
-            httpServer.ignore(Methods.POST, null);
-            httpServer.ignore(null, null);
-            httpServer.ignore(null, "/adsdassad");
+//            httpServer.ignore(Methods.GET, "/jsontest");
+//            httpServer.ignore(Methods.GET, "/cemhurturk");
+//            httpServer.ignore(Methods.GET, "/asdfjasdlfkjals;kdfjadkls;");
+//            httpServer.ignore(Methods.GET, "kdfjadkls;");
+//            httpServer.ignore(Methods.GET, "/thismynewserver");
+//            httpServer.ignore(Methods.POST, "sdfl;kgjsd;lkgjsfl;k");
+//            httpServer.ignore(Methods.POST, null);
+//            httpServer.ignore(null, null);
+//            httpServer.ignore(null, "/adsdassad");
         }
         httpServer.start();
     }
