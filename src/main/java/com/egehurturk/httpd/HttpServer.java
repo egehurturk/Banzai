@@ -8,6 +8,7 @@ import com.egehurturk.handlers.HttpController;
 import com.egehurturk.handlers.HttpHandler;
 import com.egehurturk.util.Methods;
 import com.egehurturk.util.Pair;
+import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -355,13 +356,61 @@ public class HttpServer extends BaseServer implements Closeable {
         handlers.add(template);
     }
 
+    /**
+     * Ignore files (or directories, or even specific files) with the given method and path.
+     * <p>
+     *
+     * Wildcards:
+     * <ul>
+     *     <li>
+     *         Directory syntax: If the path points to a directory, e.g. "/text" where "text" is a directory under
+     *         the web root, then every file under "text" will be blocked, even intermediate files under child directories.
+     *     </li>
+     *     <li>
+     *          Pattern matching: If the path contains a pattern, e.g. "/css/*.css" where "css" is a directory under
+     *          the web root, then every file with the extension "css" will be blocked.
+     *     </li>
+     * </ul>
+     *
+     * @param method Method to be blocked. Every request to the given path with this method will be returned as 404 (Not displayed to user).
+     * @param path Path to be blocked. Every request to this path will be returned as 404.
+     */
     public void ignore(Methods method, String path) {
         try {
             if (path == null || path.equals(""))
                 throw new IllegalArgumentException("Path to be blocked cannot be empty or null");
             if (method == null)
                 throw new IllegalArgumentException("Method to block cannot be null. See com.egehurturk.util.Methods for supported HTTP methods");
-            this.ignoredPaths.add(Pair.makePair(method, path));
+
+            boolean isStarRemovedDir = Utility.isDirectory(webRoot + Utility.removeLastChars(path, 1));
+
+            if (Utility.isDirectory(webRoot + path) ) {
+                List<Pair<Methods, String>> dirWalk = readDirectory(method, webRoot + path, path, new ArrayList<>());
+                this.ignoredPaths.addAll(dirWalk);
+            }
+
+
+             else if (path.indexOf("*") == path.length()-1 && isStarRemovedDir) {
+                List<Pair<Methods, String>> dirWalk = readDirectory(method, webRoot + Utility.removeLastChars(path, 2),  Utility.removeLastChars(path, 2), new ArrayList<>());
+                System.out.println(dirWalk);
+                this.ignoredPaths.addAll(dirWalk);
+            }
+
+            else if (path.contains("*.") && Utility.isDirectory( webRoot + path.substring(0, path.indexOf("*") ) ) ) {
+                int starIndex = path.indexOf("*");
+                String extension = path.substring(starIndex + 2);
+                List<Pair<Methods, String>> filteredWalk = filenameMatches(method, extension, webRoot + path.substring(0,path.indexOf("*")-1),
+                                                            path.substring(0,path.indexOf("*")-1), new ArrayList<>());
+                this.ignoredPaths.addAll(filteredWalk);
+            }
+            else {
+                this.ignoredPaths.add(Pair.makePair(method, path));
+                if (path.equals("/index.html"))
+                    this.ignoredPaths.add(Pair.makePair(method, "/"));
+                else if (path.equals("/"))
+                    this.ignoredPaths.add(Pair.makePair(method, "/index.html"));
+            }
+
         } catch (IllegalArgumentException err) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -373,6 +422,14 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 
     // <<<<<<<<<<<<< CORE <<<<<<<<<<<<<<
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected List<Pair<Methods, String>> readDirectory(Methods m, String path, String actualPath, List<Pair<Methods, String>> pair) {
+        return super.readDirectory(m, path, actualPath, pair);
+    }
 
 
     /**
@@ -419,5 +476,4 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 
 }
-
 
