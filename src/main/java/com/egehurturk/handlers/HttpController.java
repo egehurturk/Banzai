@@ -1,9 +1,7 @@
 package com.egehurturk.handlers;
 
-import com.egehurturk.exceptions.BadRequest400Exception;
 import com.egehurturk.exceptions.HttpRequestException;
 import com.egehurturk.exceptions.MethodNotAllowedException;
-import com.egehurturk.exceptions.NotFound404Exception;
 import com.egehurturk.httpd.HttpRequest;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
@@ -235,32 +233,14 @@ public class HttpController implements Closeable, Runnable {
                 logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
             }
         }
-        catch (BadRequest400Exception e) {
-            try {
-                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("400.html"), new PrintWriter(client.getOutputStream(), false));
-                respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
-            } catch (IOException ioException) {
-                logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
-            }
-        }
-        catch (MethodNotAllowedException e) {
-            try {
-                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("403.html"), new PrintWriter(client.getOutputStream(), false));
-                respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
-            } catch (IOException ioException) {
-                logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
-            }
-        }
-        catch (NotFound404Exception e) {
-            try {
-                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
-                respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
-            } catch (IOException  ioException) {
-                logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
-            }
-        }
         catch (HttpRequestException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage() + " [Code: " + e.code + ", Message: " + e.message + "]");
+            try {
+                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream( e.code + ".html"), new PrintWriter(client.getOutputStream(), false));
+                respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
+            } catch (IOException ioException) {
+                logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
+            }
         }
         finally {
             try {
