@@ -3,17 +3,15 @@
 
     <Appenders>
 
-        <Console name="stdout" target="SYSTEM_OUT">
-
-            <PatternLayout pattern="%style{%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss}}}{blue} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=bg_red, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=magenta bold, TRACE=blue} %logger{36} - %message\n"/>
-
+        <Console name="stdout" target="SYSTEM_OUT" follow="true">
+<!--            <PatternLayout pattern="%style{%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss}}}{magenta} [%t] %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=bg_red, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=magenta bold, TRACE=blue} %logger{36} - %message\n"/>-->
+            <PatternLayout pattern="%style{%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss}}}{magenta} [%7.7r] %8.8t - %c{30} - %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=bg_red, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=magenta bold, TRACE=blue} %logger{36} - %message\n"/>
         </Console>
 
 
         <File name="fout" fileName="./logfiles/application-${date:yyyyMMdd}.log" immediateFlush="false" append="true">
 
             <PatternLayout pattern="%style{%date{DEFAULT}}{yellow} [%t] %highlight{%-5level}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=blue} %logger{36} - %message\n"/>
-
         </File>
 
     </Appenders>

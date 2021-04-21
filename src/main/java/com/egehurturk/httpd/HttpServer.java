@@ -237,12 +237,6 @@ public class HttpServer extends BaseServer implements Closeable {
 
     // >>>>>>>>>>>>>>>>>>>>> CORE >>>>>>>>>>>>>>>>>>>>
     /*
-             _________________________________________
-            / You are only young once, but you can    \
-            \ stay immature indefinitely.             /
-             -----------------------------------------
-               \
-                \
                     .--.
                    |o_o |
                    |:_/ |
@@ -261,6 +255,8 @@ public class HttpServer extends BaseServer implements Closeable {
      */
     @Override
     public void start() {
+
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 
         if (checkFields()) {
             logger.error("Server is not properly initialized"); logger.error("Configuration error");
@@ -323,7 +319,6 @@ public class HttpServer extends BaseServer implements Closeable {
      */
     @Override
     public void stop() {
-        logger.info("Stopping server...");
         close();
     }
 
@@ -333,6 +328,7 @@ public class HttpServer extends BaseServer implements Closeable {
     @Override
     public void close() {
         try {
+            logger.info("Halting execution...");
             this.server.close();
             this.propertiesStream.close();
         } catch (IOException e) {
@@ -417,6 +413,15 @@ public class HttpServer extends BaseServer implements Closeable {
             err.printStackTrace(pw);
             String cause = sw.toString().substring(0, sw.toString().indexOf(err.getMessage()));
             logger.error(cause + err.getMessage());
+        }
+
+    }
+
+    /** Cleanup and log resources before stopping execution with SIGINT signal  */
+    private class ShutdownHook extends Thread {
+        @Override
+        public void run() {
+            HttpServer.this.stop();
         }
 
     }
