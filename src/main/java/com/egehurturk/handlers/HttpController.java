@@ -231,90 +231,42 @@ public class HttpController implements Closeable, Runnable {
             try {
                 FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse(Status.valueOf("Internal Server Error"), this.out));
-                close();
             } catch (IOException ioException) {
-                try {
-                    this.in.close();
-                } catch (IOException exception) {
-                    logger.error("Could not close input stream of client");
-                    return;
-                }
-                this.out.close();
-                try {
-                    this.client.close();
-                } catch (IOException exception) {
-                    logger.error("Could not close client stream");
-                }
+                logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
             }
         }
         catch (BadRequest400Exception e) {
             try {
                 FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("400.html"), new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
-                close();
             } catch (IOException ioException) {
-                try {
-                    this.in.close();
-                } catch (IOException exception) {
-                    logger.error("Could not close input stream of client");
-                    return;
-                }
-                this.out.close();
-                try {
-                    this.client.close();
-                } catch (IOException exception) {
-                    logger.error("Could not close client stream");
-                }
+                logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
             }
         }
         catch (MethodNotAllowedException e) {
             try {
                 FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("403.html"), new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
-                close();
             } catch (IOException ioException) {
-                try {
-                    this.in.close();
-                } catch (IOException exception) {
-                    logger.error("Could not close input stream of client");
-                    return;
-                }
-                this.out.close();
-                try {
-                    this.client.close();
-                } catch (IOException exception) {
-                    logger.error("Could not close client stream");
-                }
+                logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
             }
         }
         catch (NotFound404Exception e) {
             try {
                 FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
                 respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
-                close();
             } catch (IOException  ioException) {
-                try {
-                    this.in.close();
-                } catch (IOException exception) {
-                    logger.error("Could not close input stream of client");
-                    return;
-                }
-                this.out.close();
-                try {
-                    this.client.close();
-                } catch (IOException exception) {
-                    logger.error("Could not close client stream");
-                }
+                logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
             }
         }
         catch (HttpRequestException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         finally {
             try {
                 close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Cannot close client socket's input/output streams: [" + e.getMessage() + "]");
             }
         }
 
