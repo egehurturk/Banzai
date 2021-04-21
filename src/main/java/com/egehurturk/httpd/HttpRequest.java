@@ -104,6 +104,12 @@ public class HttpRequest {
     public final String HTTP_V_1_1 = "HTTP/1.1";
     public final String HTTP_V_1_0 = "HTTP/1.0";
 
+    private final String BAD_REQ_MSG = "Input stream is null or empty. Check for client" +
+        " connection that sends the request";
+    private final String HTTP_ER_MSG = "Request does not match HTTP standards. Check the request again " +
+        "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
+        "HTTP scheme (\"HTTP/1.1\"), and path";
+
     /**
      * Other headers that are not specified as a field
      * in this object.
@@ -114,36 +120,21 @@ public class HttpRequest {
         parse(data);
     }
 
+
     private void parse(BufferedReader in) throws IOException, BadRequest400Exception {
         if (in == null) {
-            logger.error("Input stream of client is null, or empty, Check for client connection");
-            throw new com.egehurturk.exceptions.BadRequest400Exception("Input stream is null or empty. Check for client" +
-                    "connection that sends the request", 400, "Bad Request");
+            throw new com.egehurturk.exceptions.BadRequest400Exception(BAD_REQ_MSG, 400, "Bad Request");
         }
         String requestLine = in.readLine();
         if (requestLine == null || requestLine.isEmpty()) {
-            logger.error("Input stream of client is null, or empty, Check for client connection");
-            throw new com.egehurturk.exceptions.BadRequest400Exception("Input stream is null or empty. Check for client" +
-                    " connection that sends the request", 400, "Bad Request");
+            throw new com.egehurturk.exceptions.BadRequest400Exception(BAD_REQ_MSG, 400, "Bad Request");
         }
-        if (!checkValidHttpRequest(requestLine)) {
-            logger.error("Request does not match HTTP standards. Check the request again" +
-                    "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
-                    "HTTP scheme (\"HTTP/1.1\"), and path");
-            throw new com.egehurturk.exceptions.BadRequest400Exception("Request does not match HTTP standards. Check the request again" +
-                    "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
-                    "HTTP scheme (\"HTTP/1.1\"), and path", 400, "Bad Request");
-        }
-
         String[] requestLineArray = requestLine.split(" ");
-        if (requestLineArray.length != 3) {
-            logger.error("Request does not match HTTP standards. Check the request again" +
-                    "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
-                    "HTTP scheme (\"HTTP/1.1\"), and path");
-            throw new com.egehurturk.exceptions.BadRequest400Exception("Request does not match HTTP standards. Check the request again" +
-                    "and/or read RCF standards. Request should contain at least method (\"GET, POST\"), " +
-                    "HTTP scheme (\"HTTP/1.1\"), and path", 400, "Bad Request");
-        }
+
+        boolean isHttpValid = requestLineArray.length == 3 && checkValidHttpRequest(requestLine);
+        if (!isHttpValid)
+            throw new com.egehurturk.exceptions.BadRequest400Exception(HTTP_ER_MSG, 400, "Bad Request");
+
         this.method   = requestLineArray[0].toUpperCase(); // ensure it is all upper ("GET")
         if (!requestLineArray[1].contains("?")) {
             this.path = requestLineArray[1].toLowerCase(); // ensure it is all lower, i.e ("/index.html")
@@ -152,29 +143,31 @@ public class HttpRequest {
             parseQueryParams(requestLineArray[1].substring(                                 // a=3&b=4
                     requestLineArray[1].indexOf("?") + 1));
         }
-        this.scheme   = requestLineArray[2]; // by default it is all upper. Case here does not matter
+        this.scheme   = requestLineArray[2];
 
         // read headers line by line
         String  headerLine = in.readLine().toLowerCase().trim();
-        while ( !headerLine.isEmpty() && headerLine != null) { // check if lines are not empty
-            // <key> : <value>
-            // trim: <key>:<value>
-            // connection:keep-alive, accept:text/html
-            int idx = headerLine.indexOf(":"); // get the index of ":"
+        boolean pass = true;
+        while (headerLine != null &&  !headerLine.isEmpty() ) {
+            int idx = headerLine.indexOf(":");
             if (idx == -1) {
-                throw new com.egehurturk.exceptions.BadRequest400Exception("Invalid header paramter: " + headerLine,
-                        400, "Bad Request");
+                pass = false;
             }
             else {
-                // put the header inside the headers map as
-                // content-type: text/html
                 this.headers.put(headerLine.substring(0, idx), headerLine.substring(idx+1));
             }
             headerLine = in.readLine().toLowerCase().trim();
-
         }
-        // in POST requests
 
+        if (!pass) {
+            System.out.println("fail!");
+            throw new com.egehurturk.exceptions.BadRequest400Exception("Invalid header parameter: " + headerLine,
+                400, "Bad Request");
+        }
+
+
+
+        // POST requests have body after the metadata (headers + status line)
         if (method.equals("POST")) {
             String bodyMsg;
             StringBuilder _bodyTemplate = new StringBuilder();
