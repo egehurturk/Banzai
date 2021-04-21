@@ -417,7 +417,9 @@ public class HttpServer extends BaseServer implements Closeable {
     private static class ShutdownHook extends Thread {
         @Override
         public void run() {
+            System.out.println();
             logger.info("Halting execution...");
+            System.out.println();
         }
 
     }
