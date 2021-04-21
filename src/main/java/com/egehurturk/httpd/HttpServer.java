@@ -306,8 +306,6 @@ public class HttpServer extends BaseServer implements Closeable {
             controller.setAllowForCustomMapping(this.allowCustomUrlMapping);
             if (ignoredPaths.size() >= 1)
                 controller.ignore(ignoredPaths);
-            else
-                System.out.println("No ignored paths");
             pool.execute(controller);
         }
     }
