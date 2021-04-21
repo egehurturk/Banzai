@@ -260,7 +260,6 @@ public class HttpServer extends BaseServer implements Closeable {
 
         if (checkFields()) {
             logger.error("Server is not properly initialized"); logger.error("Configuration error");
-            logger.error("Stopping execution");
             // uhh, tons of try/catches
             try {
                 this.propertiesStream.close();
@@ -328,12 +327,11 @@ public class HttpServer extends BaseServer implements Closeable {
     @Override
     public void close() {
         try {
-            logger.info("Halting execution...");
             this.server.close();
             this.propertiesStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
-        }
+            logger.error(e.getMessage());
+        } catch (NullPointerException ignored) {}
     }
 
     @Override
@@ -418,10 +416,10 @@ public class HttpServer extends BaseServer implements Closeable {
     }
 
     /** Cleanup and log resources before stopping execution with SIGINT signal  */
-    private class ShutdownHook extends Thread {
+    private static class ShutdownHook extends Thread {
         @Override
         public void run() {
-            HttpServer.this.stop();
+            logger.info("Halting execution...");
         }
 
     }
