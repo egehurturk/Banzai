@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 
 
 
-public class EntryPoint {
+class EntryPoint {
 
     // SET THIS TO TRUE
     public static final boolean PRODUCTION_ENV = false;
