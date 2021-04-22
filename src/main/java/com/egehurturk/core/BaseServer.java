@@ -477,6 +477,12 @@ public abstract class BaseServer {
             System.err.println("Server host " + this.config.getProperty(HOST_PROP) + " that you passed into the configurations file " +
                     "(server.properties) is not valid. Make sure the host name exists or valid, or change " +
                     "the property. ");
+        } finally {
+            try {
+                propertiesStream.close();
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
         }
     }
 
@@ -541,7 +547,13 @@ public abstract class BaseServer {
      */
     public void configureServer(String propertiesFilePath) throws ConfigurationException {
         try {
-            this.config = serveConfigurations(System.getProperties(), new FileInputStream( propertiesFilePath ));
+            FileInputStream stream = new FileInputStream(propertiesFilePath);
+            this.config = serveConfigurations(System.getProperties(), stream);
+            try {
+                stream.close();
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+            }
         } catch (FileNotFoundException e) {
             throw new ConfigurationException("System Configuration Error: Are you sure that a properties " +
                     "file is located under resources folder as stated in standard Maven " +
@@ -561,7 +573,7 @@ public abstract class BaseServer {
             if (!isDirectory(this.config.getProperty(WEBROOT_PROP))) {
                 throw new IllegalArgumentException(
                         "Web root directory not found. It should be placed in \"root/www\" where root" +
-                                "is the top parent directory."
+                                " is the top parent directory."
                 );
             }
             this.webRoot = this.config.getProperty(WEBROOT_PROP);
