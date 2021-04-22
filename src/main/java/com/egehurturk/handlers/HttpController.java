@@ -179,8 +179,10 @@ public class HttpController implements Closeable, Runnable {
                     if (templ.path.equals(req.getPath())) {
                         // we can use req.getPath() and templ.path interchangeably in here since they are the same
                         if (isPathIgnored(templ.method, templ.path)) {
-                            FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
+                            PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
+                            FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), writer);
                             respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
+                            writer.close();
                             foundHandler = true;
                             logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
                             break;
@@ -189,8 +191,10 @@ public class HttpController implements Closeable, Runnable {
                         try {
                             res.send();
                         } catch (NullPointerException pointerException) {
-                            FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), new PrintWriter(client.getOutputStream(), false));
+                            PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
+                            FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), writer);
                             respond(fil.toHttpResponse(Status.valueOf("Internal Server Error"), this.out));
+                            writer.close();
                         }
                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         foundHandler = true; // we found a handler
@@ -206,8 +210,10 @@ public class HttpController implements Closeable, Runnable {
                         // do not use template.path here since it will be /*.
                         // check if request path is ignored
                         if (isPathIgnored(template.method, req.getPath())) {
-                            FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), new PrintWriter(client.getOutputStream(), false));
+                            PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
+                            FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), writer);
                             respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
+                            writer.close();
                             logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
                             break;
                         }
@@ -215,8 +221,10 @@ public class HttpController implements Closeable, Runnable {
                         try {
                             res.send();
                         } catch (NullPointerException nullPointerException) {
-                            FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), new PrintWriter(client.getOutputStream(), false));
+                            PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
+                            FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), writer);
                             respond(fil.toHttpResponse(Status.valueOf("Internal Server Error"), this.out));
+                            writer.close();
                         }
                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         break;
@@ -227,8 +235,10 @@ public class HttpController implements Closeable, Runnable {
 
         } catch (IOException e) {
             try {
-                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), new PrintWriter(client.getOutputStream(), false));
+                PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
+                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), writer);
                 respond(response.toHttpResponse(Status.valueOf("Internal Server Error"), this.out));
+                writer.close();
             } catch (IOException ioException) {
                 logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
             }
@@ -236,8 +246,10 @@ public class HttpController implements Closeable, Runnable {
         catch (HttpRequestException e) {
             logger.error(e.getMessage() + " [Code: " + e.code + ", Message: " + e.message + "]");
             try {
-                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream( e.code + ".html"), new PrintWriter(client.getOutputStream(), false));
+                PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
+                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream( e.code + ".html"), writer);
                 respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
+                writer.close();
             } catch (IOException ioException) {
                 logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
             }
