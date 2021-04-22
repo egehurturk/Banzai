@@ -4,7 +4,6 @@ import com.egehurturk.httpd.HttpRequest;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
 import com.egehurturk.util.Json;
-import com.egehurturk.util.Pair;
 import com.egehurturk.util.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,8 +31,8 @@ public class JsonResponse implements ResponseType {
 
     /**
      * Constructor that verifies path
-     * @param writer:                   Response writer
-     * @param body:                     Json body
+     * @param writer Response writer
+     * @param body Json body
      */
     public JsonResponse(PrintWriter writer, String body) {
         this.writer = writer;
@@ -52,7 +51,7 @@ public class JsonResponse implements ResponseType {
 
     public void validate(HttpRequest req) {
         // * Note for future documentation: request headers are stored in lowercase and trimmed
-        
+
         if (!req.hasHeader("Accept".toLowerCase())) {
             this.valid = false;
             return;
@@ -100,7 +99,7 @@ public class JsonResponse implements ResponseType {
 
         if (this.valid == null) {
             throw new IllegalStateException("HTTP Request is required to check if the client accepts JSON as a return type. You can pass" +
-                    "the HTTP request {HttpRequest} object to this class' constructor or call the method `validate(HttpRequest)`");
+                    " the HTTP request {HttpRequest} object to this class' constructor or call the method `validate(HttpRequest)`");
         }
 
         ZonedDateTime now = ZonedDateTime.now();
