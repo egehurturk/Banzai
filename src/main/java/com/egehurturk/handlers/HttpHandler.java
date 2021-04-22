@@ -110,10 +110,10 @@ public class HttpHandler implements Handler {
         this._strWebRoot   = config.getProperty(WEBROOT_PROP);
         if (!Utility.isDirectory(this._strWebRoot)) {
             logger.error("Web root is not a directory. Check if there exists a directory" +
-                    "at root/www");
+                    " at root/www");
             throw new FileNotFoundException( "Web root directory not found. It should be" +
                     " placed in \"root/www\" where root" +
-                    "is the top parent directory.");
+                    " is the top parent directory.");
         }
         this.webRoot = new File(this._strWebRoot);
     }
@@ -130,10 +130,10 @@ public class HttpHandler implements Handler {
         this._strWebRoot = _strWebRoot;
         if (!Utility.isDirectory(this._strWebRoot)) {
             logger.error("Web root is not a directory. Check if there exists a directory" +
-                    "at root/www");
+                    " at root/www");
             throw new FileNotFoundException( "Web root directory not found. It should be" +
                     " placed in \"root/www\" where root" +
-                    "is the top parent directory.");
+                    " is the top parent directory.");
         }
         this.webRoot = new File(_strWebRoot);
         this.name    = name;
