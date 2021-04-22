@@ -18,9 +18,9 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 [![GitHub contributors](https://img.shields.io/github/contributors/egehurturk/HttpServer)](https://GitHub.com/egehurturk/HttpServer/graphs/contributors/)&nbsp;&nbsp;&nbsp;
-[![Forks](https://img.shields.io/github/forks/egehurturk/HttpServer?style=social&label=Fork&maxAge=2592000)](https://GitHub.com/egehurturk/HttpServer/network/)
+[![Forks](https://img.shields.io/github/forks/egehurturk/HttpServer?style=plastic&color=green&label=Fork&maxAge=2592000)](https://GitHub.com/egehurturk/HttpServer/network/)
 &nbsp;&nbsp;&nbsp;
-[![Stargazers](https://img.shields.io/github/stars/egehurturk/HttpServer?style=social&label=Star&maxAge=2592000)](https://GitHub.com/egehurturk/HttpServer/stargazers/)
+[![Stargazers](https://img.shields.io/github/stars/egehurturk/HttpServer?style=plastic&color=green&label=Star&maxAge=2592000)](https://GitHub.com/egehurturk/HttpServer/stargazers/)
 &nbsp;&nbsp;&nbsp;
 [![Issues](https://img.shields.io/github/issues/egehurturk/HttpServer)](https://GitHub.com/egehurturk/HttpServer/issues/)
 &nbsp;&nbsp;&nbsp;
