@@ -50,7 +50,7 @@ public class HTMLRenderer implements ResponseType {
 
     /**
      * All args Constructor
-     * @param htmlPath: html file path to be rendered
+     * @param htmlPath html file path to be rendered
      */
     public HTMLRenderer(String htmlPath, PrintWriter writer) {
         this.htmlPath = htmlPath;
