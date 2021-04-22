@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 class EntryPoint {
 
     // SET THIS TO TRUE
-    public static final boolean PRODUCTION_ENV = false;
+    public static final boolean PRODUCTION_ENV = true;
 
     /**
      * Note that configuration should not be as path, it only needs to be the name of the properties file
