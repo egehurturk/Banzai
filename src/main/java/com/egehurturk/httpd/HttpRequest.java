@@ -160,7 +160,6 @@ public class HttpRequest {
         }
 
         if (!pass) {
-            System.out.println("fail!");
             throw new com.egehurturk.exceptions.BadRequest400Exception("Invalid header parameter: " + headerLine,
                 400, "Bad Request");
         }
