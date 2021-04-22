@@ -53,8 +53,8 @@ public class FileResponse implements ResponseType {
 
     /**
      * Constructor that verifies path
-     * @param path:                     request path, e.g. "/hello"
-     * @param writer:                   Response writer
+     * @param path request path, e.g. "/hello"
+     * @param writer Response writer
      */
     public FileResponse(String path, PrintWriter writer) {
         this.path = path;
