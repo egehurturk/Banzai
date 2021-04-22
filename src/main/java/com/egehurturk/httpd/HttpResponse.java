@@ -110,13 +110,11 @@ public class HttpResponse {
 
         if (!codes.contains(code)) {
             logger.info("Status code does not exists, or not implemented");
-            throw new NotImplemented501Exception("Status code does not exists, or is not" +
-                    "implemented by me. See future versions for more", 501, "Not Implemented");
+            throw new NotImplemented501Exception("Status code does not exists.", 501, "Not Implemented");
         }
         if (!messages.contains(message)) {
             logger.info("Message does not exists, or not implemented");
-            throw new com.egehurturk.exceptions.NotImplemented501Exception("Message does not exists, or is not" +
-                    "implemented by me. See future versions for more", 501, "Not Implemented");
+            throw new com.egehurturk.exceptions.NotImplemented501Exception("Message does not exists", 501, "Not Implemented");
         }
         resp.code    = code;
         resp.message = message;
