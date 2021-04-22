@@ -1,0 +1,1 @@
+[33m2021-04-22 14:46:51,119[m [pool-2-thread-21] [31mERROR[m com.egehurturk.handlers.HttpController - Request does not match HTTP standards. Check the request again and/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path [Code: 400, Message: Bad Request]
