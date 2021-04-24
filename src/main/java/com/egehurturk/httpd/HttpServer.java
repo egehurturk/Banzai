@@ -1,7 +1,10 @@
 package com.egehurturk.httpd;
 
+import com.egehurturk.annotations.BanzaiHandler;
+import com.egehurturk.annotations.HandlerMethod;
 import com.egehurturk.core.BaseServer;
 import com.egehurturk.exceptions.ConfigurationException;
+import com.egehurturk.exceptions.MalformedHandlerException;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.HandlerTemplate;
 import com.egehurturk.handlers.HttpController;
@@ -13,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -347,6 +351,48 @@ public class HttpServer extends BaseServer implements Closeable {
         HandlerTemplate template = new HandlerTemplate(method, path, handler);
         handlers.add(template);
     }
+
+    /**
+     * Adds a Handler with a class that is annotated with {@link com.egehurturk.annotations.BanzaiHandler}
+     * @param clazz class that is annotated with {@code BanzaiHandler} and has methods annotated with
+     *                                               {@link com.egehurturk.annotations.HandlerMethod}
+     */
+    public void addHandler(Class<?> clazz) throws MalformedHandlerException {
+        if (!clazz.isAnnotationPresent(BanzaiHandler.class)) {
+            throw new IllegalArgumentException("Class " + clazz.getSimpleName() + " is not marked by BanzaiHandler annotation.");
+        }
+
+        for (Method method: clazz.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(HandlerMethod.class)) {
+                boolean validMethod = isMethodValidHandler(method);
+                if (!validMethod)
+                    throw new MalformedHandlerException("Method " + method + " which is annotated with HandlerMethod is malformed.");
+                // TODO: here
+            }
+        }
+
+    }
+
+    /**
+     * Checks if the method has a return type of {@link HttpResponse}, and has parameters
+     * {@link HttpRequest} and {@code HttpResponse} respectively.
+     *
+     * @param  method method that is annotated wiht {@link HandlerMethod} and to be checked
+     * @return is method valid
+     */
+    private boolean isMethodValidHandler(Method method) {
+        Class<?> returnType = method.getReturnType();
+        Class<?>[] parameters = method.getParameterTypes();
+        if (parameters.length != 2)
+            return false;
+        else if (parameters[0] != HttpRequest.class && parameters[1] != HttpResponse.class)
+            return false;
+        else if (returnType != HttpResponse.class)
+            return false;
+        return true;
+    }
+
+
 
     /**
      * Ignore files (or directories, or even specific files) with the given method and path.
