@@ -21,9 +21,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -95,6 +93,7 @@ public class HttpServer extends BaseServer implements Closeable {
      */
     private final List<HandlerTemplate> handlers = new ArrayList<>();
 
+    private final HashMap<Method, Pair<String, Methods>> methodHandlers = new HashMap<>();
 
     /**
      * Chained constructor for initializing with only port.
@@ -308,6 +307,7 @@ public class HttpServer extends BaseServer implements Closeable {
             }
             HttpController controller = new HttpController(cli, handlers);
             controller.setAllowForCustomMapping(this.allowCustomUrlMapping);
+            controller.setMethodHandlers(methodHandlers);
             if (ignoredPaths.size() >= 1)
                 controller.ignore(ignoredPaths);
             pool.execute(controller);
@@ -356,6 +356,8 @@ public class HttpServer extends BaseServer implements Closeable {
      * Adds a Handler with a class that is annotated with {@link com.egehurturk.annotations.BanzaiHandler}
      * @param clazz class that is annotated with {@code BanzaiHandler} and has methods annotated with
      *                                               {@link com.egehurturk.annotations.HandlerMethod}
+     * @throws MalformedHandlerException when the handler method is not appropriate in return & parameter
+     *                                   types.
      */
     public void addHandler(Class<?> clazz) throws MalformedHandlerException {
         if (!clazz.isAnnotationPresent(BanzaiHandler.class)) {
@@ -367,7 +369,12 @@ public class HttpServer extends BaseServer implements Closeable {
                 boolean validMethod = isMethodValidHandler(method);
                 if (!validMethod)
                     throw new MalformedHandlerException("Method " + method + " which is annotated with HandlerMethod is malformed.");
-                // TODO: here
+                HandlerMethod annotation = method.getAnnotation(HandlerMethod.class);
+                String path = annotation.path();
+                Methods methods = annotation.method();
+                if (path == null || path.equals(""))
+                    throw new MalformedHandlerException("Method \"" + method + "\" which is annotated with HandlerMethod is malformed.");
+                this.methodHandlers.put(method, Pair.makePair(path, methods));
             }
         }
 
@@ -522,6 +529,20 @@ public class HttpServer extends BaseServer implements Closeable {
      */
     private boolean checkFields() {
         return this.serverHost == null || this.serverPort == 0 || this.webRoot == null || this.name == null;
+    }
+
+    /**
+     * Returns available handlers as ArrayList
+     */
+    public List<String> getAvailableHandlerPaths() {
+        List<String> paths = new ArrayList<>();
+        for (HandlerTemplate handler: handlers) {
+            paths.add(handler.path);
+        }
+        for (Map.Entry<Method, Pair<String, Methods>> pair: methodHandlers.entrySet()) {
+            paths.add(pair.getValue().getFirst());
+        }
+        return paths;
     }
 
 }
