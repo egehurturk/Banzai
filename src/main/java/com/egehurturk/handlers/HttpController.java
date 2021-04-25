@@ -11,13 +11,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.Socket;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Manager class for handling {@link java.net.Socket} object client. Using
@@ -105,6 +105,7 @@ public class HttpController implements Closeable, Runnable {
      * Stored as {@link HandlerTemplate}
      */
     public List<HandlerTemplate> handlers;
+    private HashMap<Method, Pair<String, Methods>> methodHandlers = new HashMap<>();
     private Boolean allowForCustomMapping = false;
 
     /**
@@ -172,6 +173,7 @@ public class HttpController implements Closeable, Runnable {
                 throw new MethodNotAllowedException("Method is not allowed at path " + req.getPath(), 405, "Method Not Allowed");
             }
 
+            /* Handler-based iteration */
             if (this.allowForCustomMapping) {
                 // iterate over all handlers and find the handler template that is assigned to path
                 for (HandlerTemplate templ: methodTemplates) {
@@ -179,30 +181,67 @@ public class HttpController implements Closeable, Runnable {
                     if (templ.path.equals(req.getPath())) {
                         // we can use req.getPath() and templ.path interchangeably in here since they are the same
                         if (isPathIgnored(templ.method, templ.path)) {
-                            PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
-                            FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), writer);
-                            respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
-                            writer.close();
+                            respondWith404(client.getOutputStream(), req);
                             foundHandler = true;
-                            logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
                             break;
                         }
                         res = templ.handler.handle(req, res); // let handler to handle the request
                         try {
-                            res.send();
+                            boolean suc = res.send();
+                            if (suc)
+                                logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         } catch (NullPointerException pointerException) {
-                            PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
-                            FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), writer);
-                            respond(fil.toHttpResponse(Status.valueOf("Internal Server Error"), this.out));
-                            writer.close();
+                           respondWith500(client.getOutputStream(), req);
                         }
-                        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         foundHandler = true; // we found a handler
                         break;
                     }
                 }
             }
 
+            /* method-Handler-based iteration */
+            if (!foundHandler && this.allowForCustomMapping && methodHandlers.size() >= 1) {
+                for (Map.Entry<Method, Pair<String, Methods>> entry: this.methodHandlers.entrySet()) {
+                    Method method = entry.getKey();
+                    String path = entry.getValue().getFirst();
+                    Methods methods = entry.getValue().getSecond();
+
+                    Utility.debug(debugMode,"Method name: " + method.getName(), logger);
+                    Utility.debug(debugMode,"Path: " + path, logger);
+                    Utility.debug(debugMode,"HTTP Method: " + methods, logger);
+
+                    if (path.equals(req.getPath()) && methods.str.equals(req.getMethod())) {
+                        if (isPathIgnored(methods, path)) {
+                            respondWith404(client.getOutputStream(), req);
+                            foundHandler = true;
+                            break;
+                        }
+                        try {
+                            method.setAccessible(true);
+                            res = (HttpResponse) method.invoke(null, req, res);
+
+                            if (res == null) {
+                                respondWith500(client.getOutputStream(), req);
+                            } else {
+                                boolean suc = res.send();
+                                if (suc)
+                                    logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
+                            }
+
+                        } catch (IllegalAccessException | InvocationTargetException  e) {
+                            logger.error("Error while invoking HandlerMethod " + method.getName() + ": "  + e.getMessage());
+                            respondWith500(client.getOutputStream(), req);
+                        } catch (IllegalArgumentException err) {
+                            logger.error("HandlerMethod's should be static.");
+                            respondWith500(client.getOutputStream(), req);
+                        }
+                        foundHandler = true;
+                        break;
+                    }
+                }
+            }
+
+            /* default iteration */
             if (!foundHandler) {
                 // check for default handler (all paths)
                 for (HandlerTemplate template: methodTemplates) {
@@ -210,23 +249,18 @@ public class HttpController implements Closeable, Runnable {
                         // do not use template.path here since it will be /*.
                         // check if request path is ignored
                         if (isPathIgnored(template.method, req.getPath())) {
-                            PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
-                            FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), writer);
-                            respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
-                            writer.close();
-                            logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
+                            respondWith404(client.getOutputStream(), req);
                             break;
                         }
                         res = template.handler.handle(req, res);
+                        boolean suc = false;
                         try {
-                            res.send();
+                            suc = res.send();
                         } catch (NullPointerException nullPointerException) {
-                            PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
-                            FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), writer);
-                            respond(fil.toHttpResponse(Status.valueOf("Internal Server Error"), this.out));
-                            writer.close();
+                            respondWith500(client.getOutputStream(), req);
                         }
-                        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
+                        if (suc)
+                            logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
                         break;
                     }
                 }
@@ -261,7 +295,27 @@ public class HttpController implements Closeable, Runnable {
                 logger.error("Cannot close client socket's input/output streams: [" + e.getMessage() + "]");
             }
         }
+    }
 
+    private void respondWith404(OutputStream out, HttpRequest req) {
+        PrintWriter writer = new PrintWriter(out, false);
+        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), writer);
+        respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
+        writer.close();
+        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
+    }
+
+    private void respondWith500(OutputStream out, HttpRequest req) {
+        PrintWriter writer = new PrintWriter(out, false);
+        FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), writer);
+        respond(fil.toHttpResponse(Status._500_INTERNAL_ERROR, this.out));
+        writer.close();
+        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "500");
+    }
+
+    public void setMethodHandlers(HashMap<Method, Pair<String, Methods>> methodHandlers) {
+        if (methodHandlers != null)
+            this.methodHandlers = methodHandlers;
     }
 
     /**
