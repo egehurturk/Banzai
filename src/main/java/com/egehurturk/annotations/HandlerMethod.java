@@ -1,5 +1,7 @@
 package com.egehurturk.annotations;
 
+import com.egehurturk.util.Methods;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -19,19 +21,20 @@ import java.lang.annotation.Target;
  * This annotation annotated methods must be in a class which is annotated by {@link BanzaiHandler}.
  * This is a must since handler methods should be grouped together and that annotation makes this possible.
  * <p>
+ * Note that every method that is annotated by this annotation <b>should be declared static</b>.
  * Example:
  * {@code
  *      @BanzaiHandler
  *      public class MyHandler {
- *          @HandlerMethod
- *          public HttpResponse handle_JIMI(HttpRequest req, HttpResponse res) {
+ *          @HandlerMethod(path = "/jimi_hendrix")
+ *          public static HttpResponse handle_JIMI(HttpRequest req, HttpResponse res) {
  *              HttpResponse resp = // ...
  *              // ...
  *              return resp;
  *          }
  *
- *          @HandlerMethod
- *          public HttpResponse handle_METALLICA(HttpRequest req, HttpResponse res) {
+ *          @HandlerMethod(path = "/metallica")
+ *          public static HttpResponse handle_METALLICA(HttpRequest req, HttpResponse res) {
  *              HttpResponse resp = // ...
  *              // ...
  *              return resp;
@@ -50,4 +53,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface HandlerMethod {
+    /** Path the handler operators on */
+    String path();
+    /** Method the path accepts */
+    Methods method() default Methods.GET;
 }
