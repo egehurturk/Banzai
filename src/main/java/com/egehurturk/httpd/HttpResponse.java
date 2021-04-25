@@ -125,18 +125,27 @@ public class HttpResponse {
         return resp;
     }
 
-    public void send() throws IOException {
-        String body = new String(this.body);
-        this.stream.println(this.scheme + " " + this.code + " " + this.message);
-        this.stream.println(Headers.SERVER.NAME + this.headers.get(Headers.SERVER.NAME));
-        this.stream.println(Headers.DATE.NAME + this.headers.get(Headers.DATE.NAME));
-        this.stream.println(Headers.CONTENT_TYPE.NAME + this.headers.get(Headers.CONTENT_TYPE.NAME) + ";charset=\"utf-8\"");
-        this.stream.println(Headers.CONTENT_LENGTH.NAME + this.headers.get(Headers.CONTENT_LENGTH.NAME));
-        this.stream.println(Headers.CONNECTION.NAME + "close");
-        this.stream.println();
-        this.stream.println(body);
-        this.stream.println();
-        this.stream.flush();
+    public boolean send() throws IOException {
+        // TODO: wrap this with try-catch for avoiding NPE.
+        try {
+            String body = new String(this.body);
+            this.stream.println(this.scheme + " " + this.code + " " + this.message);
+            this.stream.println(Headers.SERVER.NAME + this.headers.get(Headers.SERVER.NAME));
+            this.stream.println(Headers.DATE.NAME + this.headers.get(Headers.DATE.NAME));
+            this.stream.println(Headers.CONTENT_TYPE.NAME + this.headers.get(Headers.CONTENT_TYPE.NAME) + ";charset=\"utf-8\"");
+            this.stream.println(Headers.CONTENT_LENGTH.NAME + this.headers.get(Headers.CONTENT_LENGTH.NAME));
+            this.stream.println(Headers.CONNECTION.NAME + "close");
+            this.stream.println();
+            this.stream.println(body);
+            this.stream.println();
+            this.stream.flush();
+            return true;
+        } catch (NullPointerException err) {
+            logger.error("HttpResponse object has incomplete (null) fields. Make sure that HttpResponse object you return " +
+                "from the calling handler sets body, scheme, code, message, and headers.");
+            return false;
+        }
+
     }
 
     public <K extends String, V extends String> void set(K key, V value) {
