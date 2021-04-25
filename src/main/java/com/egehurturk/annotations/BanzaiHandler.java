@@ -22,15 +22,15 @@ import java.lang.annotation.Target;
  * {@code
  *      @BanzaiHandler
  *      public class MyHandler {
- *          @HandlerMethod
- *          public HttpResponse handle_JIMI(HttpRequest req, HttpResponse res) {
+ *          @HandlerMethod(path = "/jimi_hendrix")
+ *          public static HttpResponse handle_JIMI(HttpRequest req, HttpResponse res) {
  *              HttpResponse resp = // ...
  *              // ...
  *              return resp;
  *          }
  *
- *          @HandlerMethod
- *          public HttpResponse handle_METALLICA(HttpRequest req, HttpResponse res) {
+ *          @HandlerMethod(path = "/metallica")
+ *          public static HttpResponse handle_METALLICA(HttpRequest req, HttpResponse res) {
  *              HttpResponse resp = // ...
  *              // ...
  *              return resp;
