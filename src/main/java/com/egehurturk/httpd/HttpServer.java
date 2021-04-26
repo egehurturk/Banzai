@@ -95,6 +95,8 @@ public class HttpServer extends BaseServer implements Closeable {
 
     private final HashMap<Method, Pair<String, Methods>> methodHandlers = new HashMap<>();
 
+    private final List<String> paths = new ArrayList<>();
+
     /**
      * Chained constructor for initializing with only port.
      * @param serverPort                - server port that the HTTP server is running on
@@ -350,6 +352,7 @@ public class HttpServer extends BaseServer implements Closeable {
     public void addHandler(Methods method, String path, Handler handler) {
         HandlerTemplate template = new HandlerTemplate(method, path, handler);
         handlers.add(template);
+        paths.add(path);
     }
 
     /**
@@ -372,9 +375,12 @@ public class HttpServer extends BaseServer implements Closeable {
                 HandlerMethod annotation = method.getAnnotation(HandlerMethod.class);
                 String path = annotation.path();
                 Methods methods = annotation.method();
-                if (path == null || path.equals(""))
+                if (path.equals(""))
                     throw new MalformedHandlerException("Method \"" + method + "\" which is annotated with HandlerMethod is malformed.");
-                this.methodHandlers.put(method, Pair.makePair(path, methods));
+                if (paths.contains(path))
+                    throw new MalformedHandlerException(path + " is already assigned to a handler.");
+                methodHandlers.put(method, Pair.makePair(path, methods));
+                paths.add(path);
             }
         }
 
@@ -392,7 +398,7 @@ public class HttpServer extends BaseServer implements Closeable {
         Class<?>[] parameters = method.getParameterTypes();
         if (parameters.length != 2)
             return false;
-        else if (parameters[0] != HttpRequest.class && parameters[1] != HttpResponse.class)
+        else if (parameters[0] != HttpRequest.class || parameters[1] != HttpResponse.class)
             return false;
         else if (returnType != HttpResponse.class)
             return false;
