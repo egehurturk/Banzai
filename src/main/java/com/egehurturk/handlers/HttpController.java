@@ -178,6 +178,11 @@ public class HttpController implements Closeable, Runnable {
                 // iterate over all handlers and find the handler template that is assigned to path
                 for (HandlerTemplate templ: methodTemplates) {
                     // if exists
+                    if (templ.path == null) {
+                        respondWith500(client.getOutputStream(), req);
+                        foundHandler = true; // we found a handler
+                        break;
+                    }
                     if (templ.path.equals(req.getPath())) {
                         // we can use req.getPath() and templ.path interchangeably in here since they are the same
                         if (isPathIgnored(templ.method, templ.path)) {
@@ -222,6 +227,7 @@ public class HttpController implements Closeable, Runnable {
 
                             if (res == null) {
                                 respondWith500(client.getOutputStream(), req);
+                                logger.warn("Handler returned a null HttpResponse.");
                             } else {
                                 boolean suc = res.send();
                                 if (suc)
