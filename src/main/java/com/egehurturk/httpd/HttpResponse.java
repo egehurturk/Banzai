@@ -126,7 +126,6 @@ public class HttpResponse {
     }
 
     public boolean send() throws IOException {
-        // TODO: wrap this with try-catch for avoiding NPE.
         try {
             String body = new String(this.body);
             this.stream.println(this.scheme + " " + this.code + " " + this.message);

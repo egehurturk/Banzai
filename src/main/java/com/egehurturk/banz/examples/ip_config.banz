@@ -1,0 +1,23 @@
+
+regulation ip_config {
+    allow ip from 192.168.*.*
+    deny  ip from 34.*.*.*
+}
+
+
+
+
+
+
+
+
+
+
+regulation hooks {
+    when ip LOCAL_IP from 192.156.34.* connects     do greet_them($LOCAL_IP)
+}
+
+
+action greet_them(theIp) {
+    printsf to {$theIp.host} "WARNING! This is a message from Banzai!"
+}
