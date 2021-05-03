@@ -1,6 +1,9 @@
 package com.egehurturk.httpd;
 
 
+import com.egehurturk.annotations.BanzaiHandler;
+import com.egehurturk.annotations.HandlerMethod;
+import com.egehurturk.exceptions.MalformedHandlerException;
 import com.egehurturk.handlers.FileResponse;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.JsonResponse;
@@ -10,34 +13,35 @@ import com.egehurturk.util.Headers;
 import com.egehurturk.util.Methods;
 
 import java.io.PrintWriter;
-
-
+import java.util.List;
 
 
 class EntryPoint {
 
     // SET THIS TO TRUE
-    public static final boolean PRODUCTION_ENV = true;
+    public static final boolean PRODUCTION_ENV = false;
 
     /**
      * Note that configuration should not be as path, it only needs to be the name of the properties file
      */
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedHandlerException {
         ArgumentParser parser = new ArgumentParser(args);
         HttpServer httpServer = parser.getHttpServer();
 
         if (!PRODUCTION_ENV) {
+            httpServer.addHandler(MHandler.class);
+            httpServer.addHandler(MaHandler.class);
             httpServer.allowCustomUrlMapping(true);
             httpServer.addHandler(Methods.GET , "/hello"           , new MyHandler());
-            httpServer.addHandler(Methods.GET , "/thismynewserver" , new MyNewHandler());
-            httpServer.addHandler(Methods.GET , "/cemhurturk"      , new MyHandler());
-            httpServer.addHandler(Methods.GET , "/filehandling"    , new MyFileHandler());
-            httpServer.addHandler(Methods.GET , "/jsontest"        , new Json());
-            httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
-            httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
-            httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
+//            httpServer.addHandler(Methods.GET , "/thismynewserver" , new MyNewHandler());
+//            httpServer.addHandler(Methods.GET , "/cemhurturk"      , new MyHandler());
+//            httpServer.addHandler(Methods.GET , "/filehandling"    , new MyFileHandler());
+//            httpServer.addHandler(Methods.GET , "/jsontest"        , new Json());
+//            httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
+//            httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
+//            httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
 //            httpServer.ignore(Methods.GET, "/jsontest");
 //            httpServer.ignore(Methods.GET, "/cemhurturk");
 //            httpServer.ignore(Methods.GET, "/asdfjasdlfkjals;kdfjadkls;");
@@ -48,8 +52,11 @@ class EntryPoint {
 //            httpServer.ignore(null, null);
 //            httpServer.ignore(null, "/adsdassad");
         }
+        List<String> r = httpServer.getAvailableHandlerPaths();
+        System.out.println(r);
         httpServer.start();
     }
+
 
     static class MyHandler implements Handler {
         @Override
@@ -188,3 +195,60 @@ class EntryPoint {
 
 }
 
+@BanzaiHandler
+class MHandler {
+    @HandlerMethod(path = "/metallica")
+    public static HttpResponse handle_metallica(HttpRequest req, HttpResponse res) {
+        return new HttpResponseBuilder().scheme("HTTP/1.1").code(200).message("OK")
+            .body("<h1>Metallica</h1>".getBytes())
+            .setStream(new PrintWriter(res.getStream(), false))
+            .setHeader(Headers.CONTENT_LENGTH.NAME, ""+("<h1>Metallica</h1>".length()))
+            .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
+            .build();
+    }
+
+    @HandlerMethod(path = "/jimi_hendrix")
+    public static HttpResponse handle_jimi(HttpRequest req, HttpResponse res) {
+        return new HttpResponseBuilder().scheme("HTTP/1.1").code(200).message("OK")
+            .body("<h1>Jimi Hendrix</h1>".getBytes())
+            .setStream(new PrintWriter(res.getStream(), false))
+            .setHeader(Headers.CONTENT_LENGTH.NAME, ""+("<h1>Jimi Hendrix</h1>".length()))
+            .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
+            .build();
+    }
+
+    @HandlerMethod(path = "/should_return_err")
+    static HttpResponse should_Return_err(HttpRequest req, HttpResponse res) {
+        return null;
+    }
+
+    @HandlerMethod(path = "/testing_methods")
+    private static HttpResponse return_suc(HttpRequest req, HttpResponse res) {
+        return new HttpResponse();
+    }
+}
+
+@BanzaiHandler
+class MaHandler {
+    @HandlerMethod(path = "/you")
+    public static HttpResponse handle_metallica(HttpRequest req, HttpResponse res) {
+        return new HttpResponseBuilder().scheme("HTTP/1.1").code(200).message("OK")
+            .body("<h1>You</h1>".getBytes())
+            .setStream(new PrintWriter(res.getStream(), false))
+            .setHeader(Headers.CONTENT_LENGTH.NAME, ""+("<h1>You</h1>".length()))
+            .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
+            .build();
+    }
+
+    @HandlerMethod(path = "/are")
+    public static HttpResponse handle_jimi(HttpRequest req, HttpResponse res) {
+        return new HttpResponseBuilder().scheme("HTTP/1.1").code(200).message("OK")
+            .body("<h1>Are</h1>".getBytes())
+            .setStream(new PrintWriter(res.getStream(), false))
+            .setHeader(Headers.CONTENT_LENGTH.NAME, ""+("<h1>Are/h1>".length()))
+            .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
+            .build();
+    }
+
+
+}

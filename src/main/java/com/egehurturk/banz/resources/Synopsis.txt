@@ -1,0 +1,208 @@
+Name: ip-config.banz
+====================
+
+Keywords:
+=========
+
+`regulation`: define a new regulation (a rule) that gets executed by the server
+			    Syntax: `regulation $name {}`
+
+`action`: define a new action (a function) that performs an action. No values must be returned from actions.
+				Syntax: `action $name {}`
+
+				Rules:
+				        1. Use "$" to access parameter name. E.g:
+				        `action print_name(name) {
+				            printf "{$name}"
+				        }
+				        `
+
+`action($)`: {@inheritFrom `action`} with parameters. No type-checking whatsoever
+				Syntax: `action $name(a, b, c) {}`
+
+
+`allow`: allow access for the parameter
+				Syntax: `allow $param`
+
+				Rules:
+						1. If `ip` is used, the full pattern should be present (`from`).
+						2. This will override the default behaviour (allowing all IPs) and the parameter will
+						   be allowed to visit the server ONLY.
+
+`deny`: not allow access for the parameter
+				Syntax: `deny $param`
+
+				Rules:
+						1. If `ip` is used, the full pattern should be present (`from`).
+
+`ip`: parameter for `allow` and `deny` that has a parameter with `from`
+				Syntax: `allow ip <...>`
+						`deny ip <...>`
+
+				Rules:
+						1. If `ip` is used, `from` must be present.
+
+`from`: parameter for `ip`
+				Syntax: `allow ip from <...>`
+						`deny  ip from <...>`
+
+				Rules:
+						1. The parameter is obligatory.
+						2. It must be a valid IP. There could be wildcards/
+
+				Wildcards:
+						1. `*.*.*.*` indicates all IPs. It is equivilant with `*`.
+						2. `192.*.*.*` indicates all IPs starting with `192`.
+						3. `*.192.*.*.` indicates all IPs that has `192` as second bit set.
+						4. `*.*.*.8` indicates all IPs ending with `8`.
+						...
+
+
+`to`: parameter for `prints` and `printsf` actions. Specifies the destination of the output
+                Syntax: `prints to <...> <...>`
+
+                Rules:
+                        1. The parameter is obligatory.
+                        2. It must be a valid IP. There could be wildcards/
+
+                Wildcards:
+                        1. `*.*.*.*` indicates all IPs. It is equivilant with `*`.
+                        2. `192.*.*.*` indicates all IPs starting with `192`.
+                        3. `*.192.*.*.` indicates all IPs that has `192` as second bit set.
+                        4. `*.*.*.8` indicates all IPs ending with `8`.
+                        ...
+
+
+`when`: create a hook for the callback
+				Syntax: `when $callback`
+
+				Rules:
+						1. If `ip from <...>` is used, then `connects` must be present.
+
+`connects`: a callback that is triggered when the ip connects to the server
+				Syntax (used with `when`): `when ip from <...> connects do [$action]`
+
+				Rules:
+						1. Must always be used with `while`.
+
+`do`: indicate an action that is going to be run.
+				Syntax: `do print_hello`
+
+				Rules:
+						1. The preceding argument must be a valid action (exists).
+
+`requests`: a callback that is triggered when the ip requests to the server
+				Syntax (used with `when`): `when ip from <...> requests do [$action]`
+
+
+Built-in Actions
+================
+
+`print`: Print to the console
+                Syntax: `print $STRING_LITERAL`
+
+                Rules:
+                        1. `$STRING_LITERAL` must be wrapper with ""
+
+
+
+`prints`: Print to the source
+                Syntax: `prints to $IP $STRING_LITERAL`
+
+                Rules:
+                        1. {@inheritFrom `to`}
+
+`printf`: Print formatted output
+                Syntax: `printf $STRING_LITERAL`
+
+                Rules:
+                        1. `$STRING_LITERAL` must be wrapper with ""
+                        2. Use "\{" and "\}" to escape "{}"s.
+
+
+`printsf:` Print formatted output to source
+                Syntax: `printsf to $IP $STRING_LITERAL`
+
+                Rules:
+                        1. {@inheritFrom to and `prints` and `printf`}
+
+
+
+Built-in Records / Vars
+=======================
+
+`ip`: this is a record ip. Definition
+
+`record ip {
+    host
+    port
+    /* ... */
+}`
+
+$server: represents the server object. Stores useful attributes such as:
+        1. `server.host`: host of server
+        2. `server.port`: port of server
+        3. `server.name`: name of server
+
+
+
+
+
+Example:
+========
+
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< EXAMPLES ABOUT RECORDS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+record Home {
+    name
+    local_ip        /* names should not be any reserved keywords */
+    message
+}
+
+
+action create_home_record {
+
+    Home h -> ("Ege's Home", 192.168.1.127, "This is ege's home!")                  /* scope is only limited to this block */
+    printf "Home name: {h.name}, home ip: {h.local_ip}, home message: {h.message}"
+}
+
+
+regulation home_rec {
+    do create_home_record
+}
+
+
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< EXAMPLES ABOUT BANNING IP >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+regulation ip_config {
+
+	allow ip from 192.168.4.0
+	allow ip from 55.344.5.3
+	deny  ip from 23.432.5.3
+
+}
+
+
+/* <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< EXAMPLES ABOUT HOOKS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+regulation hook_ip {
+
+    /* `ip` is a reserved keyword */
+    /* `$ip` is a variable */
+
+	when ip ipAddr from 192.*.*.*	   connects do greet_local_network($ipAddr) /* Here, $ipAddr is the ip we defined after `ip` */
+	when ip ipAddr from 34.23.12.3     connects do print_hello($ipAddr)
+}
+
+/* This is a comment */
+action print_hello(ipAddr) {
+	prints to $ipAddr "haye"
+}
+
+action greet_local_network(ip) {
+	/* This is a comment inside an action */
+	printsf to $ip "{$server.host} greets {$ip.host}:{$ip.port}"
+}
+
+
+
+

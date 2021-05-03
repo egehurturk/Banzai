@@ -1,0 +1,83 @@
+[record_type]
+	- [name "Transaction"]
+	- [fields]
+		- [name "name"]
+		- [name "money"]
+
+
+[regulation_type]
+	- [name "ip_config"]
+	- [regulations]
+		- [operation "allow"] --> [identifier "ip"] --> [descriptor "from"] --> [parameter "192.*.*.*"]
+		- [operation "deny"] --> [identifier "ip"] --> [descriptor "from"] --> [parameter "192.168.8.1"]
+
+[regulation_type]
+	- [name "hooks"]
+	- [regulations]
+		- [operation "when"] --> [identifier "ip"] --> [parameter "local"] --> [descriptor "from"]
+       		  --> [paramater "192.*.*.*"] --> [action "connects"] --> [descriptor "do"] --> [action "greet_ip"]
+		  --> [parameter {accessor "local"}].
+
+		- [operation "when"] --> [identifier "ip"] --> [parameter "openNet"] --> [descriptor "from"]
+       		  --> [paramater "34.*.*.*"] --> [action "connects"] --> [descriptor "do"] --> [action "greet_public"]
+		  --> [parameter {accessor "openNet"}].
+
+		- [operation "when"] --> [identifier "ip"] --> [parameter "reserved"] --> [descriptor "from"]
+       		  --> [parameter "12.*.*.*"] --> [action "requests"] --> [descriptor "do"] --> [action "print_tra"]
+		  --> [parameter {accessor "reserved"}].
+
+
+
+
+[action_type]
+	- [name "print_tra"]
+	- [parameters]
+		- [name "reserved"]
+	- [statements]
+		- [
+			construct {accessor "Transaction"}
+			{with
+				{name "name"}
+				{name "money"}
+			}
+			{values
+				{name "Deposit 40$"}
+				{name "342"}
+			}
+		   ]
+
+
+		- [action "printsf"] --> [descriptor "to"] --> [parameter {accessor "reserved" {field "host"}}]
+		   --> [parameter "Your transaction is: {$t.name}, and money is {$t.money}"]
+
+
+
+
+
+
+
+
+
+
+======================================================================================================================
+
+
+
+
+TOKENS
+======
+
+BLOCK_BEGIN  -  "{"
+BLOCK_END    -  "}"
+L_PAREN      -  "("
+R_PAREN      -  ")"
+NAME         -
+OPERATION    -
+IDENTIFIER   -
+PARAMETER    -
+DESCRIPTOR   -
+ACTION       -
+RECORD       -
+ACCESSOR     -
+
+

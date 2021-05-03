@@ -1,7 +1,10 @@
 package com.egehurturk.httpd;
 
+import com.egehurturk.annotations.BanzaiHandler;
+import com.egehurturk.annotations.HandlerMethod;
 import com.egehurturk.core.BaseServer;
 import com.egehurturk.exceptions.ConfigurationException;
+import com.egehurturk.exceptions.MalformedHandlerException;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.HandlerTemplate;
 import com.egehurturk.handlers.HttpController;
@@ -13,13 +16,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -91,6 +93,9 @@ public class HttpServer extends BaseServer implements Closeable {
      */
     private final List<HandlerTemplate> handlers = new ArrayList<>();
 
+    private final HashMap<Method, Pair<String, Methods>> methodHandlers = new HashMap<>();
+
+    private final List<String> paths = new ArrayList<>();
 
     /**
      * Chained constructor for initializing with only port.
@@ -304,6 +309,7 @@ public class HttpServer extends BaseServer implements Closeable {
             }
             HttpController controller = new HttpController(cli, handlers);
             controller.setAllowForCustomMapping(this.allowCustomUrlMapping);
+            controller.setMethodHandlers(methodHandlers);
             if (ignoredPaths.size() >= 1)
                 controller.ignore(ignoredPaths);
             pool.execute(controller);
@@ -346,7 +352,60 @@ public class HttpServer extends BaseServer implements Closeable {
     public void addHandler(Methods method, String path, Handler handler) {
         HandlerTemplate template = new HandlerTemplate(method, path, handler);
         handlers.add(template);
+        paths.add(path);
     }
+
+    /**
+     * Adds a Handler with a class that is annotated with {@link com.egehurturk.annotations.BanzaiHandler}
+     * @param clazz class that is annotated with {@code BanzaiHandler} and has methods annotated with
+     *                                               {@link com.egehurturk.annotations.HandlerMethod}
+     * @throws MalformedHandlerException when the handler method is not appropriate in return & parameter
+     *                                   types.
+     */
+    public void addHandler(Class<?> clazz) throws MalformedHandlerException {
+        if (!clazz.isAnnotationPresent(BanzaiHandler.class)) {
+            throw new IllegalArgumentException("Class " + clazz.getSimpleName() + " is not marked by BanzaiHandler annotation.");
+        }
+
+        for (Method method: clazz.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(HandlerMethod.class)) {
+                boolean validMethod = isMethodValidHandler(method);
+                if (!validMethod)
+                    throw new MalformedHandlerException("Method " + method + " which is annotated with HandlerMethod is malformed.");
+                HandlerMethod annotation = method.getAnnotation(HandlerMethod.class);
+                String path = annotation.path();
+                Methods methods = annotation.method();
+                if (path.equals(""))
+                    throw new MalformedHandlerException("Method \"" + method + "\" which is annotated with HandlerMethod is malformed.");
+                if (paths.contains(path))
+                    throw new MalformedHandlerException(path + " is already assigned to a handler.");
+                methodHandlers.put(method, Pair.makePair(path, methods));
+                paths.add(path);
+            }
+        }
+
+    }
+
+    /**
+     * Checks if the method has a return type of {@link HttpResponse}, and has parameters
+     * {@link HttpRequest} and {@code HttpResponse} respectively.
+     *
+     * @param  method method that is annotated wiht {@link HandlerMethod} and to be checked
+     * @return is method valid
+     */
+    private boolean isMethodValidHandler(Method method) {
+        Class<?> returnType = method.getReturnType();
+        Class<?>[] parameters = method.getParameterTypes();
+        if (parameters.length != 2)
+            return false;
+        else if (parameters[0] != HttpRequest.class || parameters[1] != HttpResponse.class)
+            return false;
+        else if (returnType != HttpResponse.class)
+            return false;
+        return true;
+    }
+
+
 
     /**
      * Ignore files (or directories, or even specific files) with the given method and path.
@@ -476,6 +535,20 @@ public class HttpServer extends BaseServer implements Closeable {
      */
     private boolean checkFields() {
         return this.serverHost == null || this.serverPort == 0 || this.webRoot == null || this.name == null;
+    }
+
+    /**
+     * Returns available handlers as ArrayList
+     */
+    public List<String> getAvailableHandlerPaths() {
+        List<String> paths = new ArrayList<>();
+        for (HandlerTemplate handler: handlers) {
+            paths.add(handler.path);
+        }
+        for (Map.Entry<Method, Pair<String, Methods>> pair: methodHandlers.entrySet()) {
+            paths.add(pair.getValue().getFirst());
+        }
+        return paths;
     }
 
 }
