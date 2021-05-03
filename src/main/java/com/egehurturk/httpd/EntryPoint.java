@@ -13,13 +13,12 @@ import com.egehurturk.util.Headers;
 import com.egehurturk.util.Methods;
 
 import java.io.PrintWriter;
-import java.util.List;
 
 
 class EntryPoint {
 
     // SET THIS TO TRUE
-    public static final boolean PRODUCTION_ENV = false;
+    public static final boolean PRODUCTION_ENV = true;
 
     /**
      * Note that configuration should not be as path, it only needs to be the name of the properties file
@@ -52,8 +51,6 @@ class EntryPoint {
 //            httpServer.ignore(null, null);
 //            httpServer.ignore(null, "/adsdassad");
         }
-        List<String> r = httpServer.getAvailableHandlerPaths();
-        System.out.println(r);
         httpServer.start();
     }
 
