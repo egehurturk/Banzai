@@ -32,3 +32,4 @@ Here's the contents of the log files:
 ![log file contents](../external/errorlogfile.png)
 
 Logging configuration for Banzai is under `src/main/resources/log4j.xml`
+
