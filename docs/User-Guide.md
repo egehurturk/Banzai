@@ -15,6 +15,9 @@
   - [`com.egehurturk.httpd.HttpResponseBuilder`](#comegehurturkhttpdhttpresponsebuilder)
     - [Example Usage](#example-usage-1)
   - [`com.egehurturk.httpd.EntryPoint`](#comegehurturkhttpdentrypoint)
+- [`com.egehurturk.annotations`](#comegehurturkannotations)
+  - [`com.egehurturk.annotations.BanzaiHandler`](#comegehurturkannotationsbanzaihandler)
+  - [`com.egehurturk.annotations.HandlerMethod`](#comegehurturkannotationshandlermethod)
 - [`com.egehurturk.handlers`](#comegehurturkhandlers)
   - [`com.egehurturk.handlers.ResponseType`](#comegehurturkhandlersresponsetype)
     - [Important Methods](#important-methods-3)
@@ -236,6 +239,84 @@ class MHandler implements com.egehurturk.handlers.Handler {
 
 ## `com.egehurturk.httpd.EntryPoint`
 This class is the entry point for Banzai. The JAR (`BanzaiServer-1.0-SNAPSHOT.jar`) is configured to have the main class as this class. You should not use this class if you are using the API; however, this class contains examples for some handlers and you can take a quick look to the examples. 
+
+# `com.egehurturk.annotations`
+This package is about Banzai annotations.
+
+## `com.egehurturk.annotations.BanzaiHandler`
+
+
+Marks the class as a handler container that takes part in the HTTP request-response flow. Any class that is marked with this annotation is considered to be a handler container, that is, containing methods with [`com.egehurturk.annotations.HandlerMethod`](#comegehurturkannotationshandlermethod) annotated-methods.
+
+In contrast to the interface-based [`com.egehurturk.handlers.Handler`](#comegehurturkhandlershandler) approach, this annotation groups methods. Instead of creating a class that implements `Handler` for every path, this approach groups different methods and each method that is annotated with `HandlerMethod` acts like a class that implements `Handler`.
+
+
+The client registers a class that is annotated with this annotation with [`com.egehurturk.httpd.HttpServer`](#comegehurturkhttpdhttpserver)'s `addHandler(Class clazz)` method.
+
+Example:
+
+```java
+@BanzaiHandler
+public class MyHandler {
+    @HandlerMethod(path = "/jimi_hendrix")
+    public static HttpResponse handle_JIMI(HttpRequest req, HttpResponse res) {
+        HttpResponse resp = // ...
+        // ...
+        return resp;
+    }
+
+    @HandlerMethod(path = "/metallica")
+    public static HttpResponse handle_METALLICA(HttpRequest req, HttpResponse res) {
+        HttpResponse resp = // ...
+        // ...
+        return resp;
+      }
+}
+
+// client's entry point class
+HttpServer s = // ...;
+s.addHandler(MyHandler.class); // this will throw MalformedHandlerException. 
+
+```
+
+## `com.egehurturk.annotations.HandlerMethod`
+Marks the method as a [`com.egehurturk.handlers.Handler`](#comegehurturkhandlershandler) that regulates the HTTP request-response flow. Any method that is marked with this annotation is considered to be a Handler.
+
+Each method which is annotated by this annotation is similar to a class that implements Handler. The former includes a method called handle that takes in [`com.egehurturk.httpd.HttpRequest`](#comegehurturkhttpdhttprequest) and [`com.egehurturk.httpd.HttpResponse `]((#comegehurturkhttpdhttpresponse)) and returns `HttpResponse`.
+
+ Annotating a method with this annotation is similar to the former approach - except, one does not need to create a class.
+
+This annotation annotated methods must be in a class which is annotated by `BanzaiHandler`. This is a must since handler methods should be grouped together and that annotation makes this possible.
+
+Note that every method that is annotated by this annotation **should be declared static.** However, it doesn't matter whether the method is `private`, `protected`, or `public`. 
+
+Example:
+
+```java
+@BanzaiHandler
+public class MyHandler {
+    @HandlerMethod(path = "/jimi_hendrix")
+    public static HttpResponse handle_JIMI(HttpRequest req, HttpResponse res) {
+        HttpResponse resp = // ...
+        // ...
+        return resp;
+    }
+
+    @HandlerMethod(path = "/metallica")
+    public static HttpResponse handle_METALLICA(HttpRequest req, HttpResponse res) {
+        HttpResponse resp = // ...
+        // ...
+        return resp;
+      }
+}
+
+// client's entry point class
+HttpServer s = // ...;
+s.addHandler(MyHandler.class); // this will throw MalformedHandlerException. 
+
+```
+
+
 # `com.egehurturk.handlers`
 This package is about how Banzai maps certain `Handler`s to URLs and retrieve/send documents to the client. 
 
