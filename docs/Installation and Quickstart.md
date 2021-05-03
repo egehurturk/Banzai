@@ -204,6 +204,7 @@ import com.egehurturk.handlers.FileResponse;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.util.Methods;
 import com.egehurturk.httpd.*;
+import com.egehurturk.annotations.*;
 
 import java.io.FileNotFoundException;
 
@@ -215,19 +216,20 @@ import java.net.*;
  */
 public class App 
 {
-    public static void main( String[] args ) throws UnknownHostException
+    public static void main( String[] args ) throws UnknownHostException, MalformedHandlerException
     {
     	HttpServer s = new HttpServer(); 
 	try
 	{
-		s.setConfigPropFile("YOUR_CONFIGURATION_PROPERTIES_FILE_HERE"); // enter a property configuration file
-		s.configureServer();
+	    s.setConfigPropFile("YOUR_CONFIGURATION_PROPERTIES_FILE_HERE"); // enter a property configuration file
+	    s.configureServer();
 	} catch (ConfigurationException err)
 	{
-		err.printStackTrace();
+	    err.printStackTrace();
 	}
 	s.allowCustomUrlMapping(true);
 	s.addHandler(Methods.GET, "/helloworld", new MyHandler());
+    s.addHandler(MusicHandler.class);
 	s.start();
     }
 
@@ -242,6 +244,18 @@ public class App
 			return res;
 		}
 	}
+}
+
+@BanzaiHandler
+class MusicHandler 
+{
+    @HandlerMethod(path = "/jimi")
+    private static HttpResponse handleJimiHendrix(HttpRequest r, HttpResponse r) 
+    {
+        FileResponse fil = new FileResponse("HTML_FILE_2_HERE", res.getStream()); // enter a HTML file 
+        res = fil.toHttpResponse();
+	return res;
+    }
 }
 
 ```
