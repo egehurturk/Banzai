@@ -29,6 +29,7 @@ class EntryPoint {
         ArgumentParser parser = new ArgumentParser(args);
         HttpServer httpServer = parser.getHttpServer();
 
+
         if (!PRODUCTION_ENV) {
             httpServer.addHandler(MHandler.class);
             httpServer.addHandler(MaHandler.class);
