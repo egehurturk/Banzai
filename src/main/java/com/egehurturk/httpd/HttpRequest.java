@@ -1,8 +1,6 @@
 package com.egehurturk.httpd;
 
 import com.egehurturk.core.BaseServer;
-import com.egehurturk.exceptions.BadRequest400Exception;
-import com.egehurturk.exceptions.HttpRequestException;
 import com.egehurturk.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -98,6 +96,9 @@ public class HttpRequest {
     // logger instance
     private static Logger logger = LogManager.getLogger(HttpRequest.class);
 
+    /** Client stream */
+    private BufferedReader data;
+
     public final String METHOD = "method";
     public final String PROTOCOL = "protocol";
     public final String URL_RESOURCE = "resource";
@@ -116,24 +117,36 @@ public class HttpRequest {
      */
     public HashMap<String, String> headers = new HashMap<>();
 
-    public HttpRequest(BufferedReader data) throws HttpRequestException, IOException {
-        parse(data);
+    public HttpRequest(BufferedReader data) {
+        this.data = data;
     }
 
 
-    private void parse(BufferedReader in) throws IOException, BadRequest400Exception {
-        if (in == null) {
-            throw new com.egehurturk.exceptions.BadRequest400Exception(BAD_REQ_MSG, 400, "Bad Request");
-        }
-        String requestLine = in.readLine();
-        if (requestLine == null || requestLine.isEmpty()) {
-            throw new com.egehurturk.exceptions.BadRequest400Exception(BAD_REQ_MSG, 400, "Bad Request");
-        }
+    public boolean parse() throws IOException {
+        if (this.data == null)
+            return false;
+
+        String requestLine = this.data.readLine();
+
+        /*
+            Some browsers open multiple socket connections to a server because of safety (e.g., Chrome opens
+            an additional socket so that it's ready if the first one closes). These sockets do not send any
+            text from stream; thus, representing EOS (End of Stream). So, requestline may be null when these sockets are
+            connected. Thus, I throw an exception here and catch it in HttpController to handle this specific
+            case. The controller just closes up the connection w/o sending anything.
+         */
+        if (requestLine == null)
+            throw new IllegalArgumentException();
+
+
+        if (requestLine.isEmpty())
+            return false;
+
         String[] requestLineArray = requestLine.split(" ");
 
         boolean isHttpValid = requestLineArray.length == 3 && checkValidHttpRequest(requestLine);
         if (!isHttpValid)
-            throw new com.egehurturk.exceptions.BadRequest400Exception(HTTP_ER_MSG, 400, "Bad Request");
+            return false;
 
         this.method   = requestLineArray[0].toUpperCase(); // ensure it is all upper ("GET")
         if (!requestLineArray[1].contains("?")) {
@@ -146,36 +159,37 @@ public class HttpRequest {
         this.scheme   = requestLineArray[2];
 
         // read headers line by line
-        String  headerLine = in.readLine().toLowerCase().trim();
+        String  headerLine = this.data.readLine().toLowerCase().trim();
         boolean pass = true;
-        while (headerLine != null &&  !headerLine.isEmpty() ) {
+        while (!headerLine.isEmpty()) {
             int idx = headerLine.indexOf(":");
             if (idx == -1) {
                 pass = false;
+                break;
             }
             else {
                 this.headers.put(headerLine.substring(0, idx), headerLine.substring(idx+1));
             }
-            headerLine = in.readLine().toLowerCase().trim();
+            headerLine = this.data.readLine().toLowerCase().trim();
         }
 
         if (!pass) {
-            throw new com.egehurturk.exceptions.BadRequest400Exception("Invalid header parameter: " + headerLine,
-                400, "Bad Request");
+            logger.warn("Invalid header parameter: " + headerLine);
+            return false;
         }
-
 
 
         // POST requests have body after the metadata (headers + status line)
         if (method.equals("POST")) {
             String bodyMsg;
             StringBuilder _bodyTemplate = new StringBuilder();
-            while ( (bodyMsg = in.readLine()) != null ) {
+            while ( (bodyMsg = this.data.readLine()) != null ) {
                 _bodyTemplate.append(bodyMsg).append("\r\n"); // append carriage return
             }
             this.body = _bodyTemplate.toString().getBytes();
         }
 
+        return true;
     }
 
     public HashMap<String, String> toMap() {
@@ -196,14 +210,14 @@ public class HttpRequest {
 
         String[] requestLine = firstLine.split(" ");
         if (requestLine.length != 3) {
-            logger.error("Request line (e.g. GET /index HTTP/1.1 is not found");
+            logger.error("Request line not found");
             return false;
         }
         String method = requestLine[0].toUpperCase(); // "GET"
         String scheme = requestLine[2];
 
         if (!(scheme.equals(HTTP_V_1_1) || scheme.equals(HTTP_V_1_0))) {
-            logger.info("HTTP Version not supported");
+            logger.warn("HTTP Version not supported");
             return false;
         }
         return true;
@@ -252,7 +266,6 @@ public class HttpRequest {
         String ret = this.headers.get(name);
         Pair<Boolean, String> pair;
         if (ret == null) {
-            logger.warn("Request header does not exist in HTTP Request");
             pair = Pair.makePair(false, null);
         } else {
             pair = Pair.makePair(true, ret);
