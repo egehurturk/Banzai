@@ -107,8 +107,8 @@ public class HttpController implements Closeable, Runnable {
     private HashMap<Method, Pair<String, Methods>> methodHandlers = new HashMap<>();
     private Boolean allowForCustomMapping = false;
 
-    /** Default value for socket timeouts: 10000ms, 10s. */
-    public static int SO_TIMEOUT = 10000;
+    /** Default value for socket timeouts: 15000ms, 15s. */
+    public static int SO_TIMEOUT = 15000;
 
     private String conn = "Keep-Alive";
 
@@ -314,7 +314,6 @@ public class HttpController implements Closeable, Runnable {
 
                 }
 
-
             }
 
 
@@ -337,9 +336,7 @@ public class HttpController implements Closeable, Runnable {
         }
     }
 
-    /*
-    ! DEBUG DEBUG DEBUG: CLIENT SOCKET CONNECTION CLOSES HERE!!!
-     */
+
     private void respondWithCode(OutputStream stream, int statusCode, String statusMsg) {
         PrintWriter writer = new PrintWriter(stream, false);
         FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream(statusCode + ".html"), writer);
