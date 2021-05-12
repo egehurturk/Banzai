@@ -18,7 +18,7 @@ import java.io.PrintWriter;
 class EntryPoint {
 
     // SET THIS TO TRUE
-    public static final boolean PRODUCTION_ENV = true;
+    public static final boolean PRODUCTION_ENV = false;
 
     /**
      * Note that configuration should not be as path, it only needs to be the name of the properties file
@@ -35,13 +35,13 @@ class EntryPoint {
             httpServer.addHandler(MaHandler.class);
             httpServer.allowCustomUrlMapping(true);
             httpServer.addHandler(Methods.GET , "/hello"           , new MyHandler());
-//            httpServer.addHandler(Methods.GET , "/thismynewserver" , new MyNewHandler());
-//            httpServer.addHandler(Methods.GET , "/cemhurturk"      , new MyHandler());
-//            httpServer.addHandler(Methods.GET , "/filehandling"    , new MyFileHandler());
-//            httpServer.addHandler(Methods.GET , "/jsontest"        , new Json());
-//            httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
-//            httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
-//            httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
+            httpServer.addHandler(Methods.GET , "/thismynewserver" , new MyNewHandler());
+            httpServer.addHandler(Methods.GET , "/cemhurturk"      , new MyHandler());
+            httpServer.addHandler(Methods.GET , "/filehandling"    , new MyFileHandler());
+            httpServer.addHandler(Methods.GET , "/jsontest"        , new Json());
+            httpServer.addHandler(Methods.GET , "/paramtest"       , new Parameterized());
+            httpServer.addHandler(Methods.GET , "/template"        , new TemplateTest());
+            httpServer.addHandler(Methods.GET , "/soph"            , new Sophisticated());
 //            httpServer.ignore(Methods.GET, "/jsontest");
 //            httpServer.ignore(Methods.GET, "/cemhurturk");
 //            httpServer.ignore(Methods.GET, "/asdfjasdlfkjals;kdfjadkls;");
