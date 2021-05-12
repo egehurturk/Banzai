@@ -1,7 +1,5 @@
 package com.egehurturk.handlers;
 
-import com.egehurturk.exceptions.HttpRequestException;
-import com.egehurturk.exceptions.MethodNotAllowedException;
 import com.egehurturk.httpd.HttpRequest;
 import com.egehurturk.httpd.HttpResponse;
 import com.egehurturk.httpd.HttpResponseBuilder;
@@ -14,6 +12,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -108,6 +107,11 @@ public class HttpController implements Closeable, Runnable {
     private HashMap<Method, Pair<String, Methods>> methodHandlers = new HashMap<>();
     private Boolean allowForCustomMapping = false;
 
+    /** Default value for socket timeouts: 10000ms, 10s. */
+    public static int SO_TIMEOUT = 10000;
+
+    private String conn = "Keep-Alive";
+
     /**
      * Default constructor for this class.
      * @param socket                        - the client socket that server accepts. All
@@ -117,6 +121,7 @@ public class HttpController implements Closeable, Runnable {
         this.client = socket;
         this.handlers = handlers;
     }
+
 
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;
@@ -157,143 +162,172 @@ public class HttpController implements Closeable, Runnable {
                 close();
                 return;
             }
+
+            client.setSoTimeout(SO_TIMEOUT);
+
             this.in = new BufferedReader(
                     new InputStreamReader(client.getInputStream())
             );
             this.out = new PrintWriter(client.getOutputStream(), false);
-            // parse request
-            HttpRequest req = new HttpRequest(in);
-            boolean foundHandler = false;
-            HttpResponse res = new HttpResponse(this.out);
 
-            // get all handlers that implements {@code req.getMethod}. E.g, this list can contain all handlers
-            // that accepts GET request
-            List<HandlerTemplate> methodTemplates = findHandlerTemplateListFromMethod(req.getMethod());
-            if (methodTemplates.isEmpty()) {
-                throw new MethodNotAllowedException("Method is not allowed at path " + req.getPath(), 405, "Method Not Allowed");
-            }
+            boolean done = false;
 
-            /* Handler-based iteration */
-            if (this.allowForCustomMapping) {
-                // iterate over all handlers and find the handler template that is assigned to path
-                for (HandlerTemplate templ: methodTemplates) {
-                    // if exists
-                    if (templ.path == null) {
-                        respondWith500(client.getOutputStream(), req);
-                        foundHandler = true; // we found a handler
+            while (!done) {
+                // parse request
+                HttpRequest req;
+                req = new HttpRequest(in);
+
+                try {
+                    if (!req.parse()) {
+                        respondWithCode(client.getOutputStream(), 400, "Bad Request");
                         break;
                     }
-                    if (templ.path.equals(req.getPath())) {
-                        // we can use req.getPath() and templ.path interchangeably in here since they are the same
-                        if (isPathIgnored(templ.method, templ.path)) {
-                            respondWith404(client.getOutputStream(), req);
-                            foundHandler = true;
-                            break;
-                        }
-                        res = templ.handler.handle(req, res); // let handler to handle the request
-                        try {
-                            boolean suc = res.send();
-                            if (suc)
-                                logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
-                        } catch (NullPointerException pointerException) {
-                           respondWith500(client.getOutputStream(), req);
-                        }
-                        foundHandler = true; // we found a handler
-                        break;
-                    }
+                } catch (SocketTimeoutException err) {
+                    logger.warn("Client connection timed out.");
+                    respondWithCode(client.getOutputStream(), 408, "Request Timeout");
+                    break;
+                } catch (IllegalArgumentException err) {
+                    break;
                 }
-            }
 
-            /* method-Handler-based iteration */
-            if (!foundHandler && this.allowForCustomMapping && methodHandlers.size() >= 1) {
-                for (Map.Entry<Method, Pair<String, Methods>> entry: this.methodHandlers.entrySet()) {
-                    Method method = entry.getKey();
-                    String path = entry.getValue().getFirst();
-                    Methods methods = entry.getValue().getSecond();
+                if (req.getScheme().equals("HTTP/1.0") ||
+                    (req.hasHeader("connection") && "close".equals(
+                        req.getHeader("connection").trim())
+                    )
+                ) {
+                    done = true;
+                    conn = "Close";
+                }
 
-                    Utility.debug(debugMode,"Method name: " + method.getName(), logger);
-                    Utility.debug(debugMode,"Path: " + path, logger);
-                    Utility.debug(debugMode,"HTTP Method: " + methods, logger);
+                boolean foundHandler = false;
+                HttpResponse res = new HttpResponse(this.out);
 
-                    if (path.equals(req.getPath()) && methods.str.equals(req.getMethod())) {
-                        if (isPathIgnored(methods, path)) {
-                            respondWith404(client.getOutputStream(), req);
-                            foundHandler = true;
+                // get all handlers that implements {@code req.getMethod}. E.g, this list can contain all handlers
+                // that accepts GET request
+                List<HandlerTemplate> methodTemplates = findHandlerTemplateListFromMethod(req.getMethod());
+                if (methodTemplates.isEmpty()) {
+                    respondWithCode(client.getOutputStream(), req, 405, "Method Not Allowed");
+                    break;
+                }
+
+                /* Handler-based iteration */
+                if (this.allowForCustomMapping) {
+                    // iterate over all handlers and find the handler template that is assigned to path
+                    for (HandlerTemplate templ: methodTemplates) {
+                        // if exists
+                        if (templ.path == null) {
+                            respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
+                            foundHandler = true; // we found a handler
                             break;
                         }
-                        try {
-                            method.setAccessible(true);
-                            res = (HttpResponse) method.invoke(null, req, res);
-
-                            if (res == null) {
-                                respondWith500(client.getOutputStream(), req);
-                                logger.warn("Handler returned a null HttpResponse.");
-                            } else {
+                        if (templ.path.equals(req.getPath())) {
+                            // we can use req.getPath() and templ.path interchangeably in here since they are the same
+                            if (isPathIgnored(templ.method, templ.path)) {
+                                respondWithCode(client.getOutputStream(), req, 404, "Not Found");
+                                foundHandler = true;
+                                break;
+                            }
+                            res = templ.handler.handle(req, res); // let handler to handle the request
+                            try {
+                                res.headers.put(Headers.CONNECTION.NAME, conn);
                                 boolean suc = res.send();
                                 if (suc)
                                     logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
+                            } catch (NullPointerException pointerException) {
+                                respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
                             }
-
-                        } catch (IllegalAccessException | InvocationTargetException  e) {
-                            logger.error("Error while invoking HandlerMethod " + method.getName() + ": "  + e.getMessage());
-                            respondWith500(client.getOutputStream(), req);
-                        } catch (IllegalArgumentException err) {
-                            logger.error("HandlerMethod's should be static.");
-                            respondWith500(client.getOutputStream(), req);
-                        }
-                        foundHandler = true;
-                        break;
-                    }
-                }
-            }
-
-            /* default iteration */
-            if (!foundHandler) {
-                // check for default handler (all paths)
-                for (HandlerTemplate template: methodTemplates) {
-                    if (template.path.equals("/*")) {
-                        // do not use template.path here since it will be /*.
-                        // check if request path is ignored
-                        if (isPathIgnored(template.method, req.getPath())) {
-                            respondWith404(client.getOutputStream(), req);
+                            foundHandler = true; // we found a handler
                             break;
                         }
-                        res = template.handler.handle(req, res);
-                        boolean suc = false;
-                        try {
-                            suc = res.send();
-                        } catch (NullPointerException nullPointerException) {
-                            respondWith500(client.getOutputStream(), req);
-                        }
-                        if (suc)
-                            logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
-                        break;
                     }
                 }
 
+                /* method-Handler-based iteration */
+                if (!foundHandler && this.allowForCustomMapping && methodHandlers.size() >= 1) {
+                    for (Map.Entry<Method, Pair<String, Methods>> entry: this.methodHandlers.entrySet()) {
+                        Method method = entry.getKey();
+                        String path = entry.getValue().getFirst();
+                        Methods methods = entry.getValue().getSecond();
+
+                        Utility.debug(debugMode,"Method name: " + method.getName(), logger);
+                        Utility.debug(debugMode,"Path: " + path, logger);
+                        Utility.debug(debugMode,"HTTP Method: " + methods, logger);
+
+                        if (path.equals(req.getPath()) && methods.str.equals(req.getMethod())) {
+                            if (isPathIgnored(methods, path)) {
+                                respondWithCode(client.getOutputStream(), req, 404, "Not Found");
+                                foundHandler = true;
+                                break;
+                            }
+                            try {
+                                method.setAccessible(true);
+
+                                res = (HttpResponse) method.invoke(null, req, res);
+
+                                if (res == null) {
+                                    respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
+                                    logger.warn("Handler returned a null HttpResponse.");
+                                } else {
+                                    res.headers.put(Headers.CONNECTION.NAME, conn);
+                                    boolean suc = res.send();
+                                    if (suc)
+                                        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
+                                }
+
+                            } catch (IllegalAccessException | InvocationTargetException  e) {
+                                logger.error("Error while invoking HandlerMethod " + method.getName() + ": "  + e.getMessage());
+                                respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
+                            } catch (IllegalArgumentException err) {
+                                logger.error("HandlerMethod's should be static.");
+                                respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
+                            }
+                            foundHandler = true;
+                            break;
+                        }
+                    }
+                }
+
+                /* default iteration */
+                if (!foundHandler) {
+                    // check for default handler (all paths)
+                    for (HandlerTemplate template: methodTemplates) {
+                        if (template.path.equals("/*")) {
+                            // do not use template.path here since it will be /*.
+                            // check if request path is ignored
+                            if (isPathIgnored(template.method, req.getPath())) {
+                                respondWithCode(client.getOutputStream(), req, 404, "Not Found");
+                                break;
+                            }
+                            res = template.handler.handle(req, res);
+                            boolean suc = false;
+                            try {
+                                res.headers.put(Headers.CONNECTION.NAME, conn);
+                                suc = res.send();
+                            } catch (NullPointerException nullPointerException) {
+                                respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
+                            }
+                            if (suc)
+                                logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
+                            break;
+                        }
+                    }
+
+                }
+
+
             }
 
+
+
         } catch (IOException e) {
+            e.printStackTrace();
             try {
-                PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
-                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), writer);
-                respond(response.toHttpResponse(Status.valueOf("Internal Server Error"), this.out));
-                writer.close();
+                respondWithCode(client.getOutputStream(), 500, "Internal Server Error");
             } catch (IOException ioException) {
                 logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
             }
         }
-        catch (HttpRequestException e) {
-            logger.error(e.getMessage() + " [Code: " + e.code + ", Message: " + e.message + "]");
-            try {
-                PrintWriter writer = new PrintWriter(client.getOutputStream(), false);
-                FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream( e.code + ".html"), writer);
-                respond(response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(e.message)), this.out));
-                writer.close();
-            } catch (IOException ioException) {
-                logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
-            }
-        }
+
         finally {
             try {
                 close();
@@ -303,21 +337,33 @@ public class HttpController implements Closeable, Runnable {
         }
     }
 
-    private void respondWith404(OutputStream out, HttpRequest req) {
-        PrintWriter writer = new PrintWriter(out, false);
-        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("404.html"), writer);
-        respond(response.toHttpResponse(Status._404_NOT_FOUND, this.out));
-        writer.close();
-        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "404");
+    /*
+    ! DEBUG DEBUG DEBUG: CLIENT SOCKET CONNECTION CLOSES HERE!!!
+     */
+    private void respondWithCode(OutputStream stream, int statusCode, String statusMsg) {
+        PrintWriter writer = new PrintWriter(stream, false);
+        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream(statusCode + ".html"), writer);
+        HttpResponse res = response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(statusMsg)), writer);
+        if (statusCode == 408 || statusCode == 405 || statusCode == 400)
+            res.headers.put(Headers.CONNECTION.NAME, "close");
+        else
+            res.headers.put(Headers.CONNECTION.NAME, conn);
+        respond(res);
+        logger.info("[" + statusCode + " " + statusMsg + "]");
     }
 
-    private void respondWith500(OutputStream out, HttpRequest req) {
-        PrintWriter writer = new PrintWriter(out, false);
-        FileResponse fil = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("500.html"), writer);
-        respond(fil.toHttpResponse(Status._500_INTERNAL_ERROR, this.out));
-        writer.close();
-        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + "500");
+    private void respondWithCode(OutputStream stream, HttpRequest req, int statusCode, String statusMsg) {
+        PrintWriter writer = new PrintWriter(stream, false);
+        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream(statusCode + ".html"), writer);
+        HttpResponse res = response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(statusMsg)), writer);
+        if (statusCode == 408 || statusCode == 405 || statusCode == 400)
+            res.headers.put(Headers.CONNECTION.NAME, "close");
+        else
+            res.headers.put(Headers.CONNECTION.NAME, conn);
+        respond(res);
+        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + statusCode + " - " + statusMsg);
     }
+
 
     public void setMethodHandlers(HashMap<Method, Pair<String, Methods>> methodHandlers) {
         if (methodHandlers != null)
