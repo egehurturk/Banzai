@@ -11,3 +11,38 @@
 [33m2021-05-12 01:34:15,715[m [pool-3-thread-4] [31mERROR[m com.egehurturk.handlers.HttpController - Request does not match HTTP standards. Check the request again and/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path [Code: 400, Message: Bad Request]
 [33m2021-05-12 01:43:12,178[m [pool-3-thread-3] [31mERROR[m com.egehurturk.handlers.HttpController - Request does not match HTTP standards. Check the request again and/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path [Code: 400, Message: Bad Request]
 [33m2021-05-12 01:43:12,218[m [pool-3-thread-3] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 11:16:20,369[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - Request does not match HTTP standards. Check the request again and/or read RCF standards. Request should contain at least method ("GET, POST"), HTTP scheme ("HTTP/1.1"), and path [Code: 400, Message: Bad Request]
+[33m2021-05-12 11:16:20,417[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 11:51:45,606[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 11:54:02,774[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - Client connection timed out.
+[33m2021-05-12 11:54:37,561[m [pool-3-thread-4] [31mERROR[m com.egehurturk.handlers.HttpController - Client connection timed out.
+[33m2021-05-12 11:55:17,917[m [pool-3-thread-6] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 11:58:21,850[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 11:59:29,186[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:01:52,802[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:05:11,005[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:06:17,505[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:06:38,232[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:07:20,081[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:07:48,981[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:08:40,765[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:15:18,971[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:16:37,422[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:41:39,993[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:42:53,662[m [pool-3-thread-2] [31mERROR[m com.egehurturk.handlers.HttpController - Client connection timed out.
+[33m2021-05-12 12:42:53,665[m [pool-3-thread-2] [31mERROR[m com.egehurturk.httpd.HttpResponseBuilder - Error building Http Response
+[33m2021-05-12 12:44:50,331[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - Client connection timed out.
+[33m2021-05-12 12:44:50,337[m [pool-3-thread-1] [31mERROR[m com.egehurturk.httpd.HttpResponseBuilder - Error building Http Response
+[33m2021-05-12 12:45:55,586[m [pool-3-thread-2] [31mERROR[m com.egehurturk.handlers.HttpController - Client connection timed out.
+[33m2021-05-12 12:54:16,026[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - Client connection timed out.
+[33m2021-05-12 12:55:35,820[m [pool-3-thread-2] [31mERROR[m com.egehurturk.handlers.HttpController - Client connection timed out.
+[33m2021-05-12 12:56:32,984[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 12:58:38,528[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 13:08:06,499[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 13:08:37,378[m [pool-3-thread-2] [31mERROR[m com.egehurturk.handlers.HttpController - Client connection timed out.
+[33m2021-05-12 13:19:06,845[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 13:22:42,391[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 14:00:43,502[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 14:03:23,440[m [pool-3-thread-2] [31mERROR[m com.egehurturk.handlers.HttpController - IOException thrown while accessing client's stream: [Socket is closed]
+[33m2021-05-12 14:05:19,647[m [pool-3-thread-1] [31mERROR[m com.egehurturk.handlers.HttpController - Client connection timed out.
+[33m2021-05-12 15:45:13,348[m [pool-3-thread-2] [31mERROR[m com.egehurturk.handlers.HttpController - Client connection timed out.
