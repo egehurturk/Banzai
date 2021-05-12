@@ -10,6 +10,7 @@ public enum Status {
     _406_NOT_ACCEPTABLE(Constants.C406, Constants.CM406),
     _500_INTERNAL_ERROR(Constants.C500, Constants.CM500),
     _501_NOT_IMPLEMENTED(Constants.C501, Constants.CM501),
+    _408_TIMEOUT(Constants.C408, Constants.CM408),
 
     ;
 
@@ -29,6 +30,7 @@ public enum Status {
         public static final int C404 = 404;
         public static final int C405 = 405;
         public static final int C406 = 406;
+        public static final int C408 = 408;
         public static final int C500 = 500;
         public static final int C501 = 501;
 
@@ -40,6 +42,7 @@ public enum Status {
         public static final String CM404 = "Not Found";
         public static final String CM405 = "Method Not Allowed";
         public static final String CM406 = "Not Acceptable";
+        public static final String CM408 = "Request Timeout";
         public static final String CM500 = "Internal Server Error";
         public static final String CM501 = "Not Implemented";
 

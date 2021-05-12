@@ -103,6 +103,7 @@
                   <include>**/404.html</include>
                   <include>**/403.html</include>
                   <include>**/406.html</include>
+                  <include>**/408.html</include>
                   <include>**/500.html</include>
                   <include>**/501.html</include>
               </includes>

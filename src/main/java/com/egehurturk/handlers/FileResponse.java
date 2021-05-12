@@ -51,6 +51,7 @@ public class FileResponse implements ResponseType {
     private byte[] body;
 
 
+
     /**
      * Constructor that verifies path
      * @param path request path, e.g. "/hello"
@@ -85,6 +86,7 @@ public class FileResponse implements ResponseType {
     public void setWebroot(String webroot) {
         this.webroot = webroot;
     }
+
 
     /**
      * Converts File output to {@link HttpResponse} response
