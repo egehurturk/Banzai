@@ -246,8 +246,13 @@ public class FileResponse implements ResponseType {
         } catch (IOException err) {
             logger.error("Cannot convert input stream to buffer (byte array). ");
         }
-
-        return _buf.toByteArray();
+        byte[] array = _buf.toByteArray();
+        try {
+            _buf.close();
+        } catch (IOException e) {
+            logger.warn("Cannot close byte buffer. [silenced] ");
+        }
+        return array;
     }
 
 }
