@@ -133,7 +133,7 @@ public class HttpResponse {
             this.stream.println(Headers.DATE.NAME + this.headers.get(Headers.DATE.NAME));
             this.stream.println(Headers.CONTENT_TYPE.NAME + this.headers.get(Headers.CONTENT_TYPE.NAME) + ";charset=\"utf-8\"");
             this.stream.println(Headers.CONTENT_LENGTH.NAME + this.headers.get(Headers.CONTENT_LENGTH.NAME));
-            this.stream.println(Headers.CONNECTION.NAME + "close");
+            this.stream.println(Headers.CONNECTION.NAME + this.headers.get(Headers.CONNECTION.NAME));
             this.stream.println();
             this.stream.println(body);
             this.stream.println();
@@ -152,27 +152,14 @@ public class HttpResponse {
     }
 
     private static Set<Integer> prepareCodes(Set<Integer> code) {
-        code.add(Status._400_BAD_REQUEST.STATUS_CODE);
-        code.add(Status._403_FORBIDDEN.STATUS_CODE);
-        code.add(Status._500_INTERNAL_ERROR.STATUS_CODE);
-        code.add(Status._405_METHOD_NOT_ALLOWED.STATUS_CODE);
-        code.add(Status._404_NOT_FOUND.STATUS_CODE);
-        code.add(Status._501_NOT_IMPLEMENTED.STATUS_CODE);
-        code.add(Status._200_OK.STATUS_CODE);
-        code.add(Status._406_NOT_ACCEPTABLE.STATUS_CODE);
-
+        for (Status status: Status.values())
+            code.add(status.STATUS_CODE);
         return code;
     }
 
     private static Set<String> prepareMessages(Set<String> msg) {
-        msg.add(Status._400_BAD_REQUEST.MESSAGE);
-        msg.add(Status._403_FORBIDDEN.MESSAGE);
-        msg.add(Status._500_INTERNAL_ERROR.MESSAGE);
-        msg.add(Status._405_METHOD_NOT_ALLOWED.MESSAGE);
-        msg.add(Status._404_NOT_FOUND.MESSAGE);
-        msg.add(Status._501_NOT_IMPLEMENTED.MESSAGE);
-        msg.add(Status._200_OK.MESSAGE);
-        msg.add(Status._406_NOT_ACCEPTABLE.MESSAGE);
+        for (Status status: Status.values())
+            msg.add(status.MESSAGE);
 
         return msg;
     }
