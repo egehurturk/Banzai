@@ -172,6 +172,8 @@ public class Utility {
             case "Not Implemented":
                 returnedVal =  "_501_NOT_IMPLEMENTED";
                 break;
+            case "Request Timeout":
+                returnedVal = "_408_TIMEOUT";
         }
         return returnedVal;
     }
