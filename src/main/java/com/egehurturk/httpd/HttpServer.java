@@ -443,7 +443,6 @@ public class HttpServer extends BaseServer implements Closeable {
 
              else if (path.indexOf("*") == path.length()-1 && isStarRemovedDir) {
                 List<Pair<Methods, String>> dirWalk = readDirectory(method, webRoot + Utility.removeLastChars(path, 2),  Utility.removeLastChars(path, 2), new ArrayList<>());
-                System.out.println(dirWalk);
                 this.ignoredPaths.addAll(dirWalk);
             }
 
