@@ -232,7 +232,7 @@ public class HttpController implements Closeable, Runnable {
                                 res.headers.put(Headers.CONNECTION.NAME, conn);
                                 boolean suc = res.send();
                                 if (suc)
-                                    logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
+                                    logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode() + " - " + res.getMessage());
                             } catch (NullPointerException pointerException) {
                                 respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
                             }
@@ -271,7 +271,7 @@ public class HttpController implements Closeable, Runnable {
                                     res.headers.put(Headers.CONNECTION.NAME, conn);
                                     boolean suc = res.send();
                                     if (suc)
-                                        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
+                                        logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode() + " - " + res.getMessage());
                                 }
 
                             } catch (IllegalAccessException | InvocationTargetException  e) {
@@ -307,7 +307,7 @@ public class HttpController implements Closeable, Runnable {
                                 respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
                             }
                             if (suc)
-                                logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode());
+                                logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode() + " - " + res.getMessage());
                             break;
                         }
                     }

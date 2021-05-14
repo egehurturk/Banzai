@@ -36,6 +36,7 @@ import java.util.Set;
  *
  * @author      Ege Hurturk
  * @version     1.0 - SNAPSHOT
+ * @see HttpResponseBuilder
  */
 public class HttpResponse {
 
