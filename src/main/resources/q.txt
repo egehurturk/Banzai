@@ -72,37 +72,22 @@ This server should be run from CLI, by using a bash file:
 
 
 
+CACHE
+=====
 
-timeout := TIMEOUT_CONST
 
-if header contains {"Connection: Close"}
-   Server closes the connection with the client when the stream is flushed
-else if header contains {"Connection": "Keep Alive"}
-    if Keep-Alive is present in HTTP headers:
-         timeout := get the value for Keep-Alive timeout parameter
-    Server checks connection/socket periodically (for incoming HTTP request) for the time span since it
-        sent the last HTTP response. If no HTTP request is received by the time of the configured keep-alive
-        time (seconds) the web server closes the connection. No further HTTP request will be possible after the
-        'close' done by server.
+Add:
+
+`Cache-Control: max-age=86400`
+OR
+`Cache-Control: no-cache`: means that it must check with the server before using cached resource.
+`Age: <seconds>`
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+https://jakearchibald.com/2016/caching-best-practices/
 
 
 
