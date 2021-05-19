@@ -34,7 +34,7 @@ public class FileResponse implements ResponseType {
      * {@link PrintWriter} necessary for {@link #toHttpResponse()}
      * method
      */
-    private final PrintWriter writer;
+    private final PrintStream stream;
 
     /**
      * Required for JAR file
@@ -53,11 +53,11 @@ public class FileResponse implements ResponseType {
     /**
      * Constructor that verifies path
      * @param path request path, e.g. "/hello"
-     * @param writer Response writer
+     * @param stream Response writer
      */
-    public FileResponse(String path, PrintWriter writer) {
+    public FileResponse(String path, PrintStream stream) {
         this.path = path;
-        this.writer = writer;
+        this.stream = stream;
     }
 
     /**
@@ -68,11 +68,11 @@ public class FileResponse implements ResponseType {
      * <p>This class then buffers the stream and converts the contents to HttpResponse
      *
      * @param filestream input stream
-     * @param writer HttpResponse print writer
+     * @param stream HttpResponse print writer
      */
-    public FileResponse(InputStream filestream, PrintWriter writer) {
+    public FileResponse(InputStream filestream, PrintStream stream) {
         this.filestream = filestream;
-        this.writer = writer;
+        this.stream = stream;
     }
 
     // Getters
@@ -129,7 +129,7 @@ public class FileResponse implements ResponseType {
         );
         String contentLang = "en_US";
 
-        return new HttpResponseBuilder().factory("HTTP/1.1", this.status.STATUS_CODE, this.status.MESSAGE, buffer, this.writer,
+        return new HttpResponseBuilder().factory("HTTP/1.1", this.status.STATUS_CODE, this.status.MESSAGE, buffer, this.stream,
                 mimeType, dateHeader, "Banzai", contentLang, buffer.length, BooleanState.compressBool
         );
     }
@@ -137,10 +137,10 @@ public class FileResponse implements ResponseType {
     /**
      * Convert this to {@link HttpResponse}.
      * @param status status to be sent in the response
-     * @param writer writer associated with the response
+     * @param stream writer associated with the response
      * @return response
      */
-    public HttpResponse toHttpResponse(Status status, PrintWriter writer) {
+    public HttpResponse toHttpResponse(Status status, PrintStream stream) {
 
         byte[] buffer;
         String mimeType = "text/html";
@@ -160,7 +160,7 @@ public class FileResponse implements ResponseType {
         );
         String contentLang = "en_US";
 
-        return new HttpResponseBuilder().factory("HTTP/1.1", status.STATUS_CODE, status.MESSAGE, buffer, writer,
+        return new HttpResponseBuilder().factory("HTTP/1.1", status.STATUS_CODE, status.MESSAGE, buffer, stream,
                 mimeType, dateHeader, "Banzai", contentLang, buffer.length, BooleanState.compressBool
         );
     }
