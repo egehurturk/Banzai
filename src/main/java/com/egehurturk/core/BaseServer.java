@@ -81,7 +81,7 @@ public abstract class BaseServer {
      * method. This results in requests being queued by the server.
      *
      */
-    protected int backlog;
+    protected int backlog = 200;
 
     /**
      * Server name that is used in {@link HttpServer} class
@@ -271,7 +271,7 @@ public abstract class BaseServer {
         }
 
         if (backlog < 1) {
-            backlog = 50;
+            backlog = 200;
         }
         try {
             // Initialize a new server
