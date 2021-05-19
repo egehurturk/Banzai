@@ -79,10 +79,10 @@ public class HttpController implements Closeable, Runnable {
 
     /**
      * Output for client socket. Send anything
-     * to client with calling the {@link PrintWriter#println()} method of
-     * {@code PrintWriter}.
+     * to client with calling the {@link PrintStream#println()} method of
+     * {@code PrintStream}.
      */
-    private PrintWriter out;
+    private PrintStream out;
 
     /**
      * Store ignored (blocked) paths with the relevant
@@ -168,7 +168,7 @@ public class HttpController implements Closeable, Runnable {
             this.in = new BufferedReader(
                     new InputStreamReader(client.getInputStream())
             );
-            this.out = new PrintWriter(client.getOutputStream(), true);
+            this.out = new PrintStream(client.getOutputStream(), true);
 
             boolean done = false;
 
@@ -202,6 +202,8 @@ public class HttpController implements Closeable, Runnable {
                 BooleanState.compressBool = checkForCompression(req);
 
                 boolean foundHandler = false;
+
+                // TODO here starts httpresposne creation
                 HttpResponse res = new HttpResponse(this.out);
 
                 // get all handlers that implements {@code req.getMethod}. E.g, this list can contain all handlers
@@ -233,6 +235,7 @@ public class HttpController implements Closeable, Runnable {
                             res = templ.handler.handle(req, res); // let handler to handle the request
                             try {
                                 res.headers.put(Headers.CONNECTION.NAME, conn);
+                                // TODO here
                                 boolean suc = res.send(client.getOutputStream());
                                 if (suc)
                                     logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode() + " - " + res.getMessage());
@@ -272,6 +275,7 @@ public class HttpController implements Closeable, Runnable {
                                     logger.warn("Handler returned a null HttpResponse.");
                                 } else {
                                     res.headers.put(Headers.CONNECTION.NAME, conn);
+                                    // TODO here
                                     boolean suc = res.send(client.getOutputStream());
                                     if (suc)
                                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode() + " - " + res.getMessage());
@@ -305,6 +309,7 @@ public class HttpController implements Closeable, Runnable {
                             boolean suc = false;
                             try {
                                 res.headers.put(Headers.CONNECTION.NAME, conn);
+                                // TODO here
                                 suc = res.send(client.getOutputStream());
                             } catch (NullPointerException nullPointerException) {
                                 respondWithCode(this.out, req, 500, "Internal Server Error");
@@ -324,6 +329,7 @@ public class HttpController implements Closeable, Runnable {
 
         } catch (IOException e) {
             e.printStackTrace();
+            // TODO here
             respondWithCode(this.out, 500, "Internal Server Error");
         }
 
@@ -346,10 +352,9 @@ public class HttpController implements Closeable, Runnable {
         return compress;
     }
 
-
-    private void respondWithCode(PrintWriter writer, int statusCode, String statusMsg) {
-        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream(statusCode + ".html"), writer);
-        HttpResponse res = response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(statusMsg)), writer);
+    private void respondWithCode(PrintStream stream, int statusCode, String statusMsg) {
+        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream(statusCode + ".html"), stream);
+        HttpResponse res = response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(statusMsg)), stream);
         if (statusCode == 408 || statusCode == 405 || statusCode == 400)
             res.headers.put(Headers.CONNECTION.NAME, "close");
         else
@@ -358,9 +363,9 @@ public class HttpController implements Closeable, Runnable {
         logger.info("[" + statusCode + " " + statusMsg + "]");
     }
 
-    private void respondWithCode(PrintWriter writer, HttpRequest req, int statusCode, String statusMsg) {
-        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream(statusCode + ".html"), writer);
-        HttpResponse res = response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(statusMsg)), writer);
+    private void respondWithCode(PrintStream stream, HttpRequest req, int statusCode, String statusMsg) {
+        FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream(statusCode + ".html"), stream);
+        HttpResponse res = response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(statusMsg)), stream);
         if (statusCode == 408 || statusCode == 405 || statusCode == 400)
             res.headers.put(Headers.CONNECTION.NAME, "close");
         else
@@ -417,7 +422,7 @@ public class HttpController implements Closeable, Runnable {
         this.out.close();
     }
 
-    private void respond(String scheme, String status, byte[] body, PrintWriter stream, String name) {
+    private void respond(String scheme, String status, byte[] body, PrintStream stream, String name) {
         HttpResponseBuilder builder = new HttpResponseBuilder();
         HttpResponse res = builder
                 .scheme(scheme)
