@@ -17,8 +17,8 @@ public final class Compressor {
      * @return compressed byte array
      */
     public static byte[] compress_GZIP(byte[] body) throws IOException {
-        if (body == null || body.length == 0)
-            throw new IllegalArgumentException("Body size cannot be 0");
+        if (body == null)
+            throw new IllegalArgumentException("Body cannot be null");
 
         ByteArrayOutputStream ba_OS = new ByteArrayOutputStream();
         try (GZIPOutputStream gzip_OS = new GZIPOutputStream(ba_OS)) {
