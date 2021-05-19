@@ -5,14 +5,12 @@ import com.egehurturk.annotations.BanzaiHandler;
 import com.egehurturk.annotations.HandlerMethod;
 import com.egehurturk.exceptions.MalformedHandlerException;
 import com.egehurturk.handlers.FileResponse;
+import com.egehurturk.handlers.HTMLRenderer;
 import com.egehurturk.handlers.Handler;
 import com.egehurturk.handlers.JsonResponse;
-import com.egehurturk.renderers.HTMLRenderer;
 import com.egehurturk.util.ArgumentParser;
 import com.egehurturk.util.Headers;
 import com.egehurturk.util.Methods;
-
-import java.io.PrintWriter;
 
 
 class EntryPoint {
@@ -63,7 +61,7 @@ class EntryPoint {
                     .code(200)
                     .message("OK")
                     .body("<h1>Hello</h1>".getBytes())
-                    .setStream(new PrintWriter(response.getStream(), false))
+                    .setStream(response.getStream())
                     .setHeader(Headers.CONTENT_LENGTH.NAME, ""+("<h1>Hello</h1>".length()))
                     .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
                     .build();
@@ -95,7 +93,7 @@ class EntryPoint {
                     .code(200)
                     .message("OK")
                     .body(body.getBytes())
-                    .setStream(new PrintWriter(response.getStream(), false))
+                    .setStream(response.getStream())
                     .setHeader(Headers.CONTENT_LENGTH.NAME, ""+(body.getBytes().length))
                     .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
                     .build();
@@ -150,7 +148,7 @@ class EntryPoint {
                     .code(404)
                     .message("Not Found")
                     .body("<h1>Not Found 404 err</h1>".getBytes())
-                    .setStream(new PrintWriter(response.getStream(), false))
+                    .setStream(response.getStream())
                     .setHeader(Headers.CONTENT_LENGTH.NAME, ""+"<h1>Not Found 404 err</h1>".length())
                     .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
                     .build();
@@ -199,7 +197,7 @@ class MHandler {
     public static HttpResponse handle_metallica(HttpRequest req, HttpResponse res) {
         return new HttpResponseBuilder().scheme("HTTP/1.1").code(200).message("OK")
             .body("<h1>Metallica</h1>".getBytes())
-            .setStream(new PrintWriter(res.getStream(), false))
+            .setStream(res.getStream())
             .setHeader(Headers.CONTENT_LENGTH.NAME, ""+("<h1>Metallica</h1>".length()))
             .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
             .build();
@@ -209,7 +207,7 @@ class MHandler {
     public static HttpResponse handle_jimi(HttpRequest req, HttpResponse res) {
         return new HttpResponseBuilder().scheme("HTTP/1.1").code(200).message("OK")
             .body("<h1>Jimi Hendrix</h1>".getBytes())
-            .setStream(new PrintWriter(res.getStream(), false))
+            .setStream(res.getStream())
             .setHeader(Headers.CONTENT_LENGTH.NAME, ""+("<h1>Jimi Hendrix</h1>".length()))
             .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
             .build();
@@ -232,7 +230,7 @@ class MaHandler {
     public static HttpResponse handle_metallica(HttpRequest req, HttpResponse res) {
         return new HttpResponseBuilder().scheme("HTTP/1.1").code(200).message("OK")
             .body("<h1>You</h1>".getBytes())
-            .setStream(new PrintWriter(res.getStream(), false))
+            .setStream(res.getStream())
             .setHeader(Headers.CONTENT_LENGTH.NAME, ""+("<h1>You</h1>".length()))
             .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
             .build();
@@ -242,7 +240,7 @@ class MaHandler {
     public static HttpResponse handle_jimi(HttpRequest req, HttpResponse res) {
         return new HttpResponseBuilder().scheme("HTTP/1.1").code(200).message("OK")
             .body("<h1>Are</h1>".getBytes())
-            .setStream(new PrintWriter(res.getStream(), false))
+            .setStream(res.getStream())
             .setHeader(Headers.CONTENT_LENGTH.NAME, ""+("<h1>Are/h1>".length()))
             .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
             .build();
