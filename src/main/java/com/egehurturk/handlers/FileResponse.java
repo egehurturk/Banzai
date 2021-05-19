@@ -50,8 +50,6 @@ public class FileResponse implements ResponseType {
     public String webroot                = "www";
     private byte[] body;
 
-
-
     /**
      * Constructor that verifies path
      * @param path request path, e.g. "/hello"
@@ -132,7 +130,7 @@ public class FileResponse implements ResponseType {
         String contentLang = "en_US";
 
         return new HttpResponseBuilder().factory("HTTP/1.1", this.status.STATUS_CODE, this.status.MESSAGE, buffer, this.writer,
-                mimeType, dateHeader, "Banzai", contentLang, buffer.length
+                mimeType, dateHeader, "Banzai", contentLang, buffer.length, BooleanState.compressBool
         );
     }
 
@@ -163,7 +161,7 @@ public class FileResponse implements ResponseType {
         String contentLang = "en_US";
 
         return new HttpResponseBuilder().factory("HTTP/1.1", status.STATUS_CODE, status.MESSAGE, buffer, writer,
-                mimeType, dateHeader, "Banzai", contentLang, buffer.length
+                mimeType, dateHeader, "Banzai", contentLang, buffer.length, BooleanState.compressBool
         );
     }
 
