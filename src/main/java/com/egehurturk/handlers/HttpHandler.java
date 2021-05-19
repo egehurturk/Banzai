@@ -261,15 +261,6 @@ public class HttpHandler implements Handler {
         boolean statusReturned = false;
 
         // Host is a must for HTTP/1.1 servers
-        if (!req.headers.containsKey(
-                Utility.removeLastChars(Headers.HOST.NAME.trim().toLowerCase(), 1))
-         || req.headers.get(Utility.removeLastChars(Headers.HOST.NAME.trim().toLowerCase(), 1)).equals("")
-        ) {
-            this.status    = Status._400_BAD_REQUEST.MESSAGE;
-            stream         = ClassLoader.getSystemClassLoader().getResourceAsStream(BAD_REQ);
-            Utility.debug(this.debugMode,"Input stream (null?): " + ((stream == null) ? "null" : "nonnull"), logger);
-            statusReturned = true;
-        }
 
         // bad request if path contains directory format
         if (!statusReturned) {
@@ -397,20 +388,10 @@ public class HttpHandler implements Handler {
         }
 
 
-        HttpResponseBuilder builder = new HttpResponseBuilder();
-        HttpResponse response = builder
-                .scheme("HTTP/1.1")
-                .code(Status.valueOf(Utility.enumStatusToString(status)).STATUS_CODE)
-                .message(Status.valueOf(Utility.enumStatusToString(status)).MESSAGE)
-                .body(bodyByte)
-                .setStream(new PrintWriter(res.getStream(), false))
-                .setHeader(Headers.DATE.NAME, dateHeader)
-                .setHeader(Headers.SERVER.NAME, nameHeader)
-                .setHeader(Headers.CONTENT_LANGUAGE.NAME, contentLang)
-                .setHeader(Headers.CONTENT_LENGTH.NAME, ""+(bodyByte.length))
-                .setHeader(Headers.CONTENT_TYPE.NAME, mimeType)
-                .build();
-        return response;
+        // i know this is not good but it lessens the code soo....
+        return new HttpResponseBuilder().factory("HTTP/1.1", Status.valueOf(Utility.enumStatusToString(status)).STATUS_CODE,
+            Status.valueOf(Utility.enumStatusToString(status)).MESSAGE, bodyByte, res.getStream(), mimeType,
+            dateHeader, nameHeader, contentLang, bodyByte.length, BooleanState.compressBool);
     }
 
     /**
