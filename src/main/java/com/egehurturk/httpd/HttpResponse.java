@@ -10,7 +10,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.PrintStream;
+import java.security.cert.CRL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -74,7 +75,7 @@ public class HttpResponse {
 
     private String message;
 
-    private PrintWriter stream;
+    private PrintStream stream;
 
     /**
      * Other headers that are not specified as a field
@@ -86,8 +87,8 @@ public class HttpResponse {
 
     // empty constructors
     public HttpResponse(HashMap<String, String> map, String scheme, int code,
-                        String message, byte[] body, PrintWriter stream) {}
-    public HttpResponse(PrintWriter out) {this.stream = out;}
+                        String message, byte[] body, PrintStream stream) {}
+    public HttpResponse(PrintStream out) {this.stream = out;}
     public HttpResponse(){}
 
 
@@ -103,7 +104,7 @@ public class HttpResponse {
      * @return                          - new {@link HttpResponse} object
      * @throws HttpResponseException    - any errors associated with response lifecycle
      */
-    public static HttpResponse create(HashMap<String, String> map, String scheme, int code, String message, byte[] body, PrintWriter stream)
+    public static HttpResponse create(HashMap<String, String> map, String scheme, int code, String message, byte[] body, PrintStream stream)
             throws HttpResponseException  {
         HttpResponse resp = new HttpResponse();
 
@@ -129,20 +130,19 @@ public class HttpResponse {
 
     public boolean send(OutputStream os) throws IOException {
         try {
-//            String body = new String(this.body);
-            this.stream.println(this.scheme + " " + this.code + " " + this.message);
-            this.stream.println(Headers.SERVER.NAME + this.headers.get(Headers.SERVER.NAME));
-            this.stream.println(Headers.DATE.NAME + this.headers.get(Headers.DATE.NAME));
-            this.stream.println(Headers.CONTENT_TYPE.NAME + this.headers.get(Headers.CONTENT_TYPE.NAME) + ";charset=\"utf-8\"");
-            this.stream.println(Headers.CONTENT_LENGTH.NAME + this.headers.get(Headers.CONTENT_LENGTH.NAME));
+            final String CRLF = "\r\n";
+            this.stream.print(this.scheme + " " + this.code + " " + this.message + CRLF);
+            this.stream.print(Headers.SERVER.NAME + this.headers.get(Headers.SERVER.NAME) + CRLF);
+            this.stream.print(Headers.DATE.NAME + this.headers.get(Headers.DATE.NAME) + CRLF);
+            this.stream.print(Headers.CONTENT_TYPE.NAME + this.headers.get(Headers.CONTENT_TYPE.NAME) + ";charset=\"utf-8\"" + CRLF);
+            this.stream.print(Headers.CONTENT_LENGTH.NAME + this.headers.get(Headers.CONTENT_LENGTH.NAME) + CRLF);
             if (this.headers.get(Headers.CONTENT_ENCODING.NAME) != null && this.headers.get(Headers.CONTENT_ENCODING.NAME).length() != 0)
-                this.stream.println(Headers.CONTENT_ENCODING.NAME + this.headers.get(Headers.CONTENT_ENCODING.NAME));
-            this.stream.println(Headers.CONNECTION.NAME + this.headers.get(Headers.CONNECTION.NAME));
-            this.stream.println();
-            os.write(this.body, 0, this.body.length);
-            this.stream.println();
+                this.stream.print(Headers.CONTENT_ENCODING.NAME + this.headers.get(Headers.CONTENT_ENCODING.NAME) + CRLF);
+            this.stream.print(Headers.CONNECTION.NAME + this.headers.get(Headers.CONNECTION.NAME) + CRLF);
+            this.stream.print(CRLF);
+            this.stream.write(this.body, 0, this.body.length);
+            this.stream.print(CRLF);
             this.stream.flush();
-            os.flush();
             return true;
         } catch (NullPointerException err) {
             logger.error("HttpResponse object has incomplete (null) fields. Make sure that HttpResponse object you return " +
@@ -185,7 +185,7 @@ public class HttpResponse {
         return message;
     }
 
-    public PrintWriter getStream() {
+    public PrintStream getStream() {
         return stream;
     }
 
