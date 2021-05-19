@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -126,19 +127,22 @@ public class HttpResponse {
         return resp;
     }
 
-    public boolean send() throws IOException {
+    public boolean send(OutputStream os) throws IOException {
         try {
-            String body = new String(this.body);
+//            String body = new String(this.body);
             this.stream.println(this.scheme + " " + this.code + " " + this.message);
             this.stream.println(Headers.SERVER.NAME + this.headers.get(Headers.SERVER.NAME));
             this.stream.println(Headers.DATE.NAME + this.headers.get(Headers.DATE.NAME));
             this.stream.println(Headers.CONTENT_TYPE.NAME + this.headers.get(Headers.CONTENT_TYPE.NAME) + ";charset=\"utf-8\"");
             this.stream.println(Headers.CONTENT_LENGTH.NAME + this.headers.get(Headers.CONTENT_LENGTH.NAME));
+            if (this.headers.get(Headers.CONTENT_ENCODING.NAME) != null && this.headers.get(Headers.CONTENT_ENCODING.NAME).length() != 0)
+                this.stream.println(Headers.CONTENT_ENCODING.NAME + this.headers.get(Headers.CONTENT_ENCODING.NAME));
             this.stream.println(Headers.CONNECTION.NAME + this.headers.get(Headers.CONNECTION.NAME));
             this.stream.println();
-            this.stream.println(body);
+            os.write(this.body, 0, this.body.length);
             this.stream.println();
             this.stream.flush();
+            os.flush();
             return true;
         } catch (NullPointerException err) {
             logger.error("HttpResponse object has incomplete (null) fields. Make sure that HttpResponse object you return " +
@@ -186,3 +190,5 @@ public class HttpResponse {
     }
 
 }
+
+// TODO: resolve broken pipe error
