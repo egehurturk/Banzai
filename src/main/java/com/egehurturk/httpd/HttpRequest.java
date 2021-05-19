@@ -310,3 +310,5 @@ public class HttpRequest {
 }
 
 /* https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages */
+
+// TODO: add \r\n in response
