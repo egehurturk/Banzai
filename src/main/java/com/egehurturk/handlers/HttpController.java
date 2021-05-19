@@ -168,7 +168,7 @@ public class HttpController implements Closeable, Runnable {
             this.in = new BufferedReader(
                     new InputStreamReader(client.getInputStream())
             );
-            this.out = new PrintWriter(client.getOutputStream(), false);
+            this.out = new PrintWriter(client.getOutputStream(), true);
 
             boolean done = false;
 
@@ -179,12 +179,12 @@ public class HttpController implements Closeable, Runnable {
 
                 try {
                     if (!req.parse()) {
-                        respondWithCode(client.getOutputStream(), 400, "Bad Request");
+                        respondWithCode(this.out, 400, "Bad Request");
                         break;
                     }
                 } catch (SocketTimeoutException err) {
                     logger.warn("Client connection timed out.");
-                    respondWithCode(client.getOutputStream(), 408, "Request Timeout");
+                    respondWithCode(this.out, 408, "Request Timeout");
                     break;
                 } catch (IllegalArgumentException err) {
                     break;
@@ -199,6 +199,8 @@ public class HttpController implements Closeable, Runnable {
                     conn = "Close";
                 }
 
+                BooleanState.compressBool = checkForCompression(req);
+
                 boolean foundHandler = false;
                 HttpResponse res = new HttpResponse(this.out);
 
@@ -206,7 +208,7 @@ public class HttpController implements Closeable, Runnable {
                 // that accepts GET request
                 List<HandlerTemplate> methodTemplates = findHandlerTemplateListFromMethod(req.getMethod());
                 if (methodTemplates.isEmpty()) {
-                    respondWithCode(client.getOutputStream(), req, 405, "Method Not Allowed");
+                    respondWithCode(this.out, req, 405, "Method Not Allowed");
                     break;
                 }
 
@@ -216,25 +218,26 @@ public class HttpController implements Closeable, Runnable {
                     for (HandlerTemplate templ: methodTemplates) {
                         // if exists
                         if (templ.path == null) {
-                            respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
+                            respondWithCode(this.out, req, 500, "Internal Server Error");
                             foundHandler = true; // we found a handler
                             break;
                         }
                         if (templ.path.equals(req.getPath())) {
                             // we can use req.getPath() and templ.path interchangeably in here since they are the same
                             if (isPathIgnored(templ.method, templ.path)) {
-                                respondWithCode(client.getOutputStream(), req, 404, "Not Found");
+                                respondWithCode(this.out, req, 404, "Not Found");
                                 foundHandler = true;
                                 break;
                             }
+
                             res = templ.handler.handle(req, res); // let handler to handle the request
                             try {
                                 res.headers.put(Headers.CONNECTION.NAME, conn);
-                                boolean suc = res.send();
+                                boolean suc = res.send(client.getOutputStream());
                                 if (suc)
                                     logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode() + " - " + res.getMessage());
                             } catch (NullPointerException pointerException) {
-                                respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
+                                respondWithCode(this.out, req, 500, "Internal Server Error");
                             }
                             foundHandler = true; // we found a handler
                             break;
@@ -255,7 +258,7 @@ public class HttpController implements Closeable, Runnable {
 
                         if (path.equals(req.getPath()) && methods.str.equals(req.getMethod())) {
                             if (isPathIgnored(methods, path)) {
-                                respondWithCode(client.getOutputStream(), req, 404, "Not Found");
+                                respondWithCode(this.out, req, 404, "Not Found");
                                 foundHandler = true;
                                 break;
                             }
@@ -265,21 +268,21 @@ public class HttpController implements Closeable, Runnable {
                                 res = (HttpResponse) method.invoke(null, req, res);
 
                                 if (res == null) {
-                                    respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
+                                    respondWithCode(this.out, req, 500, "Internal Server Error");
                                     logger.warn("Handler returned a null HttpResponse.");
                                 } else {
                                     res.headers.put(Headers.CONNECTION.NAME, conn);
-                                    boolean suc = res.send();
+                                    boolean suc = res.send(client.getOutputStream());
                                     if (suc)
                                         logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode() + " - " + res.getMessage());
                                 }
 
                             } catch (IllegalAccessException | InvocationTargetException  e) {
                                 logger.error("Error while invoking HandlerMethod " + method.getName() + ": "  + e.getMessage());
-                                respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
+                                respondWithCode(this.out, req, 500, "Internal Server Error");
                             } catch (IllegalArgumentException err) {
                                 logger.error("HandlerMethod's should be static.");
-                                respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
+                                respondWithCode(this.out, req, 500, "Internal Server Error");
                             }
                             foundHandler = true;
                             break;
@@ -295,16 +298,16 @@ public class HttpController implements Closeable, Runnable {
                             // do not use template.path here since it will be /*.
                             // check if request path is ignored
                             if (isPathIgnored(template.method, req.getPath())) {
-                                respondWithCode(client.getOutputStream(), req, 404, "Not Found");
+                                respondWithCode(this.out, req, 404, "Not Found");
                                 break;
                             }
                             res = template.handler.handle(req, res);
                             boolean suc = false;
                             try {
                                 res.headers.put(Headers.CONNECTION.NAME, conn);
-                                suc = res.send();
+                                suc = res.send(client.getOutputStream());
                             } catch (NullPointerException nullPointerException) {
-                                respondWithCode(client.getOutputStream(), req, 500, "Internal Server Error");
+                                respondWithCode(this.out, req, 500, "Internal Server Error");
                             }
                             if (suc)
                                 logger.info("[" + req.getMethod() + " " + req.getPath() + " " + req.getScheme() + "] " + res.getCode() + " - " + res.getMessage());
@@ -313,6 +316,7 @@ public class HttpController implements Closeable, Runnable {
                     }
 
                 }
+                BooleanState.compressBool = false;
 
             }
 
@@ -320,11 +324,7 @@ public class HttpController implements Closeable, Runnable {
 
         } catch (IOException e) {
             e.printStackTrace();
-            try {
-                respondWithCode(client.getOutputStream(), 500, "Internal Server Error");
-            } catch (IOException ioException) {
-                logger.error("IOException thrown while accessing client's stream: [" + ioException.getMessage() + "]");
-            }
+            respondWithCode(this.out, 500, "Internal Server Error");
         }
 
         finally {
@@ -337,8 +337,17 @@ public class HttpController implements Closeable, Runnable {
     }
 
 
-    private void respondWithCode(OutputStream stream, int statusCode, String statusMsg) {
-        PrintWriter writer = new PrintWriter(stream, false);
+
+    private boolean checkForCompression(HttpRequest req) {
+        boolean compress = false;
+        if (req.hasHeader("Accept-Encoding".toLowerCase())) {
+            compress = req.getHeader("Accept-Encoding".toLowerCase()).contains("gzip");
+        }
+        return compress;
+    }
+
+
+    private void respondWithCode(PrintWriter writer, int statusCode, String statusMsg) {
         FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream(statusCode + ".html"), writer);
         HttpResponse res = response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(statusMsg)), writer);
         if (statusCode == 408 || statusCode == 405 || statusCode == 400)
@@ -349,8 +358,7 @@ public class HttpController implements Closeable, Runnable {
         logger.info("[" + statusCode + " " + statusMsg + "]");
     }
 
-    private void respondWithCode(OutputStream stream, HttpRequest req, int statusCode, String statusMsg) {
-        PrintWriter writer = new PrintWriter(stream, false);
+    private void respondWithCode(PrintWriter writer, HttpRequest req, int statusCode, String statusMsg) {
         FileResponse response = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream(statusCode + ".html"), writer);
         HttpResponse res = response.toHttpResponse(Status.valueOf(Utility.enumStatusToString(statusMsg)), writer);
         if (statusCode == 408 || statusCode == 405 || statusCode == 400)
@@ -428,7 +436,7 @@ public class HttpController implements Closeable, Runnable {
                 .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
                 .build();
         try {
-            res.send();
+            res.send(client.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -436,7 +444,7 @@ public class HttpController implements Closeable, Runnable {
 
     private void respond(HttpResponse res) {
         try {
-            res.send();
+            res.send(client.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
