@@ -1,7 +1,10 @@
 package com.egehurturk.httpd;
 
 import com.egehurturk.core.BaseServer;
+import com.egehurturk.util.Headers;
+import com.egehurturk.util.Methods;
 import com.egehurturk.util.Pair;
+import com.egehurturk.util.Utility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -178,6 +181,12 @@ public class HttpRequest {
             return false;
         }
 
+        if (!this.headers.containsKey(
+            Utility.removeLastChars(Headers.HOST.NAME.trim().toLowerCase(), 1))
+            || this.headers.get(Utility.removeLastChars(Headers.HOST.NAME.trim().toLowerCase(), 1)).equals("")
+        )
+            return false;
+
 
         // POST requests have body after the metadata (headers + status line)
         if (method.equals("POST")) {
@@ -218,6 +227,11 @@ public class HttpRequest {
 
         if (!(scheme.equals(HTTP_V_1_1) || scheme.equals(HTTP_V_1_0))) {
             logger.warn("HTTP Version not supported");
+            return false;
+        }
+        try {
+            Methods.valueOf(method);
+        } catch (IllegalArgumentException er) {
             return false;
         }
         return true;
