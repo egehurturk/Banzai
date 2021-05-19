@@ -8,7 +8,7 @@ import com.egehurturk.util.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -22,29 +22,29 @@ public class JsonResponse implements ResponseType {
     protected Logger logger = LogManager.getLogger(FileResponse.class);
 
     /**
-     * {@link PrintWriter} necessary for {@link #toHttpResponse()}
+     * {@link PrintStream} necessary for {@link #toHttpResponse()}
      * method
      */
-    private final PrintWriter writer;
+    private final PrintStream stream;
     private String body;
     private Boolean valid;
 
     /**
      * Constructor that verifies path
-     * @param writer Response writer
+     * @param stream Response stream
      * @param body Json body
      */
-    public JsonResponse(PrintWriter writer, String body) {
-        this.writer = writer;
+    public JsonResponse(PrintStream stream, String body) {
+        this.stream = stream;
         this.body   = body;
     }
 
-    public JsonResponse(PrintWriter writer) {
-        this.writer = writer;
+    public JsonResponse(PrintStream writer) {
+        this.stream = writer;
     }
 
-    public JsonResponse(PrintWriter writer, HttpRequest request) {
-        this.writer = writer;
+    public JsonResponse(PrintStream writer, HttpRequest request) {
+        this.stream = writer;
         validate(request);
     }
 
@@ -118,8 +118,8 @@ public class JsonResponse implements ResponseType {
 
         if (!this.valid) {
             status = Status._406_NOT_ACCEPTABLE;
-            FileResponse file = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("406.html"), this.writer);
-            return file.toHttpResponse(status, this.writer);
+            FileResponse file = new FileResponse(ClassLoader.getSystemClassLoader().getResourceAsStream("406.html"), this.stream);
+            return file.toHttpResponse(status, this.stream);
         }
         if (this.body == null) {
             logger.error("Body of JSON request is empty. Server automatically created JSON body.");
@@ -128,7 +128,7 @@ public class JsonResponse implements ResponseType {
 
         return new HttpResponseBuilder()
                 .factory("HTTP/1.1", status.STATUS_CODE, status.MESSAGE,
-                        this.getBody().getBytes(), this.writer,
+                        this.getBody().getBytes(), this.stream,
                         mimeType, dateHeader, "Banzai",
                         contentLang, this.getBody().getBytes().length, BooleanState.compressBool
                 );
