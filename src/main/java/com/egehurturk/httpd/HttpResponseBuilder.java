@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.util.HashMap;
 
 public class HttpResponseBuilder {
@@ -16,7 +16,7 @@ public class HttpResponseBuilder {
     private byte[] body;
     private int code;
     private String message;
-    private PrintWriter stream;
+    private PrintStream stream;
     private HashMap<String, String> headers = new HashMap<String, String>();
     protected static Logger logger = LogManager.getLogger(HttpResponseBuilder.class);
 
@@ -47,7 +47,7 @@ public class HttpResponseBuilder {
         return this;
     }
 
-    public HttpResponseBuilder setStream(PrintWriter stream) {
+    public HttpResponseBuilder setStream(PrintStream stream) {
         this.stream = stream;
         return this;
     }
@@ -64,7 +64,7 @@ public class HttpResponseBuilder {
         return res;
     }
 
-    public HttpResponse factory(String scheme, int statusCode, String statusMessage, byte[] body, PrintWriter stream, String mime, String date,
+    public HttpResponse factory(String scheme, int statusCode, String statusMessage, byte[] body, PrintStream stream, String mime, String date,
                                 String name, String contentLanguage, int contentLength, boolean compressEnabled
                                 ) {
 
@@ -87,7 +87,7 @@ public class HttpResponseBuilder {
 
     }
 
-    private HttpResponse getHttpResponse(String scheme, int statusCode, String statusMessage, byte[] body, PrintWriter stream, String mime, String date, String name, String contentLanguage, int contentLength, String contentEncoding) {
+    private HttpResponse getHttpResponse(String scheme, int statusCode, String statusMessage, byte[] body, PrintStream stream, String mime, String date, String name, String contentLanguage, int contentLength, String contentEncoding) {
         HttpResponseBuilder builder = new HttpResponseBuilder()
             .scheme(scheme)
             .code(statusCode)
