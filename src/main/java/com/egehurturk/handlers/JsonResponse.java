@@ -61,6 +61,10 @@ public class JsonResponse implements ResponseType {
     }
 
 
+
+
+
+
     public String getBody() {
         return body;
     }
@@ -126,9 +130,11 @@ public class JsonResponse implements ResponseType {
                 .factory("HTTP/1.1", status.STATUS_CODE, status.MESSAGE,
                         this.getBody().getBytes(), this.writer,
                         mimeType, dateHeader, "Banzai",
-                        contentLang, this.getBody().getBytes().length
+                        contentLang, this.getBody().getBytes().length, BooleanState.compressBool
                 );
     }
+
+
 
 
 }
