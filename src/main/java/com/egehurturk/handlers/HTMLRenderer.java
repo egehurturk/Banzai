@@ -39,7 +39,7 @@ public class HTMLRenderer implements ResponseType {
     // HTML file
     private final String htmlPath;
     private Status status;
-    private final PrintWriter writer;
+    private final PrintStream stream;
     public final String BAD_REQ = "400.html";
     public final String INDEX = "index.html";
     public final String _404_NOT_FOUND = "404.html";
@@ -51,9 +51,9 @@ public class HTMLRenderer implements ResponseType {
      * All args Constructor
      * @param htmlPath html file path to be rendered
      */
-    public HTMLRenderer(String htmlPath, PrintWriter writer) {
+    public HTMLRenderer(String htmlPath, PrintStream stream) {
         this.htmlPath = htmlPath;
-        this.writer = writer;
+        this.stream = stream;
     }
 
     /**
@@ -133,7 +133,7 @@ public class HTMLRenderer implements ResponseType {
                 )
         );
         String contentLang = "en_US", mimeType = "text/html", body = this.render();
-        return new HttpResponseBuilder().factory("HTTP/1.1", this.status.STATUS_CODE, this.status.MESSAGE, body.getBytes(), this.writer,
+        return new HttpResponseBuilder().factory("HTTP/1.1", this.status.STATUS_CODE, this.status.MESSAGE, body.getBytes(), this.stream,
                 mimeType, dateHeader, "Banzai", contentLang, body.getBytes().length, BooleanState.compressBool
         );
     }
