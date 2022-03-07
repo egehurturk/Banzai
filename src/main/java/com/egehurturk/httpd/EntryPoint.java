@@ -85,13 +85,8 @@ class EntryPoint {
     static class Parameterized implements com.egehurturk.handlers.Handler {
         @Override
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
-            String body;
-            if (request.hasParameter("name")) {
-                body = request.getParameter("name");
-            } else {
-                body = "<h3><i>Check logs (console)</i></h3>";
-            }
-            HttpResponse res = new HttpResponseBuilder().scheme("HTTP/1.1")
+            String body = request.getParameter("name").orElse("\"<h3><i>Check logs (console)</i></h3>\"");
+            return new HttpResponseBuilder().scheme("HTTP/1.1")
                     .code(200)
                     .message("OK")
                     .body(body.getBytes())
@@ -99,7 +94,6 @@ class EntryPoint {
                     .setHeader(Headers.CONTENT_LENGTH.NAME, ""+(body.getBytes().length))
                     .setHeader(Headers.CONTENT_TYPE.NAME, "text/html")
                     .build();
-            return res;
         }
     }
 
@@ -125,10 +119,10 @@ class EntryPoint {
         @Override
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
             HTMLRenderer contentRenderer = new HTMLRenderer("www/dist.html", response.getStream());
-            String username = request.getParameter("username");
-            String name = request.getParameter("name");
-            String age = request.getParameter("age");
-            String location = request.getParameter("location");
+            String username = request.getParameter("username").orElse("");
+            String name = request.getParameter("name").orElse("");
+            String age = request.getParameter("age").orElse("");
+            String location = request.getParameter("location").orElse("");
 
             contentRenderer.setVar("username", username);
             contentRenderer.setVar("name", name);
