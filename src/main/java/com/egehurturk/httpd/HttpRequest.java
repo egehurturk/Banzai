@@ -7,6 +7,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -125,6 +130,8 @@ public class HttpRequest {
 
 
     public boolean parse() throws IOException {
+
+
         if (this.data == null)
             return false;
 
@@ -155,8 +162,7 @@ public class HttpRequest {
             this.path = requestLineArray[1].toLowerCase(); // ensure it is all lower, i.e ("/index.html")
         } else {
             this.path = requestLineArray[1].substring(0, requestLineArray[1].indexOf("?")); // /index.html?a=3&b=4 -> /index.html
-            parseQueryParams(requestLineArray[1].substring(                                 // a=3&b=4
-                    requestLineArray[1].indexOf("?") + 1));
+            parseQueryParams(urlDecode(requestLineArray[1].substring(requestLineArray[1].indexOf("?") + 1)));
         }
         this.scheme   = requestLineArray[2];
 
@@ -192,6 +198,16 @@ public class HttpRequest {
         }
 
         return true;
+    }
+
+    private String urlDecode(String path) {
+
+        try {
+            return URLDecoder.decode(new URI(path).toString(), StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException | URISyntaxException e) {
+            logger.error(e.getMessage() + ", parsing query parameters without URL decoding...");
+            return path;
+        }
     }
 
     public HashMap<String, String> toMap() {
@@ -285,13 +301,13 @@ public class HttpRequest {
      * @return the value wrapped in {@link Optional}
      */
     public Optional<String> getParameter(String param) {
-        return Optional.of(getQueryParam(param).getSecond());
+        return Optional.ofNullable(getQueryParam(param).getSecond());
     }
 
     private Pair<Boolean, String> getQueryParam(String param) {
         Pair<Boolean, String> pair = null;
         if (queryParams.get(param) == null) {
-            logger.warn("Query parameter is null for " + param + " parameter");
+//            logger.warn("Query parameter is null for " + param + " parameter");
             pair = Pair.makePair(false, null);
         } else {
             pair =  Pair.makePair(true, queryParams.get(param));
@@ -301,3 +317,5 @@ public class HttpRequest {
 }
 
 /* https://developer.mozilla.org/en-US/docs/Web/HTTP/Messages */
+
+// FIXME encoding of "" in query parameters results in %22
