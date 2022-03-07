@@ -303,7 +303,7 @@ public class HttpServer extends BaseServer implements Closeable {
             Socket cli = null;
             try {
                 cli = this.server.accept();
-                logger.info("Connection established with  " + cli.getInetAddress() + ":" + cli.getPort());
+//                logger.info("Connection established with  " + cli.getInetAddress() + ":" + cli.getPort());
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }
