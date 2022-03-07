@@ -75,10 +75,7 @@ class EntryPoint {
         @Override
         public HttpResponse handle(HttpRequest request, HttpResponse response) {
             FileResponse fil = new FileResponse("www/custom.html", response.getStream());
-            // FIXME: fil is null
-            HttpResponse res = fil.toHttpResponse();
-            System.out.println("Debug from file response, file response content: " + fil.asString());
-            return res;
+            return fil.toHttpResponse();
         }
     }
 
