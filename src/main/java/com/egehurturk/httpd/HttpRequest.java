@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Optional;
 
 // http://web-sniffer.net/rfc/rfc2616.html#section-14.1
 
@@ -91,13 +92,14 @@ public class HttpRequest {
      */
     private String method;
 
-    private HashMap<String, String> queryParams = new HashMap<String, String>();
+
+    private final HashMap<String, String> queryParams = new HashMap<>();
 
     // logger instance
-    private static Logger logger = LogManager.getLogger(HttpRequest.class);
+    private static final Logger logger = LogManager.getLogger(HttpRequest.class);
 
     /** Client stream */
-    private BufferedReader data;
+    private final BufferedReader data;
 
     public final String METHOD = "method";
     public final String PROTOCOL = "protocol";
@@ -277,10 +279,13 @@ public class HttpRequest {
         return getQueryParam(param).getFirst();
     }
 
-    public String getParameter(String param) {
-        if (hasParameter(param))
-            return getQueryParam(param).getSecond();
-        return null;
+    /**
+     * Access the value of a query parameter
+     * @param param query parameter name
+     * @return the value wrapped in {@link Optional}
+     */
+    public Optional<String> getParameter(String param) {
+        return Optional.of(getQueryParam(param).getSecond());
     }
 
     private Pair<Boolean, String> getQueryParam(String param) {
