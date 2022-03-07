@@ -119,7 +119,7 @@ public HttpResponse handle(HttpRequest request, HttpResponse response) {
 ```
 * `request.hasParameter(String)` returns a boolean value indicating whether the parameter exists in URL as a query parameter.
 * `request.getParameter(String)` returns the actual value, wrapped in `Optional<String>`, of the query parameter. If it does not exists, the `Optional` type is empty.
-* If the parameter does not exists, Banzai logs a warning message
+* ~~If the parameter does not exists, Banzai logs a warning message~~
 
 > The recommended approach to access query parameters is to first check if it is null with the `request.hasParameter(String)` method and then get the parameter's value with `request.getParameter(String)`. Directly using `request.getParameter(String)` may cause `NullPointerException` and the server does not handle that exception.
 >> Since `v1.2`, There is no need to use `hasParameter` to check and then retrieve the value as `getParameter` returns an `Optional<String>` type. Any method of `Optional` can be used to check. To follow the convenience, it is recommended to use the following pattern:
