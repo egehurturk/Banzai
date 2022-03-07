@@ -12,7 +12,7 @@ Banzai is a server, specifically, a Web Server, that uses `HTTP/1.0`, and `HTTP/
 
 ## Headers
 `HTTP` protocol includes headers, *key-value* pairs, in HTTP Requests and HTTP Responses. These headers include:
-* `Host` 
+* `Host`
 * `Server`
 * `Date`
 * `Content-Language`
@@ -64,7 +64,7 @@ If a request lacks this header, Banzai will respond with a `406 Not Acceptable` 
 
 
 ## Life Cycle
-Banzai regulates HTTP protocol through `HttpResponse` and `HttpRequest` headers. These headers are a data structure for storing raw HTTP string from the client's `InputStream`. 
+Banzai regulates HTTP protocol through `HttpResponse` and `HttpRequest` headers. These headers are a data structure for storing raw HTTP string from the client's `InputStream`.
 
 `HttpResponse` and `HttpRequest` provide an abstraction over the HTTP protocol. You'll rarely need to instantiate one of these classes. You'll only encounter `HttpResponse` and `HttpRequest` in a custom class that implements `Handler`. The method `handle` takes `HttpRequest` and `HttpResponse`, and returns a `HttpResponse`.
 
@@ -75,14 +75,14 @@ Banzai regulates HTTP protocol through `HttpResponse` and `HttpRequest` headers.
 class MyHandler implements Handler {
 	@Override
 	public HttpResponse handle(HttpRequest req, HttpResponse res) {
-            FileResponse fil = new FileResponse("/some.html", res.getStream()); 
+            FileResponse fil = new FileResponse("/some.html", res.getStream());
             HttpResponse res = fil.toHttpResponse()
             return res;
 	}
 }
 ```
 * Here, `res.getStream()` is required for any of the *response* classes discussed above (`FileResponse`, `JsonResponse`, and `HTMLRenderer`). The method returns the output stream of the client
-* A `FileResponse` was instantiated and then converted into `HttpResponse` through the method `toResponse()`. 
+* A `FileResponse` was instantiated and then converted into `HttpResponse` through the method `toResponse()`.
 
 Similarly, when constructing a `JsonResponse`, you'll need the `HttpRequest` object to check if the raw HTTP request contains the header `Accept: application/json`:
 
@@ -90,7 +90,7 @@ Similarly, when constructing a `JsonResponse`, you'll need the `HttpRequest` obj
 class MyHandler implements Handler {
 	@Override
 	public HttpResponse handle(HttpRequest req, HttpResponse res) {
-            JsonResponse json = new JsonResponse(res.getStream(), req); 
+            JsonResponse json = new JsonResponse(res.getStream(), req);
             jes.setBody("{Hello!}");
             return json;
 	}
@@ -105,37 +105,39 @@ Some requests may contain query parameters. These parameters are useful to pass 
 GET /path?param1=value1&param2=value2&param3=value3 HTTP/1.1
 ```
 
-You can access the parameters through `HttpRequest` object:
+You can access the parameters through `HttpRequest` object's `getParameter` method. It returns an `Optional` type of `String` that contains the value (since `v1.2`):
 
 ```java
 @Override
 public HttpResponse handle(HttpRequest request, HttpResponse response) {
-          String fooArg = request.getParameter("foo"); // if foo does not exists as URL argument, then the value of fooArg will be null
-          String barArg = request.hasParameter("bar") ? request.getParameter("bar") : "none";
-          boolean bazArg = request.hasParameter("baz"); 
+          Optional<String> fooArg = request.getParameter("foo"); // if foo does not exists as a query parameter, then the value of fooArg will be null
+          String barArg = request.getParameter("bar").orElse("none"); // if bar exists, use the value; else, use "none"
+          boolean bazArg = request.hasParameter("baz");
           // ...
 }
 
 ```
-* `request.hasParameter(String)` returns a boolean value indicating whether the parameter exists in URL as a query parameter. 
-* `request.getParameter(String)` returns the actual value of the query parameter if it exists in URL, otherwise it returns null. 
+* `request.hasParameter(String)` returns a boolean value indicating whether the parameter exists in URL as a query parameter.
+* `request.getParameter(String)` returns the actual value, wrapped in `Optional<String>`, of the query parameter. If it does not exists, the `Optional` type is empty.
 * If the parameter does not exists, Banzai logs a warning message
 
-> The recommended approach to access query parameters is to first check if it is null with the `request.hasParameter(String)` method and then get the parameter's value with `request.getParameter(String)`. Directly using `request.getParameter(String)` may cause `NullPointerException` and the server does not handle that exception. 
-
+> The recommended approach to access query parameters is to first check if it is null with the `request.hasParameter(String)` method and then get the parameter's value with `request.getParameter(String)`. Directly using `request.getParameter(String)` may cause `NullPointerException` and the server does not handle that exception.
+>> Since `v1.2`, There is no need to use `hasParameter` to check and then retrieve the value as `getParameter` returns an `Optional<String>` type. Any method of `Optional` can be used to check. To follow the convenience, it is recommended to use the following pattern:
+\
+> `request.getParameter("foo).orElse("replacement_value")`
 
 ## Banzai
-As discussed above, every HTTP request contains a path. This path specifies which document has been requested and should be translated to the webroot. For example, if the webroot is `{root}/www`, then a request like `GET /hey.html HTTP/1.1` should request the file `{root}/www/hey/html`. 
+As discussed above, every HTTP request contains a path. This path specifies which document has been requested and should be translated to the webroot. For example, if the webroot is `{root}/www`, then a request like `GET /hey.html HTTP/1.1` should request the file `{root}/www/hey/html`.
 
 Banzai handles the process with the class `com.egehurturk.handlers.HttpHandler`. This class is responsible for translating the path to the local filesystem and retrieving the requested document, then sending the content as a `HttpResponse`.
 
 
-However, Banzai is not limited to requesting documents with the name of the document in the path. You can map certain paths to certain `Handler`s. A handler is a class that implements the `com.egehurturk.handlers.Handler` interface. Every class that implements this interface must override the method `HttpResponse handle(HttpRequest, HttpResponse)`. With this method, you can return any file with the help of `ResponseType` classes: 
+However, Banzai is not limited to requesting documents with the name of the document in the path. You can map certain paths to certain `Handler`s. A handler is a class that implements the `com.egehurturk.handlers.Handler` interface. Every class that implements this interface must override the method `HttpResponse handle(HttpRequest, HttpResponse)`. With this method, you can return any file with the help of `ResponseType` classes:
 * `FileResponse`
 * `JsonResponse`
 * `HTMLRenderer`
 
-You can also build up your own response with `HttpResponseBuilder`. 
+You can also build up your own response with `HttpResponseBuilder`.
 
 To allow the server to use custom paths, call the method:
 
@@ -145,9 +147,9 @@ server.allowCustomURLMapping(true)
 
 Priority levels when a path is requested are:
 1. Banzai looks for custom paths
-2. if a `Handler` is not found, then Banzai uses the default `HttpHandler` handler to handle paths. 
+2. if a `Handler` is not found, then Banzai uses the default `HttpHandler` handler to handle paths.
 
-For example, when you enter `/hey.html`, Banzai, firstly, looks for a `Handler` that its URL is `/hey.html`. If a `Handler` does not exist, Banzai looks for a document named `hey.html` under the webroot. If the document is not found, a `404 Not Found` response is sent. 
+For example, when you enter `/hey.html`, Banzai, firstly, looks for a `Handler` that its URL is `/hey.html`. If a `Handler` does not exist, Banzai looks for a document named `hey.html` under the webroot. If the document is not found, a `404 Not Found` response is sent.
 
 You can add a custom `Handler` to the server by calling its `addHandler` method:
 
@@ -182,6 +184,6 @@ class MyHandler implements Handler {
 ```
 * This is an example of returning a custom `HttpResponse`. However, you can (and should) use `FileResponse` or other `ResponseType`s whenever possible.
 
-When you run the server and open the path `/hello`, you'll see `<h1>Hello</h1>` as HTML. 
+When you run the server and open the path `/hello`, you'll see `<h1>Hello</h1>` as HTML.
 
 
