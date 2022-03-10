@@ -46,8 +46,6 @@ import java.util.*;
  */
 
 public abstract class BaseServer {
-    // Abstract class
-
     /**
      * The server socket that client connects. Configured
      * with {@code serverPort}, {@code serverHost},
@@ -813,5 +811,3 @@ public abstract class BaseServer {
     }
 
 }
-
-// end of class
